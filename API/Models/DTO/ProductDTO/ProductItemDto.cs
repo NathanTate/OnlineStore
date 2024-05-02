@@ -1,6 +1,6 @@
-﻿namespace API.Models.DTO.ProductDTO.Requests
+﻿namespace API.Models.DTO.ProductDTO
 {
-    public class ProductItemRequest
+    public class ProductItemDto
     {
         public long OriginalPrice { get; set; }
         public long SalePrice { get; set; }

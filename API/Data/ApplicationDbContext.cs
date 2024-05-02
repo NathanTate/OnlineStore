@@ -17,23 +17,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ProductCategory> ProductCategories { get; set; }
     public DbSet<ProductSubCategory> ProductSubCategories { get; set; }
     public DbSet<ProductSpecification> ProductSpecifications { get; set; }
+    public DbSet<Review> Reviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        builder.Entity<ProductSpecification>()
-            .HasKey(p => new { p.ProductId, p.SpecificationId });
-
-        builder.Entity<ProductSpecification>()
-            .HasOne(p => p.Product)
-            .WithMany(s => s.ProductSpecifications)
-            .HasForeignKey(p => p.ProductId);
-
-        builder.Entity<ProductSpecification>()
-            .HasOne(p => p.Specification)
-            .WithMany(s => s.ProductSpecifications)
-            .HasForeignKey(p => p.SpecificationId);
 
         builder.Entity<ProductCategory>()
             .HasIndex(p => p.CategoryName)

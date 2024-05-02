@@ -1,4 +1,5 @@
-﻿using API.Data.Repositories;
+﻿using API.Data.Repositories.ProductRepositories;
+using API.Data.Repositories.UserRepositories;
 using API.Interfaces;
 using API.Models;
 using AutoMapper;
@@ -20,7 +21,9 @@ namespace API.Data
 
         public ApplicationDbContext DbContext => _dbContext;
         public IUserRepository UserRepository => new UserRepository(_dbContext);
+        public ICategoryRepository CategoryRepository => new CategoryRepository(_dbContext, _mapper);
         public IProductRepository ProductRepository => new ProductRepository(_dbContext, _mapper);
+        public IReviewRepository ReviewRepository => new ReviewRepository(_dbContext, _mapper);
 
         public async Task<bool> SaveChangesAsync()
         {

@@ -13,12 +13,16 @@ namespace API.Models.Product
 
         [Required]
         [MaxLength(500)]    
-        public string Const { get; set; }
+        public string Cons { get; set; }
 
         public string Comment { get; set; }
 
         [Required]
         public int RatingId { get; set; }
         public Rating Rating { get; set; }
+
+        [Required]
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
     }
 }

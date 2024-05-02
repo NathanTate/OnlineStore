@@ -11,7 +11,6 @@ namespace API.Models.Product
         [Range(10, 50)]
         public int RatingScore { get; set; }
 
-        [Required]
         [MaxLength(255)]
         public string OrderStatus { get; set; }
 

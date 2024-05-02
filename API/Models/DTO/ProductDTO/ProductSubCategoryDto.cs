@@ -1,4 +1,6 @@
-﻿namespace API.Models.DTO.ProductDTO
+﻿using API.Models.DTO.ProductDTO.Responses;
+
+namespace API.Models.DTO.ProductDTO
 {
     public class ProductSubCategoryDto
     {
@@ -7,5 +9,6 @@
         public string Image { get; set; }
         public string SubCategoryDescription { get; set; }
         public int CategoryId { get; set; }
+        public List<ProductResponse> Products { get; set; }
     }
 }

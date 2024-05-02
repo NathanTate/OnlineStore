@@ -1,16 +1,16 @@
-﻿using API.Models.DTO.ProductDTO;
+﻿using API.Helpers.RequestParams;
 using API.Models.DTO.ProductDTO.Requests;
-using Microsoft.AspNetCore.Mvc;
+using API.Models.DTO.ProductDTO.Responses;
+using FluentResults;
 
 namespace API.Interfaces
 {
     public interface IProductRepository
     {
-        Task<ProductCategoryResponse> CreateCategory(ProductCategoryResponse model);
-        Task<ProductSubCategoryDto> CreateSubCategory(ProductSubCategoryDto model);
-
-        Task<IEnumerable<ProductCategoryResponse>> GetAllCategory();
-        Task<ProductCategoryResponse> GetCategory(int categoryId);
-        Task<ProductSubCategoryDto> GetAllSubCategory();
+        Task<Result<ProductResponse>> CreateProductAsync(ProductRequest model);
+        Task<IEnumerable<ProductResponse>> GetProductsAsync(ProductParams productParams);
+        Task<Result<ProductResponse>> GetProductAsync(int id);
+        Task<Result> UpdateProductAsync(ProductRequest model);
+        Task<Result> DeleteProductAsync(int id);
     }
 }

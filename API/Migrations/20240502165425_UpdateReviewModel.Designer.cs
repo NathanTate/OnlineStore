@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240428195451_ProductSpecificationUpdate")]
-    partial class ProductSpecificationUpdate
+    [Migration("20240502165425_UpdateReviewModel")]
+    partial class UpdateReviewModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -189,7 +189,13 @@ namespace API.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<int>("ProductRating")
+                        .HasColumnType("int");
+
                     b.Property<int>("SubCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalReviews")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -219,6 +225,9 @@ namespace API.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryName")
+                        .IsUnique();
 
                     b.ToTable("ProductCategories");
                 });
@@ -286,10 +295,18 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.Product.ProductSpecification", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("SpecificationId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -297,9 +314,9 @@ namespace API.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.HasKey("ProductId", "SpecificationId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("SpecificationId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductSpecifications");
                 });
@@ -320,9 +337,6 @@ namespace API.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("ProductCategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SubCategoryDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -334,12 +348,15 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductCategoryId");
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("SubCategoryName")
+                        .IsUnique();
 
                     b.ToTable("ProductSubCategories");
                 });
 
-            modelBuilder.Entity("API.Models.Product.Specification", b =>
+            modelBuilder.Entity("API.Models.Product.Rating", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -347,14 +364,64 @@ namespace API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("OrderStatus")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("RatingScore")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Specification");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Rating");
+                });
+
+            modelBuilder.Entity("API.Models.Product.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cons")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Pros")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("RatingId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("RatingId");
+
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -548,24 +615,52 @@ namespace API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Models.Product.Specification", "Specification")
-                        .WithMany("ProductSpecifications")
-                        .HasForeignKey("SpecificationId")
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("API.Models.Product.ProductSubCategory", b =>
+                {
+                    b.HasOne("API.Models.Product.ProductCategory", "Category")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("API.Models.Product.Rating", b =>
+                {
+                    b.HasOne("API.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("API.Models.Product.Review", b =>
+                {
+                    b.HasOne("API.Models.ApplicationUser", null)
+                        .WithMany("UserReviews")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("API.Models.Product.Product", "Product")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.Product.Rating", "Rating")
+                        .WithMany()
+                        .HasForeignKey("RatingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
 
-                    b.Navigation("Specification");
-                });
-
-            modelBuilder.Entity("API.Models.Product.ProductSubCategory", b =>
-                {
-                    b.HasOne("API.Models.Product.ProductCategory", "ProductCategory")
-                        .WithMany()
-                        .HasForeignKey("ProductCategoryId");
-
-                    b.Navigation("ProductCategory");
+                    b.Navigation("Rating");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -622,6 +717,8 @@ namespace API.Migrations
             modelBuilder.Entity("API.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("UserReviews");
                 });
 
             modelBuilder.Entity("API.Models.Product.Brand", b =>
@@ -636,16 +733,18 @@ namespace API.Migrations
                     b.Navigation("ProductItems");
 
                     b.Navigation("ProductSpecifications");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("API.Models.Product.ProductCategory", b =>
+                {
+                    b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("API.Models.Product.ProductSubCategory", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("API.Models.Product.Specification", b =>
-                {
-                    b.Navigation("ProductSpecifications");
                 });
 #pragma warning restore 612, 618
         }

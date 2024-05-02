@@ -2,7 +2,7 @@
 using API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Data.Repositories
+namespace API.Data.Repositories.UserRepositories
 {
     public class UserRepository : IUserRepository
     {
@@ -13,7 +13,7 @@ namespace API.Data.Repositories
         }
         public async Task<ApplicationUser> GetById(string id)
         {
-            return await _dbContext.Users.SingleOrDefaultAsync(u => u.Id == id); 
+            return await _dbContext.Users.SingleOrDefaultAsync(u => u.Id == id);
         }
     }
 }
