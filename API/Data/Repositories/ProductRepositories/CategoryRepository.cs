@@ -35,10 +35,9 @@ namespace API.Data.Repositories.ProductRepositories
 
         public async Task<IEnumerable<ProductCategoryResponse>> GetAllCategoryAsync()
         {
-            return await _dbContext.ProductCategories
-                .ProjectTo<ProductCategoryResponse>(_mapper.ConfigurationProvider)
-                .AsNoTracking()
-                .ToListAsync();
+            var categories = await _dbContext.ProductCategories.Include(c => c.SubCategories).ToListAsync();
+            return _mapper.Map<IEnumerable<ProductCategoryResponse>>(
+                categories);
         }
         public async Task<Result<ProductCategoryResponse>> GetCategoryAsync(int id)
         {

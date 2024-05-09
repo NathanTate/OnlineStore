@@ -2,7 +2,6 @@
 using API.Interfaces;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
-using API.Models.Product;
 using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;

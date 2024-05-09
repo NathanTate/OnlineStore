@@ -143,7 +143,7 @@ namespace API.Controllers
             return CreatedAtAction(nameof(CreateSubCategory), new { subCategoryId = result.Value.Id}, result.Value);
         }
 
-        [HttpGet("GetSubCategories")]
+        [HttpGet("GetSubCategories/{id}")]
         public async Task<ActionResult<IEnumerable<ProductSubCategoryDto>>> GetSubCategories(int id = 1)
         {
             return Ok(await _uow.CategoryRepository.GetAllSubCategoryAsync(id));

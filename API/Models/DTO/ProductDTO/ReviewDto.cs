@@ -9,7 +9,7 @@ namespace API.Models.DTO.ProductDTO
         public string Pros { get; set; }
         public string Cons { get; set; }
         public string Comment { get; set; }
-        public Rating Rating { get; set; }
+        public RatingDto Rating { get; set; }
         public int ProductId { get; set; }
     }
 }

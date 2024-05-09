@@ -1,0 +1,151 @@
+.primary-footer {
+  font-size: var(--fs-footer);
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--size-450);
+  align-items: center;
+  padding-block: var(--size-700);
+}
+
+.cta__input {
+  padding: var(--size-300) var(--size-300);
+  border: 2px solid var(--clr-primary-100);
+  margin-right: var(--size-400);
+}
+
+.footer-nav {
+  padding-bottom: var(--size-400);
+  border-bottom: 1px solid var(--clr-primary-400);
+}
+
+.footer-nav-list a {
+  text-decoration: none;
+  display: inline-block;
+  padding-block: var(--size-100);
+}
+
+h4 {
+  color: var(--clr-primary-400);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--size-400);
+}
+
+.wrapper img {
+  display: none;
+}
+
+.footer-info-media {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-areas: 
+  'social payment copyright';
+  gap: var(--size-300);
+  padding-block: var(--size-400);
+}
+
+.social-icons {
+  grid-area: social;
+  justify-self: start;
+}
+
+.social-icons > * {
+  color: var(--clr-primary-600);
+  margin-right: var(--size-300);
+}
+
+.payment-method-icons {
+  display: flex;
+  gap: var(--size-100);
+  grid-area: payment;
+  justify-self: center;
+}
+
+.copyright-text {
+  grid-area: copyright;
+  justify-self: end;
+}
+
+.fs-lg-850 {
+  font-size: var(--fs-850);
+}
+
+@media (max-width: 60rem) {
+  .fs-md-600 {
+    font-size: var(--fs-700);
+  }
+} 
+
+@media (max-width: 767px) {
+  .fs-md-600 {
+    font-size: var(--fs-600);
+  }
+
+  .cta {
+    padding-block: var(--size-600) var(--size-400);
+  }
+
+  h4 {
+    color: var(--clr-primary-100);
+    font-size: var(--fs-300);
+    margin-bottom: 0;
+  }
+
+  .wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--size-200) var(--size-200) var(--size-300);
+  }
+
+  .wrapper img{ 
+    display: block;
+  }
+
+  .footer-nav { 
+    border-bottom: none;
+  }
+
+  .footer-nav > * {
+    border-bottom: 2px solid var(--clr-primary-400);
+  }
+
+  .footer-nav-list {
+    display: none;
+  }
+
+  .footer-nav-list[data-visible="true"] {
+    display: block;
+    padding: 0 var(--size-300) var(--size-300);
+  }
+}
+
+@media (max-width: 38rem) {
+  .footer-info-media {
+    grid-template-areas: 
+    'social copyright'
+    'payment payment';
+  }
+
+  .cta {
+    justify-content: center;
+  }
+
+  .cta div:nth-child(2) {
+    display: flex;
+    gap: var(--size-200);
+    flex-wrap: wrap;
+  }
+
+  .cta div:nth-child(2) > * {
+    margin-inline: auto;
+  }
+
+
+  .footer-info-media > .payment-method-icons {
+    margin: auto;
+  }
+}

@@ -1,0 +1,39 @@
+.container {
+  padding-block: var(--size-500) var(--size-750);
+}
+
+.wrapper {
+  max-width: 1156px;
+  margin-inline: auto;
+  --gap-spacer: 2rem;
+}
+
+.wrapper > *{
+  padding: var(--size-650) 8%;
+}
+
+.form-input {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--clr-primary-400);
+}
+
+h3 {
+  margin-bottom: var(--size-300);
+}
+
+.controls {
+  padding-top: var(--size-500);
+}
+
+.submit-button {
+  margin-right: var(--size-400);
+}
+
+.helper-block > *{
+  display: block;
+}
+
+li {
+  --flow-spacer: 0;
+}

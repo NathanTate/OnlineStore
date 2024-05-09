@@ -1,0 +1,98 @@
+<footer class="primary-footer bg-primary-900 text-primary-100">
+    <div class="container">
+        <section class="cta">
+            <div>
+                <h2 class="fs-lg-850 fs-md-600 text-primary-100 fs-md-600">Sign Up To Our Newsletter.</h2>
+                <p>Be the first to hear about the latest offers</p>
+            </div>
+            <div>
+                <input placeholder="Your Email" class="cta__input bg-primary-900" type="email">
+                <button class="button bg-blue-accent-400">Subscribe</button>
+            </div>
+        </section>
+        <section class="footer-nav even-columns">
+            <div>
+                <div class="wrapper">
+                    <h4>Information</h4>
+                    <img (click)="onToggle('info')" [src]="isVisible['info'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
+                </div>
+                <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.info">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="wrapper">
+                    <h4>PC Parts</h4>
+                    <img (click)="onToggle('pcParts')" [src]="isVisible['pcParts'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
+                </div>
+                <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.pcParts">
+                    <li><a href="#">Processor</a></li>
+                    <li><a href="#">Graphics Card</a></li>
+                    <li><a href="#">Memory</a></li>
+                    <li><a href="#">Storage</a></li>
+                    <li><a href="#">Power Supply</a></li>
+                    <li><a href="#">Motherboard</a></li>
+                    <li><a href="#">Cooling</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="wrapper">
+                    <h4>Desktop PCs</h4>
+                    <img (click)="onToggle('desktopPCs')" [src]="isVisible['desktopPCs'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
+                </div>
+                <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.desktopPCs">
+                    <li><a href="#">Gaming Desktops</a></li>
+                    <li><a href="#">Workstation Desktops</a></li>
+                    <li><a href="#">Home Office Desktops</a></li>
+                    <li><a href="#">Mini PCs</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="wrapper">
+                    <h4>Laptops</h4>
+                    <img (click)="onToggle('laptops')" [src]="isVisible['laptops'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
+                </div>
+                <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.laptops">
+                    <li><a href="#">Gaming Laptops</a></li>
+                    <li><a href="#">Business Laptops</a></li>
+                    <li><a href="#">Student Laptops</a></li>
+                    <li><a href="#">Ultraportable Laptops</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="wrapper">
+                    <h4>Address</h4>
+                    <img (click)="onToggle('address')" [src]="isVisible['address'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
+                </div>
+                <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.address">
+                    <li>123 Street Name</li>
+                    <li>City</li>
+                    <li>Country</li>
+                    <li>Postal Code</li>
+                    <li>Email: example&commat;example.com</li>
+                    <li>Phone: +1234567890</li>
+                </ul>
+            </div>
+        </section>
+        <div class="footer-info-media">
+            <div class="social-icons">
+                <fa-icon [icon]="faFacebook" size="2x"></fa-icon>
+                <fa-icon [icon]="faInstagram" size="2x"></fa-icon>
+            </div>
+            <div class="payment-method-icons">
+                <img src="/assets/svg/paypal.svg" alt="paypal icon">
+                <img src="/assets/svg/visa.svg" alt="visa icon">
+                <img src="/assets/svg/masterCard.svg" alt="mastercard icon">
+                <img src="/assets/svg/discover.svg" alt="discover icon">
+                <img src="/assets/svg/american-express.svg" alt="american express icon">
+            </div>
+            <p class="copyright-text text-primary-400">
+                Copyright &copy; 2024 Shop Pty. Ltd.
+            </p>
+            </div>
+    </div>
+</footer>

@@ -1,0 +1,12 @@
+.not-found-div {
+    min-height: 50vh;
+}
+
+.not-found-div > * {
+    margin-bottom: var(--size-400);
+}
+
+.not-found-div > a {
+    width: 8rem;
+    text-align: center;
+}

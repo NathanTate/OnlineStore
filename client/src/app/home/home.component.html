@@ -1,0 +1,27 @@
+<div style="padding-block: 2rem;">  
+    <div class="container grid-wrapper">
+        <section class="sidebar">
+            <app-filter [subCategories]="subCategories" 
+            [colors]="availableColors" [brands]="availableBrands" (filterParams)="getProducts($event)"></app-filter>
+        </section>
+        <main class="products-grid">
+        <app-product-card class="bg-primary-400"
+            *ngFor="let product of products; let i = index" 
+            [product]="product" [index]="i">
+        </app-product-card>
+        <app-product-card class="bg-primary-400"
+            *ngFor="let product of products; let i = index" 
+            [product]="product" [index]="i">
+        </app-product-card>
+        <app-product-card class="bg-primary-400"
+            *ngFor="let product of products; let i = index" 
+            [product]="product" [index]="i">
+        </app-product-card>
+        <app-product-card class="bg-primary-400"
+            *ngFor="let product of products; let i = index" 
+            [product]="product" [index]="i">
+        </app-product-card>
+    </main>
+    </div>
+</div>
+

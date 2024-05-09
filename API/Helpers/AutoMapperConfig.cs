@@ -35,6 +35,7 @@ namespace API.Helpers
                 .ForMember(dest => dest.ProductItems, opt => opt.MapFrom(src => src.ProductItems));
 
                 config.CreateMap<Review, ReviewDto>().ReverseMap();
+                config.CreateMap<Rating, RatingDto>().ReverseMap();
             });
         }
     }

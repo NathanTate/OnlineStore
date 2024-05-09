@@ -37,25 +37,25 @@ namespace API.Data.Repositories.ProductRepositories
                 .Where(p => p.SubCategory.CategoryId == productParams.categoryId)
                                 .Include(p => p.ProductItems);
 
-            if(productParams.subCategoryId != default(int))
+            if(productParams.subCategoryIds.Count() != 0)
             {
-                products = products.Where(p => p.SubCategoryId == productParams.subCategoryId);
+                products = products.Where(p => productParams.subCategoryIds.Contains(p.SubCategoryId));
             }
             if(productParams.BrandId != default(int))
             {
                 products = products.Where(p => p.BrandId == productParams.BrandId);
             }
-            if (!string.IsNullOrEmpty(productParams.Color))
+            if (productParams.Colors.Count() != 0)
             {
-                products = products.Where(p => p.ProductItems.Any(p => p.Color == productParams.Color));
+                products = products.Where(p => p.ProductItems.Where(b => productParams.Colors.Contains(b.Color)).Any());
             }
-            if (productParams.PriceEnd != default(long))
+            if (productParams.PriceMax != default(long))
             {
-                products = products.Where(p => p.ProductItems.Any(p => p.OriginalPrice <= productParams.PriceEnd));
+                products = products.Where(p => p.ProductItems.Any(p => p.OriginalPrice <= productParams.PriceMax));
             }
-            if (productParams.PriceEnd != default(long))
+            if (productParams.PriceMin != default(long))
             {
-                products = products.Where(p => p.ProductItems.Any(p => p.OriginalPrice >= productParams.PriceStart));
+                products = products.Where(p => p.ProductItems.Any(p => p.OriginalPrice >= productParams.PriceMin));
             }
             var result = await products.AsNoTracking().ProjectTo<ProductResponse>(_mapper.ConfigurationProvider).ToListAsync();
             return result;

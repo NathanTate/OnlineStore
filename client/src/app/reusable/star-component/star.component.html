@@ -1,0 +1,14 @@
+<div class="rating text-primary-400" [ngStyle]="{'font-size': size}">
+<div class="rating__body">
+  <div *ngIf="disabled" class="disable">
+  </div>
+  <div class="rating__active" [ngStyle]="{'width': ((rating * 2) +'%')}"></div>
+    <div class="rating__items" role="list" (mouseleave)="onMouseLeave()">
+      <input *ngFor="let star of [].constructor(5); 
+      let i = index" (click)="submitRating(i + 1)"
+      (mouseenter)="onMouseEnter(i + 1)"
+      type="radio" class="rating__item" name="rating">
+    </div>
+</div>
+</div>
+
