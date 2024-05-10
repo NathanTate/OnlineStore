@@ -1,4 +1,4 @@
-﻿using API.Models.Product;
+﻿using API.Models.ProductModel;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 

@@ -1,7 +1,7 @@
 ﻿using API.Interfaces;
 using API.Models.DTO.ProductDTO;
 using API.Models.DTO.ProductDTO.Requests;
-using API.Models.Product;
+using API.Models.ProductModel;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using FluentResults;

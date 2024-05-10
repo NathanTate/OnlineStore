@@ -9,6 +9,8 @@ namespace API.Interfaces
         public ICategoryRepository CategoryRepository { get; }
         public IProductRepository ProductRepository { get; }
         public IReviewRepository ReviewRepository { get; }
+        public ICouponRepository CouponRepository { get; }
+        public ICartRepository CartRepository { get; }
         Task<bool> SaveChangesAsync();
     }
 }

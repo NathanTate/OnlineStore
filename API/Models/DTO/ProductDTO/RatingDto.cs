@@ -1,6 +1,4 @@
-﻿using API.Models.Product;
-
-namespace API.Models.DTO.ProductDTO
+﻿namespace API.Models.DTO.ProductDTO
 {
     public class RatingDto
     {

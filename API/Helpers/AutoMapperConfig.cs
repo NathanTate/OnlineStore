@@ -1,9 +1,14 @@
 ﻿using API.Models;
+using API.Models.Cart;
+using API.Models.Coupon;
+using API.Models.DTO.Cart.CartRequests;
+using API.Models.DTO.Cart.CartResponses;
+using API.Models.DTO.Coupon;
 using API.Models.DTO.ProductDTO;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
 using API.Models.DTO.UserDTO.Requests;
-using API.Models.Product;
+using API.Models.ProductModel;
 using AutoMapper;
 
 namespace API.Helpers
@@ -36,6 +41,13 @@ namespace API.Helpers
 
                 config.CreateMap<Review, ReviewDto>().ReverseMap();
                 config.CreateMap<Rating, RatingDto>().ReverseMap();
+
+                config.CreateMap<Coupon, CouponDto>().ReverseMap();
+
+                config.CreateMap<CartHeader, CartHeaderRequest>().ReverseMap();
+                config.CreateMap<CartHeader, CartHeaderResponse>().ReverseMap();
+                config.CreateMap<CartDetail, CartDetailRequest>().ReverseMap();
+                config.CreateMap<CartDetail, CartDetailResponse>().ReverseMap();
             });
         }
     }

@@ -1,4 +1,4 @@
-﻿using API.Models.Product;
+﻿using API.Models.ProductModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace API.Models.DTO.ProductDTO

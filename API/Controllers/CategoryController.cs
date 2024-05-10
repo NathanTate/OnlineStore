@@ -4,6 +4,7 @@ using API.Models.DTO.ProductDTO.Requests;
 using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 

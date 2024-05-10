@@ -1,6 +1,4 @@
-﻿using API.Models.Product;
-
-namespace API.Models.DTO.ProductDTO.Responses
+﻿namespace API.Models.DTO.ProductDTO.Responses
 {
     public class ProductResponse
     {

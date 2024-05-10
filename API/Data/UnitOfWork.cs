@@ -1,4 +1,6 @@
-﻿using API.Data.Repositories.ProductRepositories;
+﻿using API.Data.Repositories.CartRepository;
+using API.Data.Repositories.CouponRepositories;
+using API.Data.Repositories.ProductRepositories;
 using API.Data.Repositories.UserRepositories;
 using API.Interfaces;
 using API.Models;
@@ -24,6 +26,8 @@ namespace API.Data
         public ICategoryRepository CategoryRepository => new CategoryRepository(_dbContext, _mapper);
         public IProductRepository ProductRepository => new ProductRepository(_dbContext, _mapper);
         public IReviewRepository ReviewRepository => new ReviewRepository(_dbContext, _mapper);
+        public ICouponRepository CouponRepository => new CouponRepository(_dbContext, _mapper);
+        public ICartRepository CartRepository => new CartRepository(_dbContext, _mapper);
 
         public async Task<bool> SaveChangesAsync()
         {

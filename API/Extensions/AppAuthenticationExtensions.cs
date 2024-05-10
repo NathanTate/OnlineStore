@@ -26,12 +26,12 @@ namespace API.Extensions
             .AddDefaultTokenProviders();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
                         ValidateIssuerSigningKey = true,
                         ValidateLifetime = true,
                         ValidAudience = JwtOptions.Audience,
@@ -39,17 +39,17 @@ namespace API.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("JwtOptions:SecretKey"))),
                     };
 
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnMessageReceived = context =>
-                        {
-                            context.HttpContext.Request.Cookies.TryGetValue("token", out string token);
-                            return Task.FromResult(token);
-                        }
-                    };
-                })
-                .AddCookie();
-
+                    //options.Events = new JwtBearerEvents
+                    //{
+                    //    OnMessageReceived = context =>
+                    //    {
+                    //        context.HttpContext.Request.Cookies.TryGetValue("token", out string token);
+                    //        return Task.FromResult(token);
+                    //    }
+                    //};
+                });
+                //.AddCookie();
+                builder.Services.AddAuthorization();
             return builder;
         }
     }
