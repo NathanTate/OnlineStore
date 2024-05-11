@@ -3,12 +3,15 @@ using API.Models.DTO.Coupon;
 using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using static API.Utility.SD;
 
 namespace API.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = nameof(UserRoles.ADMIN))]
     public class CouponController : BaseAPIController
     {
         private readonly IUnitOfWork _uow;

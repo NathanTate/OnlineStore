@@ -1,12 +1,12 @@
 export interface Category {
-  Id: number;
+  id: number;
   categoryName: string;
   categoryDescription: string;
   subCategoriesDto: SubCategory[];
 }
 
 export interface SubCategory {
-  Id: number;
+  id: number;
   subCategoryName: string;
   image: string;
   subCategoryDescription: string;

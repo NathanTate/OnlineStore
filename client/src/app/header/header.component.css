@@ -124,6 +124,7 @@
     .primary-header {
         padding-block: var(--size-200);
         background-color: var(--clr-blue-accent-400);
+        border: none;
     }
 
     .action-icon {

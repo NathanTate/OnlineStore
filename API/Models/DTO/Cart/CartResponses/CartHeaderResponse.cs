@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public long Total { get; set; }
-        public long Discount { get; set; }
+        public decimal Total { get; set; }
+        public decimal Discount { get; set; }
         public string CouponCode { get; set; }
     }
 }

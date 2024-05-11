@@ -32,14 +32,14 @@ namespace API.Data.Repositories.CartRepository
                 return Result.Fail("This user has no cart");
             }
 
-            var cartDetails = await _dbContext.CartDetails.AsNoTracking().Where(d => d.CartHeaderId == cart.CartHeader.Id)
-                .Include(p => p.ProductItem).ToListAsync();
+            var cartDetails = await _dbContext.CartDetails.AsNoTracking().Where(d => d.CartHeaderId == cart.CartHeader.Id).Include(d => d.Product).ToListAsync();
+
             cart.CartDetails = _mapper.Map<IEnumerable<CartDetailResponse>>(cartDetails);
 
 
             foreach(var cartDetail in cart.CartDetails)
             {
-                cart.CartHeader.Total += (cartDetail.Count *  cartDetail.ProductItem.OriginalPrice);
+                cart.CartHeader.Total += (cartDetail.Count *  cartDetail.Product.OriginalPrice);
             }
 
             if(!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
@@ -87,7 +87,7 @@ namespace API.Data.Repositories.CartRepository
                 return Result.Fail("Cart doesn't exist");
             }
 
-            var product = await _dbContext.ProductItem.FindAsync(model.ProductItemId);
+            var product = await _dbContext.Products.FindAsync(model.ProductId);
             if(product == null)
             {
                 return Result.Fail("Failed adding product to cart");
@@ -95,7 +95,7 @@ namespace API.Data.Repositories.CartRepository
 
             var cartDetailsDb = await _dbContext.CartDetails
                 .FirstOrDefaultAsync(d => d.CartHeaderId == cartHeaderDb.Id 
-                && d.ProductItem.Id == model.ProductItemId);
+                && d.ProductId == model.ProductId);
             if(cartDetailsDb == null) 
             {
                 model.CartHeaderId = cartHeaderDb.Id;

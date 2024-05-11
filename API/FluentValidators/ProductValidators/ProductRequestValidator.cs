@@ -14,7 +14,8 @@ namespace API.FluentValidators.ProductValidators
             RuleFor(p => p.Description).NotEmpty();
             RuleFor(p => p.SubCategoryId).NotEmpty();
             RuleFor(p => p.BrandId).NotEmpty();
-            RuleFor(p => p.ProductItemsDto).NotEmpty();
+            RuleFor(p => p.SalePrice).NotEmpty();
+            RuleFor(P => P.Color).NotEmpty();
             RuleFor(p => p.ProductSpecificationsDto).NotEmpty();
         }
     }

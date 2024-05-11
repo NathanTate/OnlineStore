@@ -11,8 +11,8 @@ namespace API.Models.Cart
         public int CartHeaderId { get; set; }
         public CartHeader CartHeader { get; set; }
         [Required]
-        public int ProductItemId { get; set; }
-        public ProductItem ProductItem { get; set; }
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
         public int Count { get; set; }
     }
 }

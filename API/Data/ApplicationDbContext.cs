@@ -1,6 +1,7 @@
 ﻿using API.Models;
 using API.Models.Cart;
 using API.Models.Coupon;
+using API.Models.Order;
 using API.Models.ProductModel;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -16,14 +17,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Address> Addresses { get; set; }
     public DbSet<Product> Products { get; set; }
-    public DbSet<ProductItem> ProductItem { get; set; }
     public DbSet<ProductCategory> ProductCategories { get; set; }
     public DbSet<ProductSubCategory> ProductSubCategories { get; set; }
+    public DbSet<ProductImage> ProductImages { get; set; }
     public DbSet<ProductSpecification> ProductSpecifications { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<Coupon> Coupons { get; set; }
     public DbSet<CartHeader> CartHeaders { get; set; }
     public DbSet<CartDetail> CartDetails { get; set; }
+    public DbSet<OrderHeader> OrderHeaders { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder builder)

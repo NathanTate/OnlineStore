@@ -1,4 +1,7 @@
-<div style="padding-block: 2rem;">  
+<div class="container container-md-none">
+    <app-ad-banner [imageUrl]="'/assets/images/banner-small.png'"></app-ad-banner>  
+</div>
+<div style="padding-block: 2rem;">
     <div class="container grid-wrapper">
         <section class="sidebar">
             <app-filter [subCategories]="subCategories" 
@@ -21,7 +24,7 @@
             *ngFor="let product of products; let i = index" 
             [product]="product" [index]="i">
         </app-product-card>
-    </main>
-    </div>
+        </main>
+    </div>  
 </div>
 

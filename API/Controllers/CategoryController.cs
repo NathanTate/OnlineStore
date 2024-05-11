@@ -7,9 +7,11 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using static API.Utility.SD;
 
 namespace API.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = nameof(UserRoles.ADMIN))]
     public class CategoryController : BaseAPIController
     {
         private readonly IUnitOfWork _uow;
@@ -48,12 +50,14 @@ namespace API.Controllers
             return CreatedAtAction(nameof(CreateCategory), new { categoryId = result.Value.Id}, result.Value);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetCategories")]
         public async Task<ActionResult<IEnumerable<ProductCategoryResponse>>> GetCategories()
         {
             return Ok(await _uow.CategoryRepository.GetAllCategoryAsync());
         }
 
+        [AllowAnonymous]
         [HttpGet("GetCategory/{id}")]
         public async Task<ActionResult<ProductCategoryResponse>> GetCategory(int id)
         {
@@ -144,12 +148,14 @@ namespace API.Controllers
             return CreatedAtAction(nameof(CreateSubCategory), new { subCategoryId = result.Value.Id}, result.Value);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetSubCategories/{id}")]
         public async Task<ActionResult<IEnumerable<ProductSubCategoryDto>>> GetSubCategories(int id = 1)
         {
             return Ok(await _uow.CategoryRepository.GetAllSubCategoryAsync(id));
         }
 
+        [AllowAnonymous]
         [HttpGet("GetSubCategory/{id}")]
         public async Task<ActionResult<ProductSubCategoryDto>> GetSubCategory(int id)
         {

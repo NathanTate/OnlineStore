@@ -1,8 +1,8 @@
-﻿using API.Models.Order;
-using API.Models.ProductModel;
+﻿using API.Models.ProductModel;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Models.Coupon
+namespace API.Models.Order
 {
     public class OrderDetail
     {
@@ -15,5 +15,16 @@ namespace API.Models.Coupon
         [Required]
         public int ProductId { get; set; }
         public Product Product { get; set; }
+
+        [Required]
+        public int Count { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        public string ProductName { get; set; }
+
+        [Required]
+        [Precision(16, 2)]
+        public decimal ProductPrice { get; set; }
     }
 }

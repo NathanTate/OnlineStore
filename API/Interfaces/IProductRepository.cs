@@ -12,5 +12,6 @@ namespace API.Interfaces
         Task<Result<ProductResponse>> GetProductAsync(int id);
         Task<Result> UpdateProductAsync(ProductRequest model);
         Task<Result> DeleteProductAsync(int id);
+        Task<Result> DeletePhotoAsync(int productId, int photoId);
     }
 }

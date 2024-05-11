@@ -1,5 +1,4 @@
-﻿using API.Models.Coupon;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace API.Models.Order
@@ -39,6 +38,10 @@ namespace API.Models.Order
 
         [Required]
         public int AddressId { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string OrderStatus { get; set; }
 
         [Required]
         public DateTime OrderDate { get; set; }

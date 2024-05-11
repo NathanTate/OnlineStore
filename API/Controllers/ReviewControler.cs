@@ -3,11 +3,13 @@ using API.Models.DTO.ProductDTO;
 using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace API.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class ReviewControler : BaseAPIController
     {
         private readonly IUnitOfWork _uow;
@@ -46,6 +48,7 @@ namespace API.Controllers
             return CreatedAtAction(nameof(CreateReview), new {reviewId = review.Value.Id}, review.Value);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetReviews")]
         public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviews()
         {

@@ -22,10 +22,12 @@ namespace API.Extensions
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            builder.Services.AddScoped<IPhotoService, PhotoService>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
             builder.Services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
+            builder.Services.Configure<CloudinaryOptions>(configuration.GetSection("CloudinarySettings"));
 
             return builder;
         }

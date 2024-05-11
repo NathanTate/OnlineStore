@@ -5,6 +5,7 @@ using API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,8 @@ app.UseCors(opt => opt
     .AllowAnyHeader()
     .AllowAnyMethod()
     .WithOrigins("https://localhost:4200"));
+
+StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripeSecretKey");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

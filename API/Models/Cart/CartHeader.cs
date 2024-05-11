@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Models.Cart
 {
@@ -9,8 +10,12 @@ namespace API.Models.Cart
         [Required]
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
-        public long Total { get; set; }
-        public long Discount { get; set; }
+
+        [Precision(16, 2)]
+        public decimal Total { get; set; }
+
+        [Precision(16, 2)]
+        public decimal Discount { get; set; }
 
         [MaxLength(50)]
         public string CouponCode { get; set; }

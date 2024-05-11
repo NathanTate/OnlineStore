@@ -5,11 +5,14 @@ using API.Models.DTO.ProductDTO.Responses;
 using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using static API.Utility.SD;
 
 namespace API.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = $"{nameof(UserRoles.ADMIN)}, {nameof(UserRoles.MANAGER)}")]
     public class ProductController : BaseAPIController
     {
         private readonly IUnitOfWork _uow;
@@ -43,12 +46,14 @@ namespace API.Controllers
             return CreatedAtAction(nameof(CreateProduct), new {productId = result.Value.Id }, result.Value);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetProducts")]
         public async Task<ActionResult<IEnumerable<ProductResponse>>> GetProducts([FromQuery] ProductParams productParams)
         {
             return Ok(await _uow.ProductRepository.GetProductsAsync(productParams));
         }
 
+        [AllowAnonymous]
         [HttpGet("GetProduct{id}")]
         public async Task<ActionResult<ProductResponse>> GetProduct(int id)
         {
@@ -92,10 +97,25 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpDelete("DeleteProduct{id}")]
+        [HttpDelete("DeleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             Result result = await _uow.ProductRepository.DeleteProductAsync(id);
+
+            if(result.IsFailed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            await _uow.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("DeletePhoto/{productId}")]
+        public async Task<IActionResult> DeletePhoto(int productId, [FromQuery] int photoId)
+        {
+            Result result = await _uow.ProductRepository.DeletePhotoAsync(productId, photoId);
 
             if(result.IsFailed)
             {

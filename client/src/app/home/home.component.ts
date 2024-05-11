@@ -37,8 +37,8 @@ export class HomeComponent implements OnInit{
     this.productService.getProducts(filterParams).subscribe({
       next: (productsData) => {
         this.products = productsData;
-        this.availableColors = new Set<string>(this.products.flatMap(p => p.productItems.map(p => p.color)))
-        this.availableBrands = new Set<string>(this.products.flatMap(p => p.brand.brandName))
+        this.availableColors = new Set<string>(this.products.map(p => p.color));
+        this.availableBrands = new Set<string>(this.products.flatMap(p => p.brand.brandName));
         this.products.forEach(p => {
           p.productImages.push({id: 0, url: 'https://shorturl.at/kmJMN', isMain: true})
         })

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Models.Coupon
 {
@@ -7,7 +8,11 @@ namespace API.Models.Coupon
         [Key]
         [MaxLength(50)]
         public string CouponCode { get; set; }
-        public long DiscountAmount { get; set; }
-        public long MinPrice { get; set; }
+
+        [Precision(16, 2)]
+        public decimal DiscountAmount { get; set; }
+
+        [Precision(16, 2)]
+        public decimal MinPrice { get; set; }
     }
 }

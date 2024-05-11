@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Models.ProductModel
 {
@@ -12,6 +13,17 @@ namespace API.Models.ProductModel
         public string Name { get; set; }
 
         [Required]
+        [Precision(16, 2)]
+        public decimal OriginalPrice { get; set; }
+
+        [Precision(16, 2)]
+        public decimal SalePrice { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string Color { get; set; }
+
+        [Required]
         public string Description { get; set; }
 
         [Range(10, 50)]
@@ -23,7 +35,6 @@ namespace API.Models.ProductModel
         public int SubCategoryId { get; set; }
         public ProductSubCategory SubCategory { get; set; }
 
-        public List<ProductItem> ProductItems { get; set; } = new();
         public List<ProductImage> ProductImages { get; set; } = new();
         public List<ProductSpecification> ProductSpecifications { get; set; } = new();
         public List<Review> Reviews { get; set; } = new();

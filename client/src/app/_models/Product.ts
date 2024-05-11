@@ -5,7 +5,9 @@ export interface Product {
   productRating: number;
   totalReviews: number;
   brand: Brand;
-  productItems: ProductItem[];
+  originalPrice: number;
+  salePrice: number;
+  color: string;
   productImages: ProductImage[];
   productSpecifications: ProductSpecification[];
   reviews: Review[];
@@ -15,13 +17,6 @@ interface Brand {
   id: number;
   brandName: string;
   brandDescription: string;
-}
-
-interface ProductItem {
-  originalPrice: number;
-  salePrice: number;
-  productCode: string;
-  color: string;
 }
 
 interface ProductImage {

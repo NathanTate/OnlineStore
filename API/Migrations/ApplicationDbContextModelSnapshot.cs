@@ -158,14 +158,14 @@ namespace API.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductItemId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CartHeaderId");
 
-                    b.HasIndex("ProductItemId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("CartDetails");
                 });
@@ -182,11 +182,13 @@ namespace API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<long>("Discount")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Discount")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
 
-                    b.Property<long>("Total")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Total")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -205,18 +207,120 @@ namespace API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<long>("DiscountAmount")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("DiscountAmount")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
 
-                    b.Property<long>("MinPrice")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("MinPrice")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
 
                     b.HasKey("CouponCode");
 
                     b.ToTable("Coupons");
                 });
 
-            modelBuilder.Entity("API.Models.Product.Brand", b =>
+            modelBuilder.Entity("API.Models.Order.OrderDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderHeaderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<decimal>("ProductPrice")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderHeaderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderDetails");
+                });
+
+            modelBuilder.Entity("API.Models.Order.OrderHeader", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CouponCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Discount")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("OrderTotal")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
+
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("StripeSessionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderHeaders");
+                });
+
+            modelBuilder.Entity("API.Models.ProductModel.Brand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -238,7 +342,7 @@ namespace API.Migrations
                     b.ToTable("Brand");
                 });
 
-            modelBuilder.Entity("API.Models.Product.Product", b =>
+            modelBuilder.Entity("API.Models.ProductModel.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -249,6 +353,11 @@ namespace API.Migrations
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -258,8 +367,16 @@ namespace API.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<decimal>("OriginalPrice")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
+
                     b.Property<int>("ProductRating")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("SalePrice")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
 
                     b.Property<int>("SubCategoryId")
                         .HasColumnType("int");
@@ -276,7 +393,7 @@ namespace API.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("API.Models.Product.ProductCategory", b =>
+            modelBuilder.Entity("API.Models.ProductModel.ProductCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -301,7 +418,7 @@ namespace API.Migrations
                     b.ToTable("ProductCategories");
                 });
 
-            modelBuilder.Entity("API.Models.Product.ProductImage", b =>
+            modelBuilder.Entity("API.Models.ProductModel.ProductImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -325,44 +442,10 @@ namespace API.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImage");
+                    b.ToTable("ProductImages");
                 });
 
-            modelBuilder.Entity("API.Models.Product.ProductItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<long>("OriginalPrice")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ProductCode")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<long>("SalePrice")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductItem");
-                });
-
-            modelBuilder.Entity("API.Models.Product.ProductSpecification", b =>
+            modelBuilder.Entity("API.Models.ProductModel.ProductSpecification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -390,7 +473,7 @@ namespace API.Migrations
                     b.ToTable("ProductSpecifications");
                 });
 
-            modelBuilder.Entity("API.Models.Product.ProductSubCategory", b =>
+            modelBuilder.Entity("API.Models.ProductModel.ProductSubCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -425,7 +508,7 @@ namespace API.Migrations
                     b.ToTable("ProductSubCategories");
                 });
 
-            modelBuilder.Entity("API.Models.Product.Rating", b =>
+            modelBuilder.Entity("API.Models.ProductModel.Rating", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -451,7 +534,7 @@ namespace API.Migrations
                     b.ToTable("Rating");
                 });
 
-            modelBuilder.Entity("API.Models.Product.Review", b =>
+            modelBuilder.Entity("API.Models.ProductModel.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -642,15 +725,15 @@ namespace API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Models.Product.ProductItem", "ProductItem")
+                    b.HasOne("API.Models.ProductModel.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductItemId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CartHeader");
 
-                    b.Navigation("ProductItem");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("API.Models.Cart.CartHeader", b =>
@@ -664,15 +747,34 @@ namespace API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("API.Models.Product.Product", b =>
+            modelBuilder.Entity("API.Models.Order.OrderDetail", b =>
                 {
-                    b.HasOne("API.Models.Product.Brand", "Brand")
+                    b.HasOne("API.Models.Order.OrderHeader", "OrderHeader")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderHeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.ProductModel.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrderHeader");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("API.Models.ProductModel.Product", b =>
+                {
+                    b.HasOne("API.Models.ProductModel.Brand", "Brand")
                         .WithMany("Products")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Models.Product.ProductSubCategory", "SubCategory")
+                    b.HasOne("API.Models.ProductModel.ProductSubCategory", "SubCategory")
                         .WithMany("Products")
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -683,9 +785,9 @@ namespace API.Migrations
                     b.Navigation("SubCategory");
                 });
 
-            modelBuilder.Entity("API.Models.Product.ProductImage", b =>
+            modelBuilder.Entity("API.Models.ProductModel.ProductImage", b =>
                 {
-                    b.HasOne("API.Models.Product.Product", "Product")
+                    b.HasOne("API.Models.ProductModel.Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -694,20 +796,9 @@ namespace API.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("API.Models.Product.ProductItem", b =>
+            modelBuilder.Entity("API.Models.ProductModel.ProductSpecification", b =>
                 {
-                    b.HasOne("API.Models.Product.Product", "Product")
-                        .WithMany("ProductItems")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("API.Models.Product.ProductSpecification", b =>
-                {
-                    b.HasOne("API.Models.Product.Product", "Product")
+                    b.HasOne("API.Models.ProductModel.Product", "Product")
                         .WithMany("ProductSpecifications")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -716,9 +807,9 @@ namespace API.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("API.Models.Product.ProductSubCategory", b =>
+            modelBuilder.Entity("API.Models.ProductModel.ProductSubCategory", b =>
                 {
-                    b.HasOne("API.Models.Product.ProductCategory", "Category")
+                    b.HasOne("API.Models.ProductModel.ProductCategory", "Category")
                         .WithMany("SubCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -727,7 +818,7 @@ namespace API.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("API.Models.Product.Rating", b =>
+            modelBuilder.Entity("API.Models.ProductModel.Rating", b =>
                 {
                     b.HasOne("API.Models.ApplicationUser", "User")
                         .WithMany()
@@ -738,19 +829,19 @@ namespace API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("API.Models.Product.Review", b =>
+            modelBuilder.Entity("API.Models.ProductModel.Review", b =>
                 {
                     b.HasOne("API.Models.ApplicationUser", null)
                         .WithMany("UserReviews")
                         .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("API.Models.Product.Product", "Product")
+                    b.HasOne("API.Models.ProductModel.Product", "Product")
                         .WithMany("Reviews")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Models.Product.Rating", "Rating")
+                    b.HasOne("API.Models.ProductModel.Rating", "Rating")
                         .WithMany()
                         .HasForeignKey("RatingId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -819,28 +910,31 @@ namespace API.Migrations
                     b.Navigation("UserReviews");
                 });
 
-            modelBuilder.Entity("API.Models.Product.Brand", b =>
+            modelBuilder.Entity("API.Models.Order.OrderHeader", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("API.Models.ProductModel.Brand", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("API.Models.Product.Product", b =>
+            modelBuilder.Entity("API.Models.ProductModel.Product", b =>
                 {
                     b.Navigation("ProductImages");
-
-                    b.Navigation("ProductItems");
 
                     b.Navigation("ProductSpecifications");
 
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("API.Models.Product.ProductCategory", b =>
+            modelBuilder.Entity("API.Models.ProductModel.ProductCategory", b =>
                 {
                     b.Navigation("SubCategories");
                 });
 
-            modelBuilder.Entity("API.Models.Product.ProductSubCategory", b =>
+            modelBuilder.Entity("API.Models.ProductModel.ProductSubCategory", b =>
                 {
                     b.Navigation("Products");
                 });

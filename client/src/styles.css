@@ -386,6 +386,9 @@ body {
   .display-md-none {
     display: none; 
   }
+  .container.container-md-none {
+    width: 100%;
+  }
 }
 
 @media (max-width: 30rem) {

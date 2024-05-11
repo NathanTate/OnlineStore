@@ -19,6 +19,7 @@ import { ProductCardComponent } from './reusable/product-card/product-card.compo
 import { StarComponent } from './reusable/star-component/star.component';
 import { FilterComponent } from './reusable/filter/filter.component';
 import { DropdownDirective } from './_directives/dropdown.directive';
+import { AdBannerComponent } from './reusable/ad-banner/ad-banner.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { DropdownDirective } from './_directives/dropdown.directive';
     ProductCardComponent,
     StarComponent,
     FilterComponent,
-    DropdownDirective
+    DropdownDirective,
+    AdBannerComponent
   ],
   imports: [
     BrowserModule,

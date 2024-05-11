@@ -18,7 +18,7 @@
     </div>
     <ul role="list" class="flow" style="--flow-spacer: 0.4rem" [attr.data-visible]="isVisible.category">
       <li *ngFor="let subCategory of subCategories">
-        <input type="checkbox" [value]="subCategory.Id" (change)="onCheckChange($event, 'subCategories')"><label>{{subCategory.subCategoryName}}</label>
+        <input type="checkbox" [value]="subCategory.id" (change)="onCheckChange($event, 'subCategories')"><label>{{subCategory.subCategoryName}}</label>
       </li>
     </ul>
   </div>

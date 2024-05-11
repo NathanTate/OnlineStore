@@ -11,6 +11,7 @@ namespace API.Interfaces
         public IReviewRepository ReviewRepository { get; }
         public ICouponRepository CouponRepository { get; }
         public ICartRepository CartRepository { get; }
+        public IOrderRepository OrderRepository { get; }
         Task<bool> SaveChangesAsync();
     }
 }
