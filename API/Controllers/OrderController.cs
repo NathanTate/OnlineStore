@@ -1,4 +1,5 @@
 ﻿using API.Extensions;
+using API.Helpers.OrderParameters;
 using API.Interfaces;
 using API.Models.DTO.Cart.CartResponses;
 using API.Models.DTO.Order;
@@ -51,9 +52,9 @@ namespace API.Controllers
         }
 
         [HttpGet("GetOrders")]
-        public async Task<ActionResult<IEnumerable<OrderHeaderDto>>> GetOrders()
+        public async Task<ActionResult<IEnumerable<OrderHeaderDto>>> GetOrders([FromQuery] OrderParams orderParams)
         {
-            return Ok(await _uow.OrderRepository.GetOrdersAsync(User.GetUserId()));
+            return Ok(await _uow.OrderRepository.GetOrdersAsync(orderParams, User.GetUserId()));
         }
 
         [HttpGet("GetOrder{id}")]

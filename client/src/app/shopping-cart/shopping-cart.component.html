@@ -1,0 +1,69 @@
+<div class="container padding-block-500">
+  <h1 class="fs-secondary-heading fw-bold padding-block-500">Shopping Cart</h1>
+  <div class="cart grid-container">
+    <div>
+      <div class="cart__labels">
+        <p class="fw-bold">Item</p>
+        <div class="cart__labels-right">
+          <p class="fw-bold">Price</p>
+          <p class="fw-bold">Quantity</p>
+          <p class="fw-bold">Subtotal</p>
+          <button style="opacity: 0;"></button>
+        </div>
+      </div>
+      <div class="cart__items" *ngIf="cart">
+        <hr />
+        <ng-template [ngIf]="cart.cartDetails.length > 0" [ngIfElse]="emptyCart">
+          <app-cart-item *ngFor="let item of cart.cartDetails" [item]="item"></app-cart-item>
+        </ng-template>
+      </div>
+      <div class="controls__group">
+        <button class="cart__button continue text-primary-400">Continue Shopping</button>
+        <button (click)="removeAllItems()" class="cart__button clear bg-primary-900 text-primary-100">Clear Shopping Cart</button>
+      </div>
+    </div>
+    <div>
+    <div class="cart__summary bg-primary-200 flow" style="--flow-spacer: 0.5rem">
+      <h2 class="fw-bold fs-summary">Summary</h2>
+      <div>
+        <h3 class="fs-secondary-title">Apply Discount Code</h3>
+      </div>
+      <hr>
+      <div *ngIf="cart" class="checkout-preview fw-bold">
+        <div>
+          <p>Subtotal</p>
+          <p>${{cart.cartHeader.total}}.00</p>
+        </div>
+        <div>
+          <p>Shipping</p>
+          <p>$21.00</p>
+        </div>
+        <div>
+          <p>Tax</p>
+          <p>$1.91</p>
+        </div>
+        <div>
+          <p>GST (10%)</p>
+          <p>$1.91</p>
+        </div>
+        <div>
+          <p>Order Total</p>
+          <p>${{cart.cartHeader.total - 21}}.00</p>
+        </div>
+        <div class="checkout-preview__buttons">
+          <button routerLink="/checkout" [disabled]="cart.cartDetails.length <= 0" class="button bg-blue-accent-400">Proceed to Checkout</button>
+          <div class="checkout-preview__logo">
+            <img src="/assets/svg/zip.svg" alt="">
+            <span style="font-size: 24px; color: #00AEB8;">|</span>
+            <p style="font-size: var(--fs-300);">own it now, up to 6 months interest free learn more</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyCart>
+  <h2 class="fs-secondary-title fw-bold padding-block-500">Cart is empty...</h2>
+</ng-template>

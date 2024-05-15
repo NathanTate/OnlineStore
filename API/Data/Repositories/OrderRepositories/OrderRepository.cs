@@ -1,4 +1,6 @@
-﻿using API.Interfaces;
+﻿using API.Helpers;
+using API.Helpers.OrderParameters;
+using API.Interfaces;
 using API.Models;
 using API.Models.DTO.Cart.CartResponses;
 using API.Models.DTO.Order;
@@ -6,6 +8,7 @@ using API.Models.DTO.Order.Requests;
 using API.Models.Order;
 using API.Utility;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentEmail.Core;
 using FluentResults;
 using Microsoft.AspNetCore.Identity;
@@ -107,28 +110,29 @@ namespace API.Data.Repositories.OrderRepositories
             if(paymentIntent.Status == "succeeded") 
             {
                 orderHeader.PaymentIntentId = paymentIntent.Id;
-                orderHeader.OrderStatus = nameof(SD.OrderStatus.APPROVED);
+                orderHeader.OrderStatus = nameof(OrderStatus.APPROVED);
             }
 
             return Result.Ok();
         }
 
-        public async Task<IEnumerable<OrderHeaderDto>> GetOrdersAsync(string userId)
+        public async Task<PagedList<OrderHeaderDto>> GetOrdersAsync(OrderParams orderParams, string userId)
         {
-            IEnumerable<OrderHeaderDto> orders;
+            IQueryable<OrderHeaderDto> ordersQuery;
             var user = await _dbContext.Users.FindAsync(userId);
             if(await _userManager.IsInRoleAsync(user, nameof(UserRoles.ADMIN)))
             {
-                orders = _mapper.Map<IEnumerable<OrderHeaderDto>>(await _dbContext.OrderHeaders.AsNoTracking()
-                    .Include(h => h.OrderDetails).ToListAsync());
+                ordersQuery = _dbContext.OrderHeaders.AsNoTracking()
+                    .Include(h => h.OrderDetails).ProjectTo<OrderHeaderDto>(_mapper.ConfigurationProvider);
             }
             else
             {
-                orders = _mapper.Map<IEnumerable<OrderHeaderDto>>(await _dbContext.OrderHeaders.AsNoTracking()
-                    .Where(h => h.UserId == userId).Include(h => h.OrderDetails).ToListAsync());
+                ordersQuery = _dbContext.OrderHeaders.AsNoTracking()
+                    .Where(h => h.UserId == userId).Include(h => h.OrderDetails)
+                    .ProjectTo<OrderHeaderDto>(_mapper.ConfigurationProvider);
             }
 
-            return orders;
+            return await PagedList<OrderHeaderDto>.CreateAsync(ordersQuery, orderParams.Page, orderParams.PageSize);
         }
 
         public async Task<Result<OrderHeaderDto>> GetOrderAsync(int orderHeaderId, string userId)

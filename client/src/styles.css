@@ -197,6 +197,12 @@ textarea:not([rows]) {
   margin-top: var(--flow-spacer, 1.25em);
 }
 
+.justify-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .button {
   align-items: center;
   justify-content: center;
@@ -215,15 +221,14 @@ textarea:not([rows]) {
 }
 
 .button[data-icon="true"] {
-  display: flex;
   border: none;
   padding: 0;
 }
 
-.button[data-icon="true"] img{
+/* .button[data-icon="true"] img{
   border: none;
   padding: 0;
-}
+} */
 
 .mobile-nav-toggle {
   display: none;
@@ -377,7 +382,7 @@ body {
     grid-auto-columns: 1fr;
   }
 
-  .button:is(:hover, :focus-visible) {
+  .button:not([disabled]):is(:hover, :focus-visible) {
     opacity: 0.85;
   }
 }

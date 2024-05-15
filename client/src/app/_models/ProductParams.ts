@@ -8,12 +8,17 @@
 //   colors: string[];
 // }
 
+
 export class ProductParams {
-  [key: string]: number | number[] | string[];
+  [key: string]: number | number[] | string[] | string;
   categoryId: number = 2;
   subCategories: number[] = [];
   priceStart: number = 0;
   priceEnd: number = 0;
   brands: number[] = [];
   colors: string[] = [];
+  page: number;
+  pageSize: number;
+  sortBy: string;
+  sortColumn: string;
 }

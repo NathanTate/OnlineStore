@@ -1,3 +1,10 @@
+export interface ProductResponse {
+  items: Product[],
+  page: number,
+  pageSize: number,
+  totalCount: number
+}
+
 export interface Product {
   id: number;
   name: string;

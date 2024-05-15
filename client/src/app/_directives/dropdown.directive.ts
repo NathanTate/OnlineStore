@@ -4,7 +4,7 @@ import { Directive, ElementRef, HostBinding, HostListener } from "@angular/core"
   selector: '[appDropdown]'
 })
 export class DropdownDirective{
-  @HostBinding('attr.data-visible') isOpen = false;
+  @HostBinding('class.open') isOpen = false;
 
   constructor(private elRef: ElementRef<HTMLElement>) {
   }

@@ -42,13 +42,42 @@
   gap: var(--size-200);
 }
 
+.card__price_cart {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.card__cart-button {
+  border: none;
+  padding: clamp(0.5rem, 5vw, 0.75rem);
+  font-size: 1rem;
+  color: rgb(31, 202, 31);
+  background-color: transparent;
+  border-radius: 4px;
+}
+
 :host a {
   text-decoration: none;
 }
 
-@media (min-width: 48rem) {
+@media (hover:hover) {
   :host:hover {
-    scale: 1.1;
     box-shadow: 6px 6px 8px -8px gray;
+  }
+  .card__cart-button:hover {
+    background-color: rgb(222, 240, 222);
+  }
+}
+
+@media (min-width: 48rem) {
+  .card__cart-button {
+    padding: 0.4rem;
+  }
+}
+
+@media (max-width: 455px) {
+  .card__cart-button {
+    font-size: 1.25rem;
   }
 }

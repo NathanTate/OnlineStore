@@ -1,0 +1,133 @@
+.section {
+  position: relative;
+  font-size: var(--fs-300);
+  padding-block: var(--size-500);
+  overflow: hidden;
+}
+
+.fs-primary-heading {
+  font-size: var(--fs-800);
+}
+
+.section img:not([class]) {
+  object-fit: contain;
+  width: 100%;
+  max-height: 175px;
+}
+
+.section--dark {
+  background-color: var(--clr-primary-900);
+  color: var(--clr-primary-100);
+}
+
+.section--light {
+  background-color: var(--clr-primary-100);
+  color: var(--clr-primary-900);
+}
+
+.two-columns {
+  display: grid;
+  align-items: center;
+  grid-template-areas: 
+  'image'
+  'text';
+  gap: 2rem;
+}
+
+.section__text {
+  grid-area: text;
+}
+
+.section__img {
+  grid-area: image;
+}
+
+.title-group {
+  display: flex;
+  flex-wrap: wrap;
+  text-wrap: balance;
+  gap: 1rem;
+}
+
+.decoration-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  --size: 36px;
+  width: var(--size);
+  height: var(--size);
+  background-color: var(--clr-blue-accent-400);
+  border-radius: 50px 50px 0;
+  flex-shrink: 0;
+}
+
+.decoration-wrapper :is(img.svg, fa-icon) {
+  filter: brightness(0) invert(1);
+  max-width: 1.125rem;
+  font-size: 1.125rem;
+}
+
+@media (min-width: 42rem) {
+  .section {
+    padding-block: var(--size-700);
+  }
+  .section > .container {
+    --max-width: 1120px; --padding: 2rem;
+  } 
+  .two-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .section:nth-child(even) .two-columns {
+    grid-template-areas: 'text image';
+  }
+  .section:nth-child(odd) .two-columns {
+    grid-template-areas: 'image text';
+  }
+  .section img:not([class]) {
+    max-height: 350px;
+  }
+  .section .full-width img {
+    object-fit: contain;
+  }
+
+}
+
+@media (min-width: 54rem) {
+  .section {
+    font-size: var(--fs-600);
+  }
+
+  .fs-primary-heading {
+    font-size: var(--fs-900);
+  }
+
+  .decoration-wrapper {
+    --size: 50px;
+  }
+
+  .decoration-wrapper :is(img.svg, fa-icon) {
+    max-width: 1.625rem;
+    font-size: 1.625rem;
+  }
+}
+
+@media (max-width: 42rem) {
+  .section:nth-child(1) {
+    padding-top: 0;
+  }
+  
+  .section__text.mt-sm{
+    margin-top: 175px;
+  }
+  
+  .section__text.mt-sm + .section__image img {
+    object-fit: cover;
+  }
+  
+  .section__image.full-width {
+    position: absolute;
+    top: 0;
+    left: -2rem;
+    right: -2rem;
+  }
+}

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../_services/product.service';
-import { Product } from '../_models/Product';
+import { ProductResponse } from '../_models/Product';
 import { ProductParams } from '../_models/ProductParams';
 import { SubCategory } from '../_models/Categories';
 
@@ -10,14 +10,17 @@ import { SubCategory } from '../_models/Categories';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit{
-  products: Product[] = [];
+  productResponse: ProductResponse;
   productParams: ProductParams;
+  page: number = 1;
+  pageSize: number = 20;
+  loading: boolean = true;
   subCategories: SubCategory[] = [];
   availableColors: Set<string> = new Set<string>();
   availableBrands: Set<string> = new Set<string>();
 
   constructor(private productService: ProductService) {
-
+    this.productParams = productService.getProductParams();
   }
   
   ngOnInit(): void {
@@ -33,16 +36,33 @@ export class HomeComponent implements OnInit{
     })
   }
 
-  getProducts(filterParams?: ProductParams) {
-    this.productService.getProducts(filterParams).subscribe({
+  getProducts() {
+    this.loading = true;
+    this.productParams.page = this.page;
+    this.productParams.pageSize = this.pageSize;
+    this.productService.getProducts(this.productParams).subscribe({
       next: (productsData) => {
-        this.products = productsData;
-        this.availableColors = new Set<string>(this.products.map(p => p.color));
-        this.availableBrands = new Set<string>(this.products.flatMap(p => p.brand.brandName));
-        this.products.forEach(p => {
+        this.productResponse = productsData;
+        this.loading = false;
+        this.availableColors = new Set<string>(this.productResponse.items.map(p => p.color));
+        this.availableBrands = new Set<string>(this.productResponse.items.flatMap(p => p.brand.brandName));
+        this.productResponse.items.forEach(p => {
           p.productImages.push({id: 0, url: 'https://shorturl.at/kmJMN', isMain: true})
         })
       }
     })
+  }
+
+  pageChanged(page: number) {
+    if(this.productParams.page !== page) {
+      this.page = page;
+      this.productParams.page = page;
+      this.getProducts();
+    }
+  }
+
+  setFilters(productParams: ProductParams) {
+    this.productParams = productParams;
+    this.getProducts();
   }
 }

@@ -1,0 +1,29 @@
+<div class="item">
+  <div class="item__details">
+    <img [src]="item.product.productImages[0]?.url ?? '/assets/images/images.jfif'" alt="some image">
+    <p>{{item.product.name}}: {{item.product.description}}</p>
+  </div>
+  <div class="item__controls">
+    <div class="price" >
+      <h4 class="fw-bold">Price</h4>
+      <p class="fs-helper fw-bold">${{item.product.originalPrice}}.00</p>
+    </div>
+    <div class="quantity">
+      <h4 class="fw-bold">Quantity</h4>
+      <input type="number" (ngModelChange)="onChange($event)" [(ngModel)]="count" min="1" value="1" class="quantity_input bg-primary-200 fw-bold">
+    </div>
+    <div class="subtotal"> 
+      <h4 class="fw-bold">Subtotal</h4>
+      <p class="fs-helper fw-bold">$13,049.00</p>
+    </div>
+    <div class="item__edit-group">
+      <button (click)="removeFromCart()">
+        <fa-icon [icon]="removeIcon"></fa-icon>
+      </button>
+      <button>
+        <fa-icon [icon]="likeIcon"></fa-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<hr>

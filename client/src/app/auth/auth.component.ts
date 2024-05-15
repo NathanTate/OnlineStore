@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -21,7 +21,7 @@ export class AuthComponent implements OnInit, OnDestroy{
   timeoutId: ReturnType<typeof setTimeout>;
 
   constructor(private fb: FormBuilder, private authService: AuthService,
-    private router: Router, private route: ActivatedRoute
+    private router: Router
   ) { }
 
   ngOnInit(): void {

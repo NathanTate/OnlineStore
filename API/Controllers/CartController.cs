@@ -16,7 +16,8 @@ namespace API.Controllers
         {
             _uow = uow;
         }
-        [HttpPost]
+
+        [HttpPost("CreateCart")]
         public async Task<ActionResult<CartResponse>> CreateCart()
         {
             Result<CartResponse> result = await _uow.CartRepository.CreateCartAsync(User.GetUserId());
@@ -36,12 +37,33 @@ namespace API.Controllers
         {
             Result<CartResponse> result = await _uow.CartRepository.GetCartAsync(User.GetUserId());
 
-            if(result.IsFailed)
+            if (result.IsFailed)
             {
                 return BadRequest(result.Errors);
             }
 
             return Ok(result.Value);
+        }
+
+        [HttpGet("CartExists")]
+        public async Task<ActionResult<bool>> CartExists()
+        {
+            return Ok(await _uow.CartRepository.CartExistsAsync(User.GetUserId()));
+        }
+
+        [HttpPost("ApplyCoupon")]
+        public async Task<IActionResult> ApplyCoupon(CartHeaderRequest model)
+        {
+            Result result = await _uow.CartRepository.ApplyCouponAsync(model, User.GetUserId());
+
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            await _uow.SaveChangesAsync();
+
+            return Ok();
         }
 
         [HttpPut("AddToCart")]
@@ -59,10 +81,10 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpDelete("RemoveFromCart{cartDetailsId}")]
-        public async Task<IActionResult> RemoveFromCart(int cartDetailsId)
+        [HttpDelete("RemoveFromCart/{cartDetailsId}/{removeAll}")]
+        public async Task<IActionResult> RemoveFromCart(int cartDetailsId, bool removeAll)
         {
-            Result result = await _uow.CartRepository.DeleteCartAsync(cartDetailsId, User.GetUserId());
+            Result result = await _uow.CartRepository.RemoveFromCartAsync(cartDetailsId, removeAll, User.GetUserId());
 
             if(result.IsFailed)
             {

@@ -5,23 +5,26 @@ import { HttpClient } from "@angular/common/http";
 import { AuthModel } from "../_models/Auth";
 import { environment } from "../../environments/environment.development";
 import { Router } from "@angular/router";
+import { CartService } from "./cart.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  currentUser$ = new BehaviorSubject<User| null>(null);
+  currentUserSubject = new BehaviorSubject<User| null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
   tokenExperationTimer: ReturnType<typeof setTimeout>;
   baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private cartService: CartService) {
    
   }
 
   login(model: AuthModel) {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
       map((user: User) => {
-            this.setCurrentUser(user);
+          this.setCurrentUser(user);
+          this.cartCreate();
       })
     );
   }
@@ -37,7 +40,7 @@ export class AuthService {
   }
 
   logout() {
-    this.currentUser$.next(null);
+    this.currentUserSubject.next(null);
     this.router.navigate(['/auth'])
     if(this.tokenExperationTimer) {
       clearTimeout(this.tokenExperationTimer)
@@ -58,9 +61,10 @@ export class AuthService {
     user.roles = roles;
     const isValidToken = user.tokenExperationDate && new Date() < user.tokenExperationDate;
     if(isValidToken) {
-      this.currentUser$.next(user);
+      this.currentUserSubject.next(user);
       localStorage.setItem('user', JSON.stringify(user));
-  
+      this.cartCreate();
+      this.cartService.getCart().subscribe();
       this.autoLogout(experationTime);
     }
   }
@@ -69,5 +73,15 @@ export class AuthService {
     if(token) {
       return JSON.parse(atob(token.split('.')[1]))
     }
+  }
+
+  private cartCreate() {
+    this.cartService.cartExists().subscribe({
+      next: (exists: boolean) => {
+        if(!exists) {
+          this.cartService.createCart().subscribe();
+        }
+      }
+    })
   }
 }

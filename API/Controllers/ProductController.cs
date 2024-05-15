@@ -1,4 +1,5 @@
-﻿using API.Helpers.RequestParams;
+﻿using API.Helpers;
+using API.Helpers.RequestParams;
 using API.Interfaces;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
@@ -48,7 +49,7 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetProducts")]
-        public async Task<ActionResult<IEnumerable<ProductResponse>>> GetProducts([FromQuery] ProductParams productParams)
+        public async Task<ActionResult<PagedList<ProductResponse>>> GetProducts([FromQuery] ProductParams productParams)
         {
             return Ok(await _uow.ProductRepository.GetProductsAsync(productParams));
         }

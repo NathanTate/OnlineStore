@@ -10,6 +10,7 @@ namespace API.Interfaces
         Task<Result<CartResponse>> CreateCartAsync(string userId);
         Task<Result> UpdateCartAsync(CartDetailRequest model, string userId);
         Task<Result> ApplyCouponAsync(CartHeaderRequest model, string userId);
-        Task<Result> DeleteCartAsync(int cartDetailsId, string userId);
+        Task<Result> RemoveFromCartAsync(int cartDetailsId, bool removeAll, string userId);
+        Task<bool> CartExistsAsync(string userId);
     }
 }

@@ -2,6 +2,7 @@ import { Component, Renderer2 } from "@angular/core";
 import { faSquareFacebook, faSquareInstagram } from "@fortawesome/free-brands-svg-icons";
 import { faMagnifyingGlass, faCartShopping, faUser, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import { AuthService } from "../_services/auth.service";
+import { CartService } from "../_services/cart.service";
 
 @Component({
     selector: 'app-header',
@@ -18,7 +19,7 @@ export class HeaderComponent {
     isVisible = false;
     isMenuVisible = false;
 
-    constructor(public authService: AuthService, private render: Renderer2) {}
+    constructor(public authService: AuthService, private render: Renderer2, public cartService: CartService) {}
 
     onToggle() {
         this.isVisible = !this.isVisible;

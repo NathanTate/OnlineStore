@@ -5,6 +5,7 @@ using API.Models.DTO.Cart.CartRequests;
 using API.Models.DTO.Cart.CartResponses;
 using AutoMapper;
 using FluentResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data.Repositories.CartRepository
@@ -24,7 +25,7 @@ namespace API.Data.Repositories.CartRepository
         {
             CartResponse cart = new()
             {
-                CartHeader = _mapper.Map<CartHeaderResponse>(await _dbContext.CartHeaders.AsNoTracking().FirstOrDefaultAsync(h => h.UserId == userId))        
+                CartHeader = _mapper.Map<CartHeaderResponse>(await _dbContext.CartHeaders.AsNoTracking().FirstOrDefaultAsync(h => h.UserId == userId))
             };
 
             if (cart.CartHeader == null)
@@ -32,49 +33,65 @@ namespace API.Data.Repositories.CartRepository
                 return Result.Fail("This user has no cart");
             }
 
-            var cartDetails = await _dbContext.CartDetails.AsNoTracking().Where(d => d.CartHeaderId == cart.CartHeader.Id).Include(d => d.Product).ToListAsync();
+            var cartDetails = await _dbContext.CartDetails.AsNoTracking().Where(d => d.CartHeaderId == cart.CartHeader.Id).Include(d => d.Product).Include(p => p.Product.ProductImages).ToListAsync();
 
             cart.CartDetails = _mapper.Map<IEnumerable<CartDetailResponse>>(cartDetails);
 
 
-            foreach(var cartDetail in cart.CartDetails)
+            foreach (var cartDetail in cart.CartDetails)
             {
-                cart.CartHeader.Total += (cartDetail.Count *  cartDetail.Product.OriginalPrice);
+                cart.CartHeader.Total += cartDetail.Count * cartDetail.Product.OriginalPrice;
             }
 
-            if(!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
+            if (!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
             {
                 Coupon coupon = await _dbContext.Coupons.FindAsync(cart.CartHeader.CouponCode);
-                if(coupon != null && coupon.MinPrice < cart.CartHeader.Total) 
-                { 
+                if (coupon != null && coupon.MinPrice < cart.CartHeader.Total)
+                {
                     cart.CartHeader.Total -= coupon.DiscountAmount;
                     cart.CartHeader.Discount = coupon.DiscountAmount;
                 }
             }
 
-            return Result.Ok(cart);     
+            return Result.Ok(cart);
         }
 
-        public Task<Result> ApplyCouponAsync(CartHeaderRequest model, string userId)
+        public async Task<bool> CartExistsAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await _dbContext.CartHeaders.AnyAsync(c => c.UserId == userId);
+        }
+
+        public async Task<Result> ApplyCouponAsync(CartHeaderRequest model, string userId)
+        {
+            var cartHeader = await _dbContext.CartHeaders.FirstOrDefaultAsync(x => x.UserId == userId);
+            var coupon = await _dbContext.Coupons.FindAsync(model.CouponCode);
+
+            if (cartHeader == null)
+            {
+                return Result.Fail("Cart doesn't exist");
+            }
+
+            cartHeader.CouponCode = coupon.CouponCode;
+
+            return Result.Ok();
+
         }
 
         public async Task<Result<CartResponse>> CreateCartAsync(string userId)
         {
             var cartHeaderDb = await _dbContext.CartHeaders.AsNoTracking().FirstOrDefaultAsync(h => h.UserId == userId);
-            if(cartHeaderDb != null)
+            if (cartHeaderDb != null)
             {
-                return Result.Fail("Cart already exists"); 
+                return Result.Fail("Cart already exists");
             }
 
             var cartHeader = new CartHeader() { UserId = userId };
 
             await _dbContext.CartHeaders.AddAsync(cartHeader);
 
-            return Result.Ok(_mapper.Map<CartResponse>(new CartResponse 
-            { 
-                CartHeader = _mapper.Map<CartHeaderResponse>(cartHeader), 
+            return Result.Ok(_mapper.Map<CartResponse>(new CartResponse
+            {
+                CartHeader = _mapper.Map<CartHeaderResponse>(cartHeader),
                 CartDetails = new List<CartDetailResponse>()
             }));
         }
@@ -82,21 +99,21 @@ namespace API.Data.Repositories.CartRepository
         public async Task<Result> UpdateCartAsync(CartDetailRequest model, string userId)
         {
             var cartHeaderDb = await _dbContext.CartHeaders.AsNoTracking().FirstOrDefaultAsync(h => h.UserId == userId);
-            if(cartHeaderDb == null)
+            if (cartHeaderDb == null)
             {
                 return Result.Fail("Cart doesn't exist");
             }
 
             var product = await _dbContext.Products.FindAsync(model.ProductId);
-            if(product == null)
+            if (product == null)
             {
                 return Result.Fail("Failed adding product to cart");
             }
 
             var cartDetailsDb = await _dbContext.CartDetails
-                .FirstOrDefaultAsync(d => d.CartHeaderId == cartHeaderDb.Id 
+                .FirstOrDefaultAsync(d => d.CartHeaderId == cartHeaderDb.Id
                 && d.ProductId == model.ProductId);
-            if(cartDetailsDb == null) 
+            if (cartDetailsDb == null)
             {
                 model.CartHeaderId = cartHeaderDb.Id;
                 await _dbContext.CartDetails.AddAsync(_mapper.Map<CartDetail>(model));
@@ -110,21 +127,38 @@ namespace API.Data.Repositories.CartRepository
 
         }
 
-        public async Task<Result> DeleteCartAsync(int cartDetailsId, string userId)
+        public async Task<Result> RemoveFromCartAsync(int cartDetailsId, bool removeAll, string userId)
         {
-            var cartDetail = await _dbContext.CartDetails.FirstOrDefaultAsync(d => d.Id == cartDetailsId);
-            if(cartDetail == null)
+            var cartHeader = await _dbContext.CartHeaders.Where(c => c.UserId == userId).FirstOrDefaultAsync();
+
+            if (removeAll)
+            {
+
+                if (cartHeader != null)
+                {
+                    var cartDetails = await _dbContext.CartDetails.Where(c => c.CartHeaderId == cartHeader.Id).ToListAsync();
+                    if (cartDetails != null)
+                    {
+                        _dbContext.CartDetails.RemoveRange(cartDetails);
+                        return Result.Ok();
+                    }
+                    else
+                    {
+                        return Result.Fail("No items to remove");
+                    }
+
+                }
+                return Result.Fail("Failed to remove all");
+            }
+            var cartDetail = await _dbContext.CartDetails.FirstOrDefaultAsync(d => d.Id == cartDetailsId && cartHeader.Id == d.CartHeaderId);
+            if (cartDetail == null)
             {
                 return Result.Fail("Cart Item doesn't exist");
             }
-            int totalCountOfItems = _dbContext.CartDetails.Where(d => d.CartHeaderId == cartDetail.CartHeaderId).Count();
-            _dbContext.CartDetails.Remove(cartDetail);
-            //if(totalCountOfItems == 1) 
-            //{
-            //    var cartHeaderToRemove = await _dbContext.CartHeaders.FirstOrDefaultAsync(h => h.Id == cartDetail.CartHeaderId);
 
-            //    _dbContext.CartHeaders.Remove(cartHeaderToRemove);
-            //}
+            _dbContext.CartDetails.Remove(cartDetail);
+
+            _dbContext.CartDetails.Where(c => c.CartHeaderId == cartHeader.Id);
 
             return Result.Ok();
         }

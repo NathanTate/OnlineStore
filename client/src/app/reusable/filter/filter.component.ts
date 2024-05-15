@@ -14,7 +14,7 @@ export class FilterComponent implements OnInit, OnDestroy{
   @Input() colors: Set<string>;
   @Input() brands: Set<string>;
   @Input() subCategories: SubCategory[];
-  @Output() filterParams = new EventEmitter<ProductParams>;
+  @Output() productParams = new EventEmitter<ProductParams>;
   filterForm: FormGroup;
   chevronDown = faChevronDown;
   chevronUp = faChevronUp;
@@ -82,7 +82,7 @@ export class FilterComponent implements OnInit, OnDestroy{
   }
 
   onSubmit() {
-    this.filterParams.emit(this.filterForm.value);
+    this.productParams.emit(this.filterForm.value);
   }
 
   initializeForm() {

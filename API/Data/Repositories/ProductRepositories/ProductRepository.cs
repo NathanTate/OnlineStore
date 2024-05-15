@@ -1,4 +1,5 @@
-﻿using API.Helpers.RequestParams;
+﻿using API.Helpers;
+using API.Helpers.RequestParams;
 using API.Interfaces;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
@@ -10,6 +11,7 @@ using FluentResults;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
+using System.Linq.Expressions;
 
 namespace API.Data.Repositories.ProductRepositories
 {
@@ -36,6 +38,7 @@ namespace API.Data.Repositories.ProductRepositories
             model.Id = 0;
 
             var product = _mapper.Map<Product>(model);
+            product.CreatedAt = DateTime.UtcNow;
             product.ProductImages.Add(new ProductImage
             {
                 Url = result.Value.Url.ToString(),
@@ -48,33 +51,27 @@ namespace API.Data.Repositories.ProductRepositories
             return Result.Ok(_mapper.Map<ProductResponse>(product));
         }
 
-        public async Task<IEnumerable<ProductResponse>> GetProductsAsync(ProductParams productParams)
+        public async Task<PagedList<ProductResponse>> GetProductsAsync(ProductParams productParams)
         {
-            IQueryable<Product> products = _dbContext.Products.AsQueryable()
+            IQueryable<Product> productsQuery = _dbContext.Products.AsQueryable()
                 .Where(p => p.SubCategory.CategoryId == productParams.categoryId);
 
+            productsQuery = FilterProduct(productsQuery, productParams);
 
-            if (productParams.subCategories.Count() != 0)
+            if(productParams.SortBy?.ToLower() == "desc")
             {
-                products = products.Where(p => productParams.subCategories.Contains(p.SubCategoryId));
+                productsQuery = productsQuery.OrderByDescending(GetSortProperty(productParams));
             }
-            if (productParams.BrandId != default(int))
+            else
             {
-                products = products.Where(p => p.BrandId == productParams.BrandId);
+                productsQuery = productsQuery.OrderBy(GetSortProperty(productParams));
             }
-            if (productParams.Colors.Count() != 0)
-            {
-                products = products.Where(p => productParams.Colors.Contains(p.Color));
-            }
-            if (productParams.PriceMax != default(decimal))
-            {
-                products = products.Where(p => p.OriginalPrice <= productParams.PriceMax);
-            }
-            if (productParams.PriceMin != default(decimal))
-            {
-                products = products.Where(p => p.OriginalPrice >= productParams.PriceMin);
-            }
-            var result = await products.AsNoTracking().ProjectTo<ProductResponse>(_mapper.ConfigurationProvider).ToListAsync();
+
+            var result = await PagedList<ProductResponse>.CreateAsync(
+                productsQuery.AsNoTracking().ProjectTo<ProductResponse>(_mapper.ConfigurationProvider),
+                productParams.Page,
+                productParams.PageSize);
+           
             return result;
         }
 
@@ -130,6 +127,45 @@ namespace API.Data.Repositories.ProductRepositories
             _dbContext.ProductImages.Remove(photo);
 
             return Result.Ok();
+        }
+
+        private static Expression<Func<Product, object>> GetSortProperty(ProductParams sortColumn)
+        {
+            Expression<Func<Product, object>> keySelector = sortColumn.SortColumn?.ToLower() switch
+            {
+                "rating" => product => product.ProductRating,
+                "price" => product => product.OriginalPrice,
+                "date" => product => product.CreatedAt,
+                _ => product => product.Id
+            };
+
+            return keySelector;
+        }
+
+        private static IQueryable<Product> FilterProduct(IQueryable<Product> productsQuery, ProductParams productParams)
+        {
+            if (productParams.subCategories.Count() != 0)
+            {
+                productsQuery = productsQuery.Where(p => productParams.subCategories.Contains(p.SubCategoryId));
+            }
+            if (productParams.BrandId != default(int))
+            {
+                productsQuery = productsQuery.Where(p => p.BrandId == productParams.BrandId);
+            }
+            if (productParams.Colors.Count() != 0)
+            {
+                productsQuery = productsQuery.Where(p => productParams.Colors.Contains(p.Color));
+            }
+            if (productParams.PriceMax != default(decimal))
+            {
+                productsQuery = productsQuery.Where(p => p.OriginalPrice <= productParams.PriceMax);
+            }
+            if (productParams.PriceMin != default(decimal))
+            {
+                productsQuery = productsQuery.Where(p => p.OriginalPrice >= productParams.PriceMin);
+            }
+
+            return productsQuery;
         }
 
     }

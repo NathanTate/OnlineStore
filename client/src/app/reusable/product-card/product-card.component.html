@@ -20,11 +20,16 @@
     {{ productDisplayName }}
   </a>
 </div>
-<div class="card__price">
-  <p class="text-primary-400 price-old">
-    &dollar;{{ product.originalPrice }}.00
-  </p>
-  <p class="fs-secondary-title fw-bold">
-    &dollar;{{ product.salePrice }}.00
-  </p>
+<div class="card__price_cart">
+  <div class="card__price">
+    <p class="text-primary-400 price-old">
+      &dollar;{{ product.originalPrice }}.00
+    </p>
+    <p class="fs-secondary-title fw-bold">
+      &dollar;{{ product.salePrice }}.00
+    </p>
+  </div>
+  <button (click)="addToCart(index)" class="card__cart-button">
+    <fa-icon [icon]="faCart" size="lg"></fa-icon>
+  </button>
 </div>

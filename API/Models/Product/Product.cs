@@ -30,6 +30,7 @@ namespace API.Models.ProductModel
         public int ProductRating { get; set; } = 0;
 
         public int TotalReviews { get; set; } = 0;
+        public DateTime CreatedAt { get; set; }
 
         [Required]
         public int SubCategoryId { get; set; }

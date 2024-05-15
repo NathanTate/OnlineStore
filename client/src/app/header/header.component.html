@@ -36,7 +36,7 @@
          <div [ngClass]="{'container': isVisible}" (window:resize)="onResize()">
           <div class="nav-expanded-control" [attr.data-visible]="isVisible">
           <a routerLink="./" class="logo">
-            <img src="/assets/svg/logo.svg" alt="website logo" />
+            <img src="/assets/svg/logo.svg" (click)="onToggle()" alt="website logo" />
           </a>
           <button class="mobile-nav-toggle" (click)="onToggle()">
             <svg fill="#00000" class="icon-close" viewBox="0 0 80 100" width="40" height="40">
@@ -50,30 +50,47 @@
             <li><a href="#">Desktop PCs</a></li>
             <li><a href="#">Networking Devices</a></li>
             <li><a href="#">Printers &amp; Scanners</a></li>
-            <li><a href="#">PC Parts</a></li>
-            <li><a href="#">All Other Products</a></li>
             <li><a href="#">Repairs</a></li>
+            <li><a routerLink="/about">About</a></li>
+            <li><a routerLink="/terms">Terms</a></li>
             <li><a href="#" class="button text-blue-accent-400">Our Deals</a></li>
           </ul>
         </div>
         </nav>
       </div>
+      <div class="search-bar fw-semi-bold">
+        <input type="search" placeholder="Search here" class="search-bar__input" aria-label="search">
+        <button class="button search-bar__button" data-icon="true">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </button>
+        <button class="button search-close__button" data-icon="true">
+          <svg fill="#00000" class="icon-close" viewBox="0 0 80 100" width="40" height="40">
+            <rect class="line top" width="60" height="8" x="10" y="45" rx="5"></rect>
+            <rect class="line bottom" width="60" height="8" x="10" y="45" rx="5"></rect>
+          </svg>
+        </button>
+      </div>
       <div class="header-right">
-        <button class="button" data-icon="true">
-          <fa-icon class="action-icon" [icon]="faSearch" size="lg"></fa-icon>
-        </button>
-        <button class="button" data-icon="true">
-          <fa-icon class="action-icon" [icon]="faCart" size="lg"></fa-icon>
-        </button>
+        <!-- <button class="button action-button search-button" data-icon="true" aria-label="open search">
+          <fa-icon [icon]="faSearch" size="lg"></fa-icon>
+        </button> -->
+        <div class="cart-button">
+          <button routerLink="/cart" class="button action-button" data-icon="true" aria-label="open cart">
+            <fa-icon [icon]="faCart" size="lg"></fa-icon>
+          </button>
+          <div class="cart-items-count" *ngIf="cartService.itemsInCart > 0">
+            {{cartService.itemsInCart}}
+          </div>
+        </div>
         <button *ngIf="authService.currentUser$ | async"
-          (click)="toggleUserMenu()" class="button" data-icon="true">
+          (click)="toggleUserMenu()" class="button" data-icon="true" aria-label="open profile">
           <img
             class="profile-picture"
             src="/assets/images/profileHolder.jfif"
             alt="profile picture"
           />
         </button>
-        <button class="button" data-icon="true" *ngIf="!(authService.currentUser$ | async)">
+        <button class="button action-button" data-icon="true" *ngIf="!(authService.currentUser$ | async)">
           <fa-icon routerLink="/auth" [icon]="faUser" class="action-icon" size="2x"></fa-icon>
         </button>
       </div>
