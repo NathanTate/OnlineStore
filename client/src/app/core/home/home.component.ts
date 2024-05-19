@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../_services/product.service';
-import { ProductResponse } from '../_models/Product';
-import { ProductParams } from '../_models/ProductParams';
-import { SubCategory } from '../_models/Categories';
+import { ProductService } from '../../_services/product.service';
+import { ProductResponse } from '../../_models/Product';
+import { ProductParams } from '../../_models/ProductParams';
+import { SubCategory } from '../../_models/Categories';
 
 @Component({
   selector: 'app-home',

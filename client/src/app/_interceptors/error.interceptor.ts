@@ -9,7 +9,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         if(error) {
-          if(error.status == 0) {
+          if(error.status == 500) {
             this.toastr.error('Server is currently offline')
             throw error;
           }

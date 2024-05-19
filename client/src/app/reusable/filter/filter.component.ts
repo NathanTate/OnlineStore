@@ -4,6 +4,7 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from 
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { ProductParams } from '../../_models/ProductParams';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-filter',
@@ -41,7 +42,7 @@ export class FilterComponent implements OnInit, OnDestroy{
     { value: '7000-999999', label: '$7,000.00 And Above', checked: false }
   ];
 
-  constructor(private fb: FormBuilder, private render: Renderer2) {}
+  constructor(private fb: FormBuilder, private render: Renderer2, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -82,6 +83,10 @@ export class FilterComponent implements OnInit, OnDestroy{
   }
 
   onSubmit() {
+    if(!this.filterForm.valid) {
+      this.toastr.error('Submission of invalid form')
+      return;
+    }
     this.productParams.emit(this.filterForm.value);
   }
 

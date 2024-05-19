@@ -79,6 +79,9 @@ namespace API.Data.Repositories.ProductRepositories
         {
             var product = await _dbContext.Products.FindAsync(id);
 
+            await _dbContext.Entry(product).Collection(p => p.ProductImages).LoadAsync();
+            await _dbContext.Entry(product).Collection(p => p.ProductSpecifications).LoadAsync();
+
             if (product == null)
             {
                 return Result.Fail("Product doesn't exist");

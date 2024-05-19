@@ -14,5 +14,8 @@ namespace API.Models.Coupon
 
         [Precision(16, 2)]
         public decimal MinPrice { get; set; }
+
+        [MaxLength(200)]
+        public string CouponStripeId { get; set; }
     }
 }

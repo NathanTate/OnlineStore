@@ -1,3 +1,38 @@
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins/Poppins-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
 :root {
   --clr-green-accent-400: rgba(120, 169, 98, 1);
   --clr-orange-accent-400: rgba(255, 184, 0, 1);
@@ -13,16 +48,18 @@
   --clr-primary-200: rgba(245, 247, 255, 1); 
   --clr-primary-100: rgba(255, 255, 255, 1);
 
-  --ff-primary: 'Popping', sans-serif;
+  --ff-primary: 'Poppins', sans-serif;
 
   --ff-body: var(--ff-primary);
   --ff-accent: var(--ff-primary);
 
-  --fw-thin: 300;
+  --fw-light: 300;
   --fw-regular: 400;
-  --fw-semi-bold: 500;
+  --fw-medium: 500;
+  --fw-semi-bold: 600;
   --fw-bold: 700;
   --fw-extra-bold: 800;
+  --fw-body: var(--fw-regular);
 
   --fs-200: 0.625rem;
   --fs-300: 0.75rem;
@@ -46,6 +83,7 @@
   --fs-nav: var(--fs-400);
   --fs-button: var(--fs-400);
   --fs-footer: var(--fs-400);
+  --fs-description: var(--fs-600);
 
   --size-100: 0.25rem;
   --size-200: 0.5rem;
@@ -64,7 +102,7 @@
 
 @media (max-width: 48rem) {
   :root {
-    --fs-body: var(--fs-400);
+    /* --fs-body: var(--fs-400); */
     --fs-primary-heading: var(--fs-800);
     --fs-secondary-heading: var(--fs-600);
     --fs-primary-title: var(--fs-700);
@@ -76,6 +114,7 @@
     --fs-nav: var(--fs-350);
     --fs-button: var(--fs-350);
     --fs-footer: var(--fs-300);
+    --fs-description: var(--fs-300);
   }
 
   /* --fs-200: 0.625rem;
@@ -145,6 +184,11 @@ h3, h4 {
   text-wrap: balance;
 }
 
+/**/
+p {
+  letter-spacing: 0.2px;
+}
+
 /* A elements that don't have a class get default styles */
 a:not([class]) {
   text-decoration-skip-ink: auto;
@@ -208,7 +252,7 @@ textarea:not([rows]) {
   justify-content: center;
   cursor: pointer;
   font-size: var(--fs-button);
-  font-weight: 500;
+  font-weight: var(--fw-semi-bold);
   background: none;
   color: var(--clr-primary-100);
   padding: 0.875em 2.75em;
@@ -223,6 +267,14 @@ textarea:not([rows]) {
 .button[data-icon="true"] {
   border: none;
   padding: 0;
+}
+
+.helper-block .text-danger {
+  display: none;
+}
+
+.helper-block .text-danger:first-child {
+  display: block;
 }
 
 /* .button[data-icon="true"] img{
@@ -327,9 +379,11 @@ input {
   background-color: var(--clr-red-accent-400);
 }
 
-.fw-bold { font-weight: var(--fw-bold);}
-.fw-semi-bold { font-weight: var(--fw-semi-bold);}
-.fw-regular { font-weight: var(--fw-regular);}
+.fw-bold { font-weight: var(--fw-bold); }
+.fw-semi-bold { font-weight: var(--fw-semi-bold); }
+.fw-medium { font-weight: var(--fw-medium); }
+.fw-regular { font-weight: var(--fw-regular);} 
+.fw-light { font-weight: var(--fw-light); }
 
 .fs-primary-heading {
   font-size: var(--fs-primary-heading);
@@ -351,6 +405,9 @@ input {
 }
 .fs-300 {
   font-size: var(--fs-300);
+}
+.fs-description {
+  font-size: var(--fs-description);
 }
 
 
@@ -374,6 +431,7 @@ input {
 body {
   font-family: var(--ff-body);
   font-size: var(--fs-body);
+  font-weight: var(--fw-body);
 }
 
 @media (min-width: 48rem) {

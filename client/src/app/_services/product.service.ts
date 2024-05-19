@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ProductResponse } from "../_models/Product";
+import { Product, ProductResponse } from "../_models/Product";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { environment } from "../../environments/environment.development";
 import { SubCategory } from "../_models/Categories";
@@ -36,6 +36,10 @@ export class ProductService {
     }
 
     return this.http.get<ProductResponse>(this.baseUrl + 'product/getproducts', {params: httpParams});
+  }
+
+  getProduct(id: number) {
+    return this.http.get<Product>(this.baseUrl + 'product/getProduct/' + id);
   }
 
   getSubCategories(categoryId: number) {

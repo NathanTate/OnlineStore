@@ -11,6 +11,10 @@
   padding-block: var(--size-700);
 }
 
+.cta h2 {
+  margin-bottom: 0.75rem;
+}
+
 .cta__input {
   padding: var(--size-300) var(--size-300);
   border: 2px solid var(--clr-primary-100);
@@ -26,6 +30,7 @@
   text-decoration: none;
   display: inline-block;
   padding-block: var(--size-100);
+  font-weight: var(--fw-light);
 }
 
 h4 {

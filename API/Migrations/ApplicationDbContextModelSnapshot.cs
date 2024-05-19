@@ -207,6 +207,10 @@ namespace API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("CouponStripeId")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<decimal>("DiscountAmount")
                         .HasPrecision(16, 2)
                         .HasColumnType("decimal(16,2)");

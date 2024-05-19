@@ -26,6 +26,18 @@ namespace API.Data.Repositories.CouponRepositories
                 return Result.Fail("Coupon Already Exists");
             }
 
+            var options = new Stripe.CouponCreateOptions
+            {
+                Id = model.CouponCode.ToLower(),
+                Name = model.CouponCode.ToLower(),
+                Currency = "USD",
+                AmountOff = (long)model.DiscountAmount * 100
+            };
+            var service = new Stripe.CouponService();
+            Stripe.Coupon response = await service.CreateAsync(options);
+
+            coupon.CouponStripeId = response.Id;
+
             await _dbContext.Coupons.AddAsync(coupon);
 
             return Result.Ok(_mapper.Map<CouponDto>(coupon));
@@ -70,6 +82,9 @@ namespace API.Data.Repositories.CouponRepositories
             {
                 return Result.Fail("Coupon doesn't exist");
             }
+
+            var service = new Stripe.CouponService();
+            await service.DeleteAsync(coupon.CouponStripeId);
 
             _dbContext.Coupons.Remove(coupon);
 

@@ -55,7 +55,7 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("GetProduct{id}")]
+        [HttpGet("GetProduct/{id}")]
         public async Task<ActionResult<ProductResponse>> GetProduct(int id)
         {
             Result<ProductResponse> result = await _uow.ProductRepository.GetProductAsync(id);

@@ -1,13 +1,13 @@
 <div class="container">
-  <h1 class="fs-secondary-heading fw-bold padding-block-500">Customer Login</h1>
+  <h1 class="fs-secondary-heading fw-semi-bold padding-block-500">Customer Login</h1>
   <div class="even-columns wrapper">
     <form class="bg-primary-200" [formGroup]="authForm" (ngSubmit)="onSubmit()">
-      <h3 class="fs-secondary-title fw-bold">Registered Customer</h3>
+      <h3 class="fs-secondary-title fw-semi-bold">Registered Customer</h3>
       <p>
         if you don't have an account yet, you can create a new account right now
       </p>
       <div class="form-group">
-        <label class="fs-label fw-bold label" for="email"
+        <label class="fs-label fw-semi-bold label" for="email"
           >Email <span class="text-red-accent-400">&ast;</span></label
         >
         <input class="form-input" type="text" placeholder="Your Email" formControlName="email"/>
@@ -19,7 +19,7 @@
         </span>
       </div>
       <div class="form-group">
-        <label class="fs-label fw-bold label" for="password"
+        <label class="fs-label fw-semi-bold label" for="password"
           >Password <span class="text-red-accent-400">&ast;</span></label
         >
         <input (keyup)="checkPassword()" class="form-input" type="password" placeholder="Your Password" formControlName="password"/>
@@ -39,7 +39,7 @@
           {{submitBtnText}}
         </button>
         <a
-          class="text-blue-accent-400 fw-semi-bold"
+          class="text-blue-accent-400 fw-semi-semi-bold"
           style="text-wrap: nowrap;"
           routerLink="/forgot-password"
           >Forgot Your Password?</a
@@ -48,7 +48,7 @@
     </form>
     <div class="bg-primary-200 flow">
       <ng-template [ngIf]="loginMode" [ngIfElse]="register">
-        <h3 class="fs-secondary-title fw-bold">New Customer?</h3>
+        <h3 class="fs-secondary-title fw-semi-bold">New Customer?</h3>
         <p>Creating an account has many benefits: </p>
         <ul>
           <li>Check out faster</li>
@@ -58,7 +58,7 @@
         <button class="button bg-blue-accent-400" (click)="switchMode()">Create An Account</button>
     </ng-template>
     <ng-template #register>
-      <h3 class="fs-secondary-title fw-bold">Already Have An Account?</h3>
+      <h3 class="fs-secondary-title fw-semi-bold">Already Have An Account?</h3>
       <p>Welcome back! Explore these benefits:</p>
       <ul>
         <li>Check out faster</li>

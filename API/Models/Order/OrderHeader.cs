@@ -30,7 +30,7 @@ namespace API.Models.Order
         public string LastName { get; set; }
 
         [MaxLength(100)]
-        public string? Email { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [MaxLength(15)]

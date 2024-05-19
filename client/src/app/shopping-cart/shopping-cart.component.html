@@ -1,13 +1,13 @@
 <div class="container padding-block-500">
-  <h1 class="fs-secondary-heading fw-bold padding-block-500">Shopping Cart</h1>
+  <h1 class="fs-secondary-heading fw-semi-bold padding-block-500">Shopping Cart</h1>
   <div class="cart grid-container">
     <div>
       <div class="cart__labels">
-        <p class="fw-bold">Item</p>
+        <p class="fw-semi-bold">Item</p>
         <div class="cart__labels-right">
-          <p class="fw-bold">Price</p>
-          <p class="fw-bold">Quantity</p>
-          <p class="fw-bold">Subtotal</p>
+          <p class="fw-semi-bold">Price</p>
+          <p class="fw-semi-bold">Quantity</p>
+          <p class="fw-semi-bold">Subtotal</p>
           <button style="opacity: 0;"></button>
         </div>
       </div>
@@ -24,12 +24,12 @@
     </div>
     <div>
     <div class="cart__summary bg-primary-200 flow" style="--flow-spacer: 0.5rem">
-      <h2 class="fw-bold fs-summary">Summary</h2>
+      <h2 class="fw-semi-bold fs-summary">Summary</h2>
       <div>
         <h3 class="fs-secondary-title">Apply Discount Code</h3>
       </div>
       <hr>
-      <div *ngIf="cart" class="checkout-preview fw-bold">
+      <div *ngIf="cart" class="checkout-preview fw-semi-bold">
         <div>
           <p>Subtotal</p>
           <p>${{cart.cartHeader.total}}.00</p>
@@ -65,5 +65,5 @@
 </div>
 
 <ng-template #emptyCart>
-  <h2 class="fs-secondary-title fw-bold padding-block-500">Cart is empty...</h2>
+  <h2 class="fs-secondary-title fw-semi-bold padding-block-500">Cart is empty...</h2>
 </ng-template>

@@ -41,6 +41,8 @@ export class AuthService {
 
   logout() {
     this.currentUserSubject.next(null);
+    this.cartService.cartSubject.next(null);
+    this.cartService.itemsInCart = 0;
     this.router.navigate(['/auth'])
     if(this.tokenExperationTimer) {
       clearTimeout(this.tokenExperationTimer)
@@ -55,7 +57,7 @@ export class AuthService {
   setCurrentUser(user: User) {
     const decodedToken = this.getDecodedToken(user.token);
     const expires = new Date(decodedToken.exp * 1000)
-    const experationTime = Date.now() - expires.getDate();
+    const experationTime = expires.getDate() - Date.now();
     const roles = decodedToken.role;
     user.tokenExperationDate = expires;
     user.roles = roles;

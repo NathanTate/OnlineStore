@@ -18,7 +18,7 @@
 
 .primary-header {
     padding-block: var(--size-500);
-    border-bottom: 2px solid var(--clr-primary-300);
+    border-bottom: 1px solid var(--clr-primary-300);
 }
 
 .nav-wrapper {
@@ -99,7 +99,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
+    font-weight: var(--fw-semi-bold);
     font-size: 12px;
     min-width: 20px;
     min-height: 20px;
@@ -119,7 +119,7 @@
     width: var(--size);
     font-size: var(--fs-input);
     border-radius: 50px;
-    transition: width 150ms;
+    transition: width 150ms, box-shadow 150ms;
 }
 
 .search-close__button {
@@ -129,6 +129,10 @@
 
 .search-bar:focus-within {
     width: 88%;
+}
+
+.search-bar__input:focus {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
 }
 
 .search-bar__input {
@@ -158,6 +162,7 @@
     right: 1rem;
     transform: translate(0, -50%);
     color: var(--clr-primary-900);
+    outline: none;
 }
 
 .search-bar__button :hover {

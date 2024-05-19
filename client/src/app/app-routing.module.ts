@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './core/home/home.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { AuthComponent } from './auth/auth.component';
 import { canActivate } from './_guards/canActive.guard';
-import { StarComponent } from './reusable/star-component/star.component';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { AboutComponent } from './static-pages/about/about.component';
 import { TermsComponent } from './static-pages/terms/terms.component';
+import { ProductComponent } from './core/product/product.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [canActivate]},
+  {path: 'product/:id', component: ProductComponent},
   {path: 'auth', component: AuthComponent},
   {path: 'cart', component: ShoppingCartComponent, canActivate: [canActivate]},
   {path: 'checkout', component: CheckoutComponent, canActivate: [canActivate]},

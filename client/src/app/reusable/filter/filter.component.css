@@ -48,7 +48,7 @@ fa-icon:hover {
 }
 
 h4 {
-  font-weight: bold;
+  font-weight: var(--fw-semi-bold);
 }
 
 ul > li {

@@ -3,6 +3,7 @@ import { Validators } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-auth',
@@ -21,7 +22,7 @@ export class AuthComponent implements OnInit, OnDestroy{
   timeoutId: ReturnType<typeof setTimeout>;
 
   constructor(private fb: FormBuilder, private authService: AuthService,
-    private router: Router
+    private router: Router, private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +50,10 @@ export class AuthComponent implements OnInit, OnDestroy{
   }
 
   onSubmit() {
+    if(!this.authForm.valid) {
+      this.toastr.error('Submission of invalid form')
+      return;
+    }
     if(this.loginMode) {
       this.authService.login(this.authForm.value).subscribe({
         next: () => {

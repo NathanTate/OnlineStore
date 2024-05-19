@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeaderComponent } from './header/header.component';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './core/home/home.component';
 import { FooterComponent } from './footer/footer.component';
 import { AuthComponent } from './auth/auth.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -26,6 +26,10 @@ import { CartItemComponent } from './shopping-cart/cart-item/cart-item.component
 import { CheckoutComponent } from './checkout/checkout.component';
 import { AboutComponent } from './static-pages/about/about.component';
 import { TermsComponent } from './static-pages/terms/terms.component';
+import { LoadingSpinnerComponent } from './reusable/loading-spinner/loading-spinner.component';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
+import { ProductComponent } from './core/product/product.component';
+import { UiTabsComponent } from './reusable/tabs/ui-tabs/ui-tabs.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +49,10 @@ import { TermsComponent } from './static-pages/terms/terms.component';
     CartItemComponent,
     CheckoutComponent,
     AboutComponent,
-    TermsComponent
+    TermsComponent,
+    LoadingSpinnerComponent,
+    ProductComponent,
+    UiTabsComponent
   ],
   imports: [
     BrowserModule,
@@ -55,11 +62,12 @@ import { TermsComponent } from './static-pages/terms/terms.component';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

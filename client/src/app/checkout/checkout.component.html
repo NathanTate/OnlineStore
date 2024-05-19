@@ -1,1 +1,136 @@
-<p>checkout works!</p>
+<div class="checkout container padding-block-500">
+  <div class="checkout__title">
+    <h1 class="fs-secondary-heading fw-semi-bold">Checkout</h1>
+    <h3 class="fs-secondary-title fw-semi-bold">Shipping Address</h3>
+  </div>
+  <div class="two-columns">
+    <form [formGroup]="checkoutForm" (ngSubmit)="onSumbit()" class="checkout__form">
+      <hr>
+      <div class="checkout__form__inner-wrapper">
+      <div class="form-group">
+        <label [ngClass]="{highlighted: email?.valid}" class="fs-label fw-semi-bold label" for="email">Email Address</label>
+        <input formControlName="email" class="form-input" id="email" type="text">
+        <div class="helper-block" *ngIf="email?.invalid && (email?.touched || email?.dirty)">
+          <span class="text-danger" *ngIf="email?.hasError('required')">Email is required</span>
+          <span class="text-danger" *ngIf="email?.hasError('email')">Invalid email address</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label [ngClass]="{highlighted: firstName?.valid}" class="fs-label fw-semi-bold label" for="firstName">First Name</label>
+        <input formControlName="firstName" class="form-input" id="firstName" type="text">
+        <div class="helper-block" *ngIf="firstName?.invalid && (firstName?.touched || firstName?.dirty)">
+          <span class="text-danger" *ngIf="firstName?.hasError('required')">First name is required</span>
+          <span class="text-danger" *ngIf="firstName?.hasError('length')">Length should be between 2 and 50 characters</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label [ngClass]="{highlighted: lastName?.valid}" class="fs-label fw-semi-bold label" for="lastName">Last Name</label>
+        <input formControlName="lastName" class="form-input" id="lastName" type="text">
+        <div class="helper-block" *ngIf="lastName?.invalid && (lastName?.touched || lastName?.dirty)">
+          <span class="text-danger" *ngIf="lastName?.hasError('required')">Last name is required</span>
+          <span class="text-danger" *ngIf="lastName?.hasError('length')">Length should be between 2 and 50 characters</span>
+        </div>
+      </div>
+      <div formGroupName="address">
+      <div class="form-group">
+        <label [ngClass]="{highlighted: houseNumber?.valid}" class="fs-label fw-semi-bold label" for="houseNumber">House Number</label>
+        <input formControlName="houseNumber" class="form-input" id="houseNumber" type="text">
+        <div class="helper-block" *ngIf="houseNumber?.invalid && (houseNumber?.touched || houseNumber?.dirty)">
+          <span class="text-danger" *ngIf="houseNumber?.hasError('required')">House number is required</span>
+          <span class="text-danger" *ngIf="houseNumber?.hasError('length')">Length should be between 2 and 50 characters</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label [ngClass]="{highlighted: street?.valid}" class="fs-label fw-semi-bold label" for="street">Street Address</label>
+        <input formControlName="street" class="form-input" id="street" type="text">
+        <div class="helper-block" *ngIf="street?.invalid && (street?.touched || street?.dirty)">
+          <span class="text-danger" *ngIf="street?.hasError('required')">Street address is required</span>
+          <span class="text-danger" *ngIf="street?.hasError('length')">Length should be between 2 and 100 characters</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label [ngClass]="{highlighted: city?.valid}" class="fs-label fw-semi-bold label" for="city">City</label>
+        <input formControlName="city" class="form-input" id="city" type="text">
+        <div class="helper-block" *ngIf="city?.invalid && (city?.touched || city?.dirty)">
+          <span class="text-danger" *ngIf="city?.hasError('required')">City is required</span>
+          <span class="text-danger" *ngIf="city?.hasError('length')">Length should be between 2 and 100 characters</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label [ngClass]="{highlighted: state?.valid}" class="fs-label fw-semi-bold label" for="state">State/Province</label>
+        <input formControlName="state" class="form-input" id="state" type="text">
+        <div class="helper-block" *ngIf="state?.invalid && (state?.touched || state?.dirty)">
+          <span class="text-danger" *ngIf="state?.hasError('required')">State is required</span>
+          <span class="text-danger" *ngIf="state?.hasError('length')">Length should be between 2 and 100 characters</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label [ngClass]="{highlighted: zipCode?.valid}" class="fs-label fw-semi-bold label" for="zip">Zip/Postal Code</label>
+        <input formControlName="zipCode" class="form-input" id="zip" type="text">
+        <div class="helper-block" *ngIf="zipCode?.invalid && (zipCode?.touched || zipCode?.dirty)">
+          <span class="text-danger" *ngIf="zipCode?.hasError('required')">Zip/Postal Code is required</span>
+          <span class="text-danger" *ngIf="zipCode?.hasError('length')">Length should be between 2 and 50 characters</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label [ngClass]="{highlighted: country?.valid}" class="fs-label fw-semi-bold label" for="country">Country</label>
+        <input formControlName="country" class="form-input" id="country" type="text">
+        <div class="helper-block" *ngIf="country?.invalid && (country?.touched || country?.dirty)">
+          <span class="text-danger" *ngIf="country?.hasError('required')">Country is required</span>
+          <span class="text-danger" *ngIf="country?.hasError('length')">Length should be between 2 and 100 characters</span>
+        </div>
+      </div>
+      </div>
+      <div class="form-group">
+        <label [ngClass]="{highlighted: phone?.valid}" class="fs-label fw-semi-bold label" for="phone">Phone Number</label>
+        <input formControlName="phone" class="form-input" maxlength="13" id="phone" type="tel">
+        <div class="helper-block" *ngIf="phone?.invalid && (phone?.touched || phone?.dirty)">
+          <span class="text-danger" *ngIf="phone?.hasError('required')">Phone number is required</span>
+          <span class="text-danger" *ngIf="phone?.hasError('pattern')">Phone number has invalid format</span>
+          <span class="text-danger" *ngIf="phone?.hasError('length')">Length should be between 9 and 13 characters</span>
+        </div>
+      </div>
+     </div>
+      <div class="padding-block-500">
+        <hr>
+      </div>
+      <div class="checkout__shipping">
+        <label class="fs-label fw-semi-bold label" for="standart-rate">Standart Rate</label>
+        <div class="shipping__group">
+          <div>
+            <input checked name="ship" type="radio" id="standart-rate">
+            <p>Price may vary depending on the item/destination. Shop Staff will contact you. $21.00</p>   
+          </div>
+          <span class="fw-bold">$21.00</span>
+        </div>
+        <label class="fs-label fw-semi-bold label" for="pickupFromStore">Pickup from store</label>
+        <div class="shipping__group">
+          <div>
+            <input name="ship" type="radio" id="pickupFromStore">
+            <p>1234 Street Adress City Address, 1234</p>
+          </div>
+          <span class="fw-bold">$0.00</span>
+        </div>
+      </div>
+      <button [disabled]="!checkoutForm.valid" class="button bg-blue-accent-400" type="submit">Checkout</button>
+    </form>
+    <div>
+    <div class="checkout__preview bg-primary-200">
+      <h3 class="checkout__preview-title fw-semi-bold">Order Summary</h3>
+      <hr>
+        <ng-template [ngIf]="cart">
+          <div class="checkout__preview-item" *ngFor="let item of cart.cartDetails">
+            <img [src]="item.product.productImages[0]?.url ?? '/assets/images/images.jfif'" alt="">
+            <div class="checkout__preview-details">
+              <p>{{item.product.name}} {{item.product.description}}</p>
+              <div class="quantity">
+                <p class="text-primary-600">Quantity: {{item.count}}</p>
+                <p class="fw-bold">${{item.product.originalPrice}}.00</p>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,166 @@
+<section class="product bg-primary-200" *ngIf="product">
+  <div class="product__tabs ">
+    <app-ui-tabs class="full-width container" [tabs]="tabs" [itemPrice]="product.originalPrice" (tabChanged)="onTabChange($event)">
+    </app-ui-tabs>
+  </div>
+  <div class="two-columns container" style="align-items: revert;">
+    <div class="product__item flow">
+      <h1 class="product__title fw-medium">{{product.name}}</h1>
+      <ng-template [ngIf]="tabs[0] === activeTab">
+        <p class="fw-light fs-description">{{product.description}}</p>
+        <ul role="list">
+          <li class="filter__color-group">
+            <div [ngStyle]="{'background-color': product.color}" class="color">
+              <input type="checkbox" class="color-checkbox" [value]="product.color">
+            </div>
+          </li>
+        </ul>
+      </ng-template>
+      <ng-template [ngIf]="tabs[1] === activeTab">
+        <table>
+          <tbody>
+            <tr *ngFor="let spec of product.productSpecifications">
+              <td>{{spec.name}}</td>
+              <td>{{spec.value}}</td>
+            </tr>
+            <tr *ngFor="let spec of product.productSpecifications">
+              <td>{{spec.name}}</td>
+              <td>{{spec.value}}</td>
+            </tr>
+            <tr *ngFor="let spec of product.productSpecifications">
+              <td>{{spec.name}}</td>
+              <td>{{spec.value}}</td>
+            </tr>
+            <tr *ngFor="let spec of product.productSpecifications">
+              <td>{{spec.name}}</td>
+              <td>{{spec.value}}</td>
+            </tr>
+            <tr *ngFor="let spec of product.productSpecifications">
+              <td>{{spec.name}}</td>
+              <td>{{spec.value}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-template>
+      <ng-template [ngIf]="tabs[2] === activeTab">
+        <app-star 
+          [rating]="product.productRating"
+          [size]="'2rem'">
+        </app-star>
+      </ng-template>
+      <p class="fw-semi-bold fs-label">Have a Question? <a class="text-blue-accent-400" href="#">Contact Us</a></p>
+    </div>
+    <div class="product__image">
+      <img
+        loading="lazy"
+        [src]="product.productImages[0]?.url"
+        alt="product image"
+      />
+    </div>
+  </div>
+</section>
+<section class="benefits bg-primary-900 text-primary-100">
+  <div class="container two-columns">
+    <div class="benefits__text">
+      <h1 class="fs-primary-heading fw-medium">Outplay the Competittion</h1>
+      <p>
+        Experience a 40% boost in computing from last generation. MSI Desktop
+        equips the 10th Gen. Intel® Core™ i7 processor with the upmost computing
+        power to bring you an unparalleled gaming experience.
+        <br />
+        <br />
+        *Performance compared to i7-9700. Specs <br />
+        varies by model.
+      </p>
+    </div>
+    <div class="benefits__image">
+      <img
+        loading="lazy"
+        src="/assets/images/productP1.png"
+        alt="intel 9 image"
+      />
+    </div>
+  </div>
+</section>
+<section class="support bg-primary-200">
+  <div
+    class="support__container container"
+    style="--max-width: 870px; --padding: 0px"
+  >
+    <ul role="list" class="support__links fw-semi-bold flow">
+      <li><a href="#">Product Support</a></li>
+      <li><a href="#">FAQ</a></li>
+      <li><a href="#">Our Buyer Guide</a></li>
+    </ul>
+  </div>
+</section>
+<section class="features text-primary-100">
+  <div class="container">
+    <div class="features__heading">
+      <h2 class="fw-medium">Features</h2>
+      <br />
+      <p class="fw-light">
+        The MPG series brings out the best in gamers by allowing full expression
+        in color with advanced RGB lighting control and synchronization.
+      </p>
+    </div>
+    <div class="features__grid">
+      <div class="features__item">
+        <div class="feature__image">
+          <img
+            loading="lazy"
+            src="/assets/svg/feature-logos/intel.svg"
+            alt="intel icon"
+          />
+        </div>
+        <p class="fw-light">
+          <span class="fw-bold">Intel® Core™ i7</span> processor with the upmost
+          computing power to bring you an unparalleled gaming experience.
+        </p>
+      </div>
+      <div class="features__item">
+        <div class="feature__image">
+          <img
+            loading="lazy"
+            src="/assets/svg/feature-logos/nvidia.svg"
+            alt="nvidia icon"
+          />
+        </div>
+        <p class="fw-light">
+          The new <span class="fw-bold">GeForce® RTX SUPER™</span> Series has
+          more cores and higher clocks for superfast performance compared to
+          previous-gen GPUs.
+        </p>
+      </div>
+      <div class="features__item">
+        <div class="feature__image">
+          <img
+            loading="lazy"
+            src="/assets/svg/feature-logos/ssd.svg"
+            alt="ssd gen3 icon"
+          />
+        </div>
+        <p class="fw-light">
+          Unleash the full potential with the latest
+          <span class="fw-bold">SSD technology</span>, the NVM Express. 6 times
+          faster than traditional SATA SSD.
+        </p>
+      </div>
+      <div class="features__item">
+        <div class="feature__image">
+          <img
+            loading="lazy"
+            src="/assets/svg/feature-logos/ram.svg"
+            alt="ddr4 icon"
+          />
+        </div>
+        <p class="fw-light">
+          Featuring the latest
+          <span class="fw-bold">10th Gen Intel® Core™</span> processors, memory
+          can support up to DDR4 2933MHz to delivers an unprecedented gaming
+          experience.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

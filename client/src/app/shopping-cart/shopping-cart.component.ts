@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CartService } from '../_services/cart.service';
 import { CartResponse } from '../_models/Cart';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-shopping-cart',
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
-export class ShoppingCartComponent implements OnInit{
+export class ShoppingCartComponent implements OnInit, OnDestroy{
   cart: CartResponse;
+  cartSubscription: Subscription;
+
   constructor(private cartService: CartService, private toastr: ToastrService) {
 
   }
@@ -19,7 +22,7 @@ export class ShoppingCartComponent implements OnInit{
   }
 
   getCart() {
-    this.cartService.cart$.subscribe({
+    this.cartSubscription = this.cartService.cart$.subscribe({
       next: (cart: CartResponse | null) => {
         if(cart !== null) {
           this.cart = cart
@@ -34,5 +37,11 @@ export class ShoppingCartComponent implements OnInit{
         this.toastr.success('Cart cleared successfully')
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if(this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
   }
 }

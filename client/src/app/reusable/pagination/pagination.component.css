@@ -27,6 +27,7 @@
 .pagination__button:not(.active):hover {
   color: red;
   border-color: rgb(145, 145, 252);
+  cursor: pointer;
 }
 
 .pagination__page-number {

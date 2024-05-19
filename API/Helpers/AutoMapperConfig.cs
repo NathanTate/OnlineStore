@@ -1,10 +1,12 @@
 ﻿using API.Models;
 using API.Models.Cart;
 using API.Models.Coupon;
+using API.Models.DTO.Address.Requests;
 using API.Models.DTO.Cart.CartRequests;
 using API.Models.DTO.Cart.CartResponses;
 using API.Models.DTO.Coupon;
 using API.Models.DTO.Order;
+using API.Models.DTO.Order.Requests;
 using API.Models.DTO.ProductDTO;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
@@ -23,6 +25,7 @@ namespace API.Helpers
             {
                 config.CreateMap<RegisterRequest, ApplicationUser>().ReverseMap();
                 config.CreateMap<ApplicationUser, UserResponse>();
+                config.CreateMap<AddressRequest, Address>();
 
 
                 config.CreateMap<ProductCategory, ProductCategoryResponse>()
@@ -49,7 +52,10 @@ namespace API.Helpers
                 config.CreateMap<CartDetail, CartDetailRequest>().ReverseMap();
                 config.CreateMap<CartDetail, CartDetailResponse>().ReverseMap();
 
-                config.CreateMap<OrderHeaderDto, CartHeaderResponse>().ReverseMap();
+                config.CreateMap<OrderCheckoutRequest, OrderHeaderDto>()
+                .ForMember(dest => dest.OrderTotal, opt => opt.MapFrom(src => src.CartResponse.CartHeader.Total))
+                .ForMember(dest => dest.CouponCode, opt => opt.MapFrom(src => src.CartResponse.CartHeader.CouponCode))
+                .ForMember(dest => dest.Discount, opt => opt.MapFrom(src => src.CartResponse.CartHeader.Discount)).ReverseMap();
                 config.CreateMap<CartDetailResponse, OrderDetailDto>()
                 .ForMember(dest => dest.ProductPrice, opt => opt.MapFrom(src => src.Product.OriginalPrice))
                 .ReverseMap();

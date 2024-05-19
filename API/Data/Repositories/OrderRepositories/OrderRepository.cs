@@ -2,7 +2,6 @@
 using API.Helpers.OrderParameters;
 using API.Interfaces;
 using API.Models;
-using API.Models.DTO.Cart.CartResponses;
 using API.Models.DTO.Order;
 using API.Models.DTO.Order.Requests;
 using API.Models.Order;
@@ -31,27 +30,42 @@ namespace API.Data.Repositories.OrderRepositories
             _userManager = userManager;
         }
 
-        public async Task<Result<string>> CheckoutAsync(CartResponse cart)
+        public async Task<Result<string>> CheckoutAsync(OrderCheckoutRequest model, string userId)
         {
-            OrderHeaderDto orderHeaderDto = _mapper.Map<OrderHeaderDto>(cart.CartHeader);
-            orderHeaderDto.Id = 0;
-            orderHeaderDto.FirstName = "Mac";
-            orderHeaderDto.LastName = "Donalds";
-            orderHeaderDto.Phone = "15548461";
-            orderHeaderDto.Email = "email@gmail.com";
-            orderHeaderDto.AddressId = 1;
+            OrderHeaderDto orderHeaderDto = _mapper.Map<OrderHeaderDto>(model);
+            var addressDb = await _dbContext.Addresses.FirstOrDefaultAsync(a => a.ApplicationUserId == userId);
+            if (addressDb != null)
+            {
+                addressDb.Country = model.Address.Country;
+                addressDb.City = model.Address.City;
+                addressDb.State = model.Address.State;
+                addressDb.Street = model.Address.Street;
+                addressDb.HouseNumber = model.Address.HouseNumber;
+                addressDb.ZipCode = model.Address.ZipCode;
+                orderHeaderDto.AddressId = addressDb.Id;
+            }
+            else
+            {
+                Models.Address address = _mapper.Map<Models.Address>(model.Address);
+                _dbContext.Add(address);
+                await _dbContext.SaveChangesAsync();
+                orderHeaderDto.AddressId = address.Id;
+            }
+            orderHeaderDto.UserId = userId;
             orderHeaderDto.OrderDate = DateTime.UtcNow;
             orderHeaderDto.OrderStatus = nameof(SD.OrderStatus.PENDING);
-            orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailDto>>(cart.CartDetails);
+            orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailDto>>(model.CartResponse.CartDetails);
             orderHeaderDto.OrderDetails.ForEach(x => x.Id = 0);
 
             var options = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>(),
                 Mode = "payment",
-                SuccessUrl = "https://localhost:4200",
-                CancelUrl = "https://localhost:4200"
+                SuccessUrl = $"https://localhost:4200/validateSession/{orderHeaderDto.Id}",
+                CancelUrl = "https://localhost:4200/OrderCancell"
             };
+
+            orderHeaderDto.Id = 0;
 
             var discounts = new List<SessionDiscountOptions>()
             {
@@ -61,7 +75,7 @@ namespace API.Data.Repositories.OrderRepositories
                 }
             };
 
-            foreach(var item in orderHeaderDto.OrderDetails)
+            foreach (var item in orderHeaderDto.OrderDetails)
             {
                 var sessionLineItem = new SessionLineItemOptions
                 {
@@ -79,7 +93,7 @@ namespace API.Data.Repositories.OrderRepositories
                 options.LineItems.Add(sessionLineItem);
             }
 
-            if(orderHeaderDto.Discount > 0)
+            if (orderHeaderDto.Discount > 0)
             {
                 options.Discounts = discounts;
             }
@@ -96,7 +110,7 @@ namespace API.Data.Repositories.OrderRepositories
         public async Task<Result> VerifyStripeSessionAsync(int orderHeaderId)
         {
             var orderHeader = await _dbContext.OrderHeaders.FindAsync(orderHeaderId);
-            if(orderHeader == null)
+            if (orderHeader == null)
             {
                 return Result.Fail("Order doesn't exists");
             }
@@ -106,8 +120,8 @@ namespace API.Data.Repositories.OrderRepositories
 
             var paymentIntentService = new PaymentIntentService();
             PaymentIntent paymentIntent = await paymentIntentService.GetAsync(session.PaymentIntentId);
-            
-            if(paymentIntent.Status == "succeeded") 
+
+            if (paymentIntent.Status == "succeeded")
             {
                 orderHeader.PaymentIntentId = paymentIntent.Id;
                 orderHeader.OrderStatus = nameof(OrderStatus.APPROVED);
@@ -120,7 +134,7 @@ namespace API.Data.Repositories.OrderRepositories
         {
             IQueryable<OrderHeaderDto> ordersQuery;
             var user = await _dbContext.Users.FindAsync(userId);
-            if(await _userManager.IsInRoleAsync(user, nameof(UserRoles.ADMIN)))
+            if (await _userManager.IsInRoleAsync(user, nameof(UserRoles.ADMIN)))
             {
                 ordersQuery = _dbContext.OrderHeaders.AsNoTracking()
                     .Include(h => h.OrderDetails).ProjectTo<OrderHeaderDto>(_mapper.ConfigurationProvider);
@@ -140,26 +154,26 @@ namespace API.Data.Repositories.OrderRepositories
             var orderDb = await _dbContext.OrderHeaders.Where(h => h.UserId == userId).AsNoTracking()
                 .Include(h => h.OrderDetails).FirstOrDefaultAsync(h => h.Id == orderHeaderId);
 
-            if(orderDb == null)
+            if (orderDb == null)
             {
                 return Result.Fail("Order doesn't exist");
             }
 
             var order = _mapper.Map<OrderHeaderDto>(orderDb);
 
-            return Result.Ok(order);    
+            return Result.Ok(order);
         }
 
         public async Task<Result> UpdateOrderAsync(OrderUpdateRequest model)
         {
             var orderHeader = await _dbContext.OrderHeaders.FindAsync(model.orderHeaderId);
 
-            if(orderHeader == null)
+            if (orderHeader == null)
             {
                 return Result.Fail("Order doesn't exist");
             }
 
-            if(model.OrderStatus == OrderStatus.CANCELED)
+            if (model.OrderStatus == OrderStatus.CANCELED)
             {
                 var refundOptions = new RefundCreateOptions
                 {

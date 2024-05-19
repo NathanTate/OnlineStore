@@ -21,19 +21,20 @@ namespace API.Controllers
         }
 
         [HttpPost("Checkout")]
-        public async Task<IActionResult> Checkout(CartResponse cartResponse)
+        public async Task<IActionResult> Checkout(OrderCheckoutRequest model)
         {
-            Result<string> result = await _uow.OrderRepository.CheckoutAsync(cartResponse);
+            Result<string> result = await _uow.OrderRepository.CheckoutAsync(model, User.GetUserId());
 
-            if(result.IsFailed)
+            if (result.IsFailed)
             {
                 return BadRequest(result.Errors);
             }
 
             await _uow.SaveChangesAsync();
 
+            Response.Headers.Append("Access-Control-Expose-Headers", "Location");
             Response.Headers.Location = result.Value;
-            return new StatusCodeResult(303);
+            return Ok();
         }
 
         [HttpPost("ValidateStripeSession{id}")]
@@ -41,7 +42,7 @@ namespace API.Controllers
         {
             Result result = await _uow.OrderRepository.VerifyStripeSessionAsync(id);
 
-            if(result.IsFailed)
+            if (result.IsFailed)
             {
                 return BadRequest(result.Errors);
             }
@@ -62,7 +63,7 @@ namespace API.Controllers
         {
             Result<OrderHeaderDto> result = await _uow.OrderRepository.GetOrderAsync(id, User.GetUserId());
 
-            if(result.IsFailed)
+            if (result.IsFailed)
             {
                 return BadRequest(result.Errors);
             }
@@ -71,12 +72,12 @@ namespace API.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Bearer", Roles = nameof(UserRoles.ADMIN))]
-        [HttpPut]
+        [HttpPut("UpdateOrder")]
         public async Task<IActionResult> UpdateOrder(OrderUpdateRequest model)
         {
             Result result = await _uow.OrderRepository.UpdateOrderAsync(model);
 
-            if(result.IsFailed)
+            if (result.IsFailed)
             {
                 return BadRequest(result.Errors);
             }

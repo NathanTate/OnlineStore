@@ -36,6 +36,7 @@
 
 .section__text {
   grid-area: text;
+  font-weight: var(--fw-light);
 }
 
 .section__img {
