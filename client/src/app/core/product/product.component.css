@@ -8,6 +8,7 @@
 
 .two-columns {
   display: grid;
+  gap: 1rem;
   align-items: center;
   grid-template-areas: 
   'image'
@@ -22,16 +23,58 @@
   border-bottom: 1px solid var(--clr-primary-300);
 }
 
+.tabs {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding-block: 1.5rem;
+}
+
+.action-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quantity_input {
+  max-width: 60px;
+  padding: 0.85rem 0.75rem;
+  border: none;
+}
+
+.quantity_input:focus {
+  outline: none;
+}
+
+.button.add-to-cart {
+  padding: 0.85rem 1.5rem;
+}
+
+.product__content {
+  padding-block: 0.675rem;
+}
+
+ul.filter__color-group {
+  display: flex;
+  gap: 1rem;
+}
+
+ul > li {
+  margin: 0;
+}
+
 .product__item {
   grid-area: text;
-  padding-block: 0.675rem;
 }
 
 .product__item table {
   border-collapse: collapse;
 }
 
-.product__item td {
+.product__item td, th {
   border: 1px solid rgb(160 160 160);
   padding: 8px 10px;
 }
@@ -42,7 +85,10 @@
 
 .product__image {
   grid-area: image;
-  height: 300px;
+  width: 100%;
+  aspect-ratio: 1;
+  justify-self: center;
+  box-shadow: 0 0 6px -2px rgb(214, 214, 214);
 }
 
 .color {
@@ -106,7 +152,7 @@ h1 {
   position: relative;
   z-index: 2;
   display: inline-block;
-  width: clamp(243px, 50%, 380px);
+  width: clamp(230px, 50%, 380px);
   background-color: transparent;
   padding-inline: 1rem;
 }
@@ -206,7 +252,7 @@ h1 {
     max-width: 50ch;
   }
 
-  .product__item {
+  .product__content {
     padding-block: 2rem;
   }
 
@@ -218,9 +264,11 @@ h1 {
   }
 
   .two-columns {
-    grid-template-columns: repeat(2, 1fr);
+    --align: start;
+    grid-template-columns: 5fr 4fr;
     grid-template-areas: 'text image';
-    gap: 1.5rem;
+    gap: 2rem;
+    align-items: var(--align);
   }
 
   .support__container {
@@ -235,16 +283,16 @@ h1 {
   .features__grid {
     grid-template-columns: repeat(2, 1fr);
     column-gap: 4.375rem;
-  }  
+  }
+
+  .tabs {
+    justify-content: space-between;
+  }
 }
 
 @media (min-width: 48rem) {
   .features__title {
     font-size: var(--fs-850);
-  }
-
-  .product__title {
-    font-size: var(--fs-800);
   }
 
   .container {
@@ -255,6 +303,10 @@ h1 {
 @media (min-width: 64rem) {
   .benefits {
     padding-block: 0;
+  }
+
+  .product__title {
+    font-size: var(--fs-800);
   }
 
   .features {

@@ -6,8 +6,9 @@ import { AfterContentInit, Component,  EventEmitter, Input, OnChanges, Output, S
   styleUrl: './ui-tabs.component.css'
 })
 export class UiTabsComponent implements OnChanges{
-  @Input() itemPrice: number;
   @Input() tabs: string[];
+  @Input() direction: string = 'horizontal';
+  @Input() gap: string = '0.25rem';
   @Output() tabChanged = new EventEmitter<string>;
   activatedTab: string = '';
 

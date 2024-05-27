@@ -30,6 +30,12 @@ import { LoadingSpinnerComponent } from './reusable/loading-spinner/loading-spin
 import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { ProductComponent } from './core/product/product.component';
 import { UiTabsComponent } from './reusable/tabs/ui-tabs/ui-tabs.component';
+import { ImageSliderComponent } from './reusable/image-slider/image-slider.component';
+import { AdminComponent } from './core/admin/admin.component';
+import { ProductAdminComponent } from './core/admin/product-management/product-admin.component';
+import { HasRoleDirective } from './_directives/hasRole.directive';
+import { CurrencyPipe } from '@angular/common';
+import { DragAndDropDirective } from './shared/drag-and-drop.directive';
 
 @NgModule({
   declarations: [
@@ -52,7 +58,12 @@ import { UiTabsComponent } from './reusable/tabs/ui-tabs/ui-tabs.component';
     TermsComponent,
     LoadingSpinnerComponent,
     ProductComponent,
-    UiTabsComponent
+    UiTabsComponent,
+    ImageSliderComponent,
+    AdminComponent,
+    ProductAdminComponent,
+    HasRoleDirective,
+    DragAndDropDirective,
   ],
   imports: [
     BrowserModule,
@@ -67,7 +78,8 @@ import { UiTabsComponent } from './reusable/tabs/ui-tabs/ui-tabs.component';
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
+    [CurrencyPipe]
   ],
   bootstrap: [AppComponent]
 })

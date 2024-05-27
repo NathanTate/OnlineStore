@@ -8,7 +8,7 @@
         <rect class="line bottom" width="60" height="7" x="10" y="45" rx="5"></rect>
       </svg>
     </button>
-    <button class="button text-primary-400 filter__btn">Clear Filter</button>
+    <button class="button text-primary-400 filter__btn" (click)="onClear()">Clear Filter</button>
   </div>
   <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
   <div class="filter__categories">
@@ -18,7 +18,7 @@
     </div>
     <ul role="list" class="flow" style="--flow-spacer: 0.4rem" [attr.data-visible]="isVisible.category">
       <li *ngFor="let subCategory of subCategories">
-        <input type="checkbox" [value]="subCategory.id" (change)="onCheckChange($event, 'subCategories')"><label>{{subCategory.subCategoryName}}</label>
+        <input #checkbox type="checkbox" [value]="subCategory.id" (change)="onCheckChange($event, 'subCategories')"><label>{{subCategory.subCategoryName}}</label>
       </li>
     </ul>
   </div>
@@ -29,7 +29,7 @@
     </div>
     <ul role="list" class="flow" style="--flow-spacer: 0.4rem" [attr.data-visible]="isVisible.price"> 
       <li *ngFor="let price of priceRanges">
-        <input type="checkbox" (change)="updatePriceValues($event)" [value]="price.value"><label>{{price.label}}</label>
+        <input #checkbox type="checkbox" (change)="updatePriceValues($event)" [value]="price.value"><label>{{price.label}}</label>
       </li>
     </ul> 
   </div>
@@ -38,10 +38,10 @@
       <h4>Color</h4>
       <fa-icon [icon]="isVisible['color'] ? chevronUp : chevronDown" size="sm"></fa-icon>
     </div>
-    <ul role="list" style="--flow-spacer: 0.4rem" [attr.data-visible]="isVisible.color">
-      <li class="filter__color-group">
-        <div *ngFor="let color of colors" [ngStyle]="{'background-color': color}" class="color">
-          <input type="checkbox" class="color-checkbox" [value]="color" (change)="onCheckChange($event, 'colors')">
+    <ul role="list" class="filter__color-group" style="--flow-spacer: 0.4rem" [attr.data-visible]="isVisible.color">
+      <li *ngFor="let color of colors">
+        <div [ngStyle]="{'background-color': color}" class="color">
+          <input #checkbox type="checkbox" class="color-checkbox" [value]="color" (change)="onCheckChange($event, 'colors')">
         </div>
       </li>
     </ul>
@@ -52,8 +52,8 @@
       <fa-icon [icon]="isVisible['filter'] ? chevronUp : chevronDown" size="sm"></fa-icon>
     </div>
     <ul role="list" class="flow" style="--flow-spacer: 0.4rem" [attr.data-visible]="isVisible.filter">
-      <li><input type="checkbox"><label>Something Should be here</label></li>
-      <li><input type="checkbox"><label>Something Should be here</label></li>
+      <li><input #checkbox type="checkbox"><label>Something Should be here</label></li>
+      <li><input #checkbox type="checkbox"><label>Something Should be here</label></li>
     </ul>
   </div>
   <button class="button submit__btn bg-blue-accent-400" type="submit">

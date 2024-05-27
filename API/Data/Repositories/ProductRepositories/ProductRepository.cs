@@ -1,6 +1,7 @@
 ﻿using API.Helpers;
 using API.Helpers.RequestParams;
 using API.Interfaces;
+using API.Models.DTO.ProductDTO;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
 using API.Models.ProductModel;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 using System.Linq.Expressions;
+using Color = API.Models.ProductModel.Color;
 
 namespace API.Data.Repositories.ProductRepositories
 {
@@ -29,24 +31,52 @@ namespace API.Data.Repositories.ProductRepositories
 
         public async Task<Result<ProductResponse>> CreateProductAsync(ProductRequest model)
         {
-            Result<ImageUploadResult> result = await _photoService.UploadPhotoAsync(model.ProductImage);
+            Result<List<ImageUploadResult>> results = await _photoService.UploadPhotoAsync(model.ProductImages);
 
-            if(result.IsFailed)
+            if (results.IsFailed)
             {
-                return Result.Fail(result.Errors[0]);
+                return Result.Fail(results.Errors[0]);
             }
             model.Id = 0;
 
             var product = _mapper.Map<Product>(model);
             product.CreatedAt = DateTime.UtcNow;
-            product.ProductImages.Add(new ProductImage
+
+            List<ProductColor> productColors = new();
+            foreach (var result in results.Value)
             {
-                Url = result.Value.Url.ToString(),
-                PublicId = result.Value.PublicId,
-                IsMain = model.IsMainImage
-            });
+                product.ProductImages.Add(new ProductImage
+                {
+                    Url = result.SecureUrl.ToString(),
+                    PublicId = result.PublicId,
+                    IsMain = model.IsMainImage
+                });
+            }
+
+            foreach (var value in model.Colors.Select(c => c.Value))
+            {
+                var color = await _dbContext.Colors.FirstOrDefaultAsync(c => c.Value == value.ToLower());
+
+                if (color == null)
+                {
+                    color = new Color
+                    {
+                        Value = value.ToLower(),
+                    };
+
+                    _dbContext.Colors.Add(color);
+                }
+
+                productColors.Add(new ProductColor { Color = color });
+            }
 
             await _dbContext.Products.AddAsync(product);
+
+            foreach (var color in productColors)
+            {
+                color.Product = product;
+                _dbContext.ProductColors.Add(color);
+            }
 
             return Result.Ok(_mapper.Map<ProductResponse>(product));
         }
@@ -58,7 +88,7 @@ namespace API.Data.Repositories.ProductRepositories
 
             productsQuery = FilterProduct(productsQuery, productParams);
 
-            if(productParams.SortBy?.ToLower() == "desc")
+            if (productParams.SortBy?.ToLower() == "desc")
             {
                 productsQuery = productsQuery.OrderByDescending(GetSortProperty(productParams));
             }
@@ -71,7 +101,7 @@ namespace API.Data.Repositories.ProductRepositories
                 productsQuery.AsNoTracking().ProjectTo<ProductResponse>(_mapper.ConfigurationProvider),
                 productParams.Page,
                 productParams.PageSize);
-           
+
             return result;
         }
 
@@ -79,15 +109,18 @@ namespace API.Data.Repositories.ProductRepositories
         {
             var product = await _dbContext.Products.FindAsync(id);
 
-            await _dbContext.Entry(product).Collection(p => p.ProductImages).LoadAsync();
-            await _dbContext.Entry(product).Collection(p => p.ProductSpecifications).LoadAsync();
-
             if (product == null)
             {
                 return Result.Fail("Product doesn't exist");
             }
 
-            return Result.Ok(_mapper.Map<ProductResponse>(product));
+            await _dbContext.Entry(product).Collection(p => p.ProductImages).LoadAsync();
+            await _dbContext.Entry(product).Collection(p => p.ProductSpecifications).LoadAsync();
+            var colors = await _dbContext.ProductColors.Where(pc => pc.ProductId == product.Id).Select(pc => pc.Color).ToListAsync();
+            var productsDto = _mapper.Map<ProductResponse>(product);
+            productsDto.Colors = _mapper.Map<List<ColorDto>>(colors);
+
+            return Result.Ok(productsDto);
         }
 
         public async Task<Result> UpdateProductAsync(ProductRequest model)
@@ -132,6 +165,11 @@ namespace API.Data.Repositories.ProductRepositories
             return Result.Ok();
         }
 
+        public async Task<IEnumerable<ColorDto>> GetColorsAsync()
+        {
+            return _mapper.Map<IEnumerable<ColorDto>>(await _dbContext.Colors.ToListAsync());
+        }
+
         private static Expression<Func<Product, object>> GetSortProperty(ProductParams sortColumn)
         {
             Expression<Func<Product, object>> keySelector = sortColumn.SortColumn?.ToLower() switch
@@ -157,7 +195,7 @@ namespace API.Data.Repositories.ProductRepositories
             }
             if (productParams.Colors.Count() != 0)
             {
-                productsQuery = productsQuery.Where(p => productParams.Colors.Contains(p.Color));
+                productsQuery = productsQuery.Where(p => productParams.Colors.Intersect(p.Colors.Select(x => x.Color.Value)).Any());
             }
             if (productParams.PriceMax != default(decimal))
             {

@@ -4,5 +4,5 @@ export interface User {
     firstName: string;
     lastName: string;
     token: string | null;
-    roles: string[]
+    roles: string[];
 }

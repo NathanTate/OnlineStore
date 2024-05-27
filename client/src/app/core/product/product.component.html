@@ -1,66 +1,30 @@
 <section class="product bg-primary-200" *ngIf="product">
-  <div class="product__tabs ">
-    <app-ui-tabs class="full-width container" [tabs]="tabs" [itemPrice]="product.originalPrice" (tabChanged)="onTabChange($event)">
-    </app-ui-tabs>
+  <div class="bg-primary-100 product__tabs">
+    <div class="container full-width tabs">
+      <div class="action-group">
+        <p>On Sale from <span class="fw-semi-bold">${{product.originalPrice}}.00</span></p>
+        <input type="number" (ngModelChange)="onChange($event)" [(ngModel)]="count" min="1" value="1" class="quantity_input bg-primary-200 fw-semi-bold">
+        <button class="button add-to-cart bg-blue-accent-400">Add to Cart</button>
+      </div>
+      <app-ui-tabs [tabs]="tabs" (tabChanged)="onTabChange($event)">
+      </app-ui-tabs>
+    </div>
   </div>
-  <div class="two-columns container" style="align-items: revert;">
+  <div class="two-columns container product__content" >
     <div class="product__item flow">
       <h1 class="product__title fw-medium">{{product.name}}</h1>
-      <ng-template [ngIf]="tabs[0] === activeTab">
-        <p class="fw-light fs-description">{{product.description}}</p>
-        <ul role="list">
-          <li class="filter__color-group">
-            <div [ngStyle]="{'background-color': product.color}" class="color">
-              <input type="checkbox" class="color-checkbox" [value]="product.color">
-            </div>
-          </li>
-        </ul>
-      </ng-template>
-      <ng-template [ngIf]="tabs[1] === activeTab">
-        <table>
-          <tbody>
-            <tr *ngFor="let spec of product.productSpecifications">
-              <td>{{spec.name}}</td>
-              <td>{{spec.value}}</td>
-            </tr>
-            <tr *ngFor="let spec of product.productSpecifications">
-              <td>{{spec.name}}</td>
-              <td>{{spec.value}}</td>
-            </tr>
-            <tr *ngFor="let spec of product.productSpecifications">
-              <td>{{spec.name}}</td>
-              <td>{{spec.value}}</td>
-            </tr>
-            <tr *ngFor="let spec of product.productSpecifications">
-              <td>{{spec.name}}</td>
-              <td>{{spec.value}}</td>
-            </tr>
-            <tr *ngFor="let spec of product.productSpecifications">
-              <td>{{spec.name}}</td>
-              <td>{{spec.value}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </ng-template>
-      <ng-template [ngIf]="tabs[2] === activeTab">
-        <app-star 
-          [rating]="product.productRating"
-          [size]="'2rem'">
-        </app-star>
-      </ng-template>
-      <p class="fw-semi-bold fs-label">Have a Question? <a class="text-blue-accent-400" href="#">Contact Us</a></p>
+      <ng-container *ngIf="tabs[0] === activeTab; then aboutProductTemplate"></ng-container>
+      <ng-container *ngIf="tabs[1] === activeTab; then specificationsTemplate"></ng-container>
+      <ng-container *ngIf="tabs[2] === activeTab; then reviewsTemplate"></ng-container>
+      <p class="fw-semi-bold fs-label" >Have a Question? <a class="text-blue-accent-400" href="#">Contact Us</a></p>
     </div>
     <div class="product__image">
-      <img
-        loading="lazy"
-        [src]="product.productImages[0]?.url"
-        alt="product image"
-      />
+     <app-image-slider [images]="product.productImages"></app-image-slider>
     </div>
   </div>
 </section>
 <section class="benefits bg-primary-900 text-primary-100">
-  <div class="container two-columns">
+  <div class="container two-columns" style="--align: center">
     <div class="benefits__text">
       <h1 class="fs-primary-heading fw-medium">Outplay the Competittion</h1>
       <p>
@@ -164,3 +128,35 @@
     </div>
   </div>
 </section>
+
+<ng-template #aboutProductTemplate>
+  <p class="fw-light fs-description">{{ product.description }}</p>
+  <ul role="list" class="filter__color-group">
+    <li *ngFor="let color of product.colors">
+      <div [ngStyle]="{ 'background-color': color.value}" class="color">
+        <input type="checkbox" class="color-checkbox" [value]="color.value">
+      </div>
+    </li>
+  </ul>
+</ng-template>
+
+<ng-template #specificationsTemplate>
+  <table>
+    <thead>
+      <tr>
+        <th class="fw-semi-bold">Specification</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let spec of product.productSpecifications">
+        <td class="fw-semi-bold">{{ spec.name }}</td>
+        <td>{{ spec.value }}</td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>
+
+<ng-template #reviewsTemplate>
+  <app-star [rating]="product.productRating" [size]="'2rem'"></app-star>
+</ng-template>

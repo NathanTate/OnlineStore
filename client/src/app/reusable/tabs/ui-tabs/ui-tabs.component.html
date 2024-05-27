@@ -1,15 +1,10 @@
 <div class="tab-container">
-  <div class="wrapper">
-    <div class="nav">
-      <div
-        [ngClass]="{ active: tab == activatedTab }"
-        *ngFor="let tab of tabs"
-        class="nav-item fw-semi-bold text-primary-600">
-        <span (click)="activateTab(tab)">{{tab}}</span>
-      </div>
-    </div>
-    <div>
-      <span>${{itemPrice}}.00</span>
+  <div class="nav" [ngStyle]="{'flex-direction': direction != 'horizontal' ? 'column': '', 'gap': gap}">
+    <div
+      [ngClass]="{ active: tab == activatedTab }"
+      *ngFor="let tab of tabs"
+      class="nav-item fw-semi-bold text-primary-600">
+      <span (click)="activateTab(tab)">{{ tab }}</span>
     </div>
   </div>
 </div>

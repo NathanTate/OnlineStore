@@ -1,0 +1,24 @@
+.two-columns {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-menu {
+  position: sticky;
+  top: 10px;
+}
+
+@media (min-width: 48rem) {
+  .two-columns {
+    grid-template-columns: clamp(250px, 30vw ,350px) 1fr;
+  }
+}
+
+:host ::ng-deep app-ui-tabs .nav-item {
+  padding-inline: 1.5rem;
+}
+
+:host ::ng-deep app-ui-tabs .nav-item.active {
+  text-decoration-color: transparent;
+  border-left: 3px solid blue;
+}

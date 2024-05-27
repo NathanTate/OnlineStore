@@ -1,0 +1,10 @@
+<div class="container two-columns padding-block-600">
+  <div>
+    <div class="admin-menu bg-primary-200 padding-block-400">
+      <app-ui-tabs [tabs]="tabKeys" direction="column" gap="0.75rem" (tabChanged)="onTabChanged($event)"></app-ui-tabs>
+    </div>
+  </div>
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

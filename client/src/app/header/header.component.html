@@ -54,6 +54,7 @@
             <li><a routerLink="/about">About</a></li>
             <li><a routerLink="/terms">Terms</a></li>
             <li><a href="#" class="button text-blue-accent-400">Our Deals</a></li>
+            <li *appHasRole="['ADMIN']"><a routerLink="/admin">Admin Pannel</a></li>
           </ul>
         </div>
         </nav>

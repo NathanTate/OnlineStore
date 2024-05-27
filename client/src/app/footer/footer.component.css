@@ -19,6 +19,8 @@
   padding: var(--size-300) var(--size-300);
   border: 2px solid var(--clr-primary-100);
   margin-right: var(--size-400);
+  color: var(--clr-primary-100);
+  outline: none;
 }
 
 .footer-nav {
@@ -131,8 +133,8 @@ h4 {
 @media (max-width: 38rem) {
   .footer-info-media {
     grid-template-areas: 
-    'social copyright'
-    'payment payment';
+    'social copyright copyright'
+    'payment payment payment';
   }
 
   .cta {

@@ -1,6 +1,7 @@
 ﻿using API.Helpers;
 using API.Helpers.RequestParams;
 using API.Interfaces;
+using API.Models.DTO.ProductDTO;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
 using FluentResults;
@@ -13,7 +14,7 @@ using static API.Utility.SD;
 
 namespace API.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer", Roles = $"{nameof(UserRoles.ADMIN)}, {nameof(UserRoles.MANAGER)}")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = nameof(UserRoles.ADMIN))]
     public class ProductController : BaseAPIController
     {
         private readonly IUnitOfWork _uow;
@@ -27,10 +28,10 @@ namespace API.Controllers
         {
             ValidationResult validationResult = validator.Validate(model);
 
-            if (!validationResult.IsValid) 
+            if (!validationResult.IsValid)
             {
                 var modelStateDictionary = new ModelStateDictionary();
-                foreach(ValidationFailure failure in validationResult.Errors)
+                foreach (ValidationFailure failure in validationResult.Errors)
                 {
                     modelStateDictionary.AddModelError(
                         failure.PropertyName,
@@ -44,7 +45,7 @@ namespace API.Controllers
 
             await _uow.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(CreateProduct), new {productId = result.Value.Id }, result.Value);
+            return CreatedAtAction(nameof(CreateProduct), new { productId = result.Value.Id }, result.Value);
         }
 
         [AllowAnonymous]
@@ -60,7 +61,7 @@ namespace API.Controllers
         {
             Result<ProductResponse> result = await _uow.ProductRepository.GetProductAsync(id);
 
-            if(result.IsFailed)
+            if (result.IsFailed)
             {
                 return BadRequest(result.Errors);
             }
@@ -73,10 +74,10 @@ namespace API.Controllers
         {
             ValidationResult validationResult = validator.Validate(model);
 
-            if(!validationResult.IsValid) 
+            if (!validationResult.IsValid)
             {
                 var modelStateDictionary = new ModelStateDictionary();
-                foreach(ValidationFailure failure in validationResult.Errors)
+                foreach (ValidationFailure failure in validationResult.Errors)
                 {
                     modelStateDictionary.AddModelError(
                         failure.PropertyName,
@@ -103,7 +104,7 @@ namespace API.Controllers
         {
             Result result = await _uow.ProductRepository.DeleteProductAsync(id);
 
-            if(result.IsFailed)
+            if (result.IsFailed)
             {
                 return BadRequest(result.Errors);
             }
@@ -118,7 +119,7 @@ namespace API.Controllers
         {
             Result result = await _uow.ProductRepository.DeletePhotoAsync(productId, photoId);
 
-            if(result.IsFailed)
+            if (result.IsFailed)
             {
                 return BadRequest(result.Errors);
             }
@@ -126,6 +127,12 @@ namespace API.Controllers
             await _uow.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpGet("GetColors")]
+        public async Task<ActionResult<ColorDto>> GetColors()
+        {
+            return Ok(await _uow.ProductRepository.GetColorsAsync());
         }
     }
 }

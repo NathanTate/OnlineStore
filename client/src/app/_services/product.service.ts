@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Product, ProductResponse } from "../_models/Product";
+import { Color, Product, ProductRequest, ProductResponse } from "../_models/Product";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { environment } from "../../environments/environment.development";
 import { SubCategory } from "../_models/Categories";
@@ -17,6 +17,11 @@ export class ProductService {
 
   getProductParams(): ProductParams {
     return this.productParams;
+  }
+
+  addProduct(model: FormData) {
+    console.log(model);
+    return this.http.post<void>(this.baseUrl + 'product/CreateProduct', model);
   }
 
   getProducts(productParams: ProductParams = this.productParams) {
@@ -44,6 +49,10 @@ export class ProductService {
 
   getSubCategories(categoryId: number) {
     return this.http.get<SubCategory[]>(this.baseUrl + 'category/getSubCategories/' + categoryId);
+  }
+
+  getColors() {
+    return this.http.get<Color[]>(this.baseUrl + 'product/getColors');
   }
 
 }

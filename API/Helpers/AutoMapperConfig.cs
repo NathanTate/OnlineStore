@@ -39,7 +39,9 @@ namespace API.Helpers
                 config.CreateMap<Brand, BrandDto>().ReverseMap();
                 config.CreateMap<ProductSpecification, ProductSpecificationDto>().ReverseMap();
                 config.CreateMap<ProductRequest, Product>()
-                .ForMember(dest => dest.ProductSpecifications, opt => opt.MapFrom(src => src.ProductSpecificationsDto));
+                .ForMember(dest => dest.ProductSpecifications, opt => opt.MapFrom(src => src.ProductSpecifications))
+                .ForMember(dest => dest.ProductImages, opt => opt.Ignore())
+                .ForMember(dest => dest.Colors, opt => opt.Ignore());
                 config.CreateMap<Product, ProductResponse>();
 
                 config.CreateMap<Review, ReviewDto>().ReverseMap();
@@ -61,6 +63,11 @@ namespace API.Helpers
                 .ReverseMap();
                 config.CreateMap<OrderHeader, OrderHeaderDto>().ReverseMap();
                 config.CreateMap<OrderDetail, OrderDetailDto>().ReverseMap();
+
+                config.CreateMap<Color, ColorDto>().ReverseMap();
+                config.CreateMap<ProductColor, ColorDto>()
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Color.Value))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Color.Id)).ReverseMap();
             });
         }
     }

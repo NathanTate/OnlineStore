@@ -27,6 +27,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<CartDetail> CartDetails { get; set; }
     public DbSet<OrderHeader> OrderHeaders { get; set; }
     public DbSet<OrderDetail> OrderDetails { get; set; }
+    public DbSet<Color> Colors { get; set; }
+    public DbSet<ProductColor> ProductColors { get; set; }
+
 
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -40,6 +43,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<ProductSubCategory>()
             .HasIndex(p => p.SubCategoryName)
             .IsUnique();
+
+        builder.Entity<ProductColor>()
+            .HasKey(pk => new { pk.ProductId, pk.ColorId });
+
+        builder.Entity<ProductColor>()
+            .HasOne(pc => pc.Color)
+            .WithMany(pc => pc.Colors)
+            .HasForeignKey(pc => pc.ColorId);
+
+        builder.Entity<ProductColor>()
+            .HasOne(pc => pc.Product)
+            .WithMany(pc => pc.Colors)
+            .HasForeignKey(pc => pc.ProductId);
             
     }
 }

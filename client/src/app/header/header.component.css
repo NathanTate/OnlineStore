@@ -43,7 +43,7 @@
 
 .nav-list a {
     text-decoration: none;
-    padding: 0.5em 1.25em;
+    padding: 0.5em 1.05em;
     border-radius: 100vw;
     transition: color 200ms, background-color 200ms;
 }

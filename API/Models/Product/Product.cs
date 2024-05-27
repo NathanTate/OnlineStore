@@ -19,9 +19,7 @@ namespace API.Models.ProductModel
         [Precision(16, 2)]
         public decimal SalePrice { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string Color { get; set; }
+        public List<ProductColor> Colors { get; set; }
 
         [Required]
         public string Description { get; set; }

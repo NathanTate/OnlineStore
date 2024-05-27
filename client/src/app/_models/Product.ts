@@ -5,6 +5,20 @@ export interface ProductResponse {
   totalCount: number
 }
 
+export interface ProductRequest {
+  name: string;
+  originalPrice: number;
+  salePrice: number;
+  description: string;
+  subCategoryId: number;
+  categoryId: number;
+  brandId: number;
+  isMainImage: boolean;
+  colors: Color[];
+  productSpecifications: ProductSpecification[];
+  ProductImages: FileList;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -14,7 +28,7 @@ export interface Product {
   brand: Brand;
   originalPrice: number;
   salePrice: number;
-  color: string;
+  colors: Color[];
   productImages: ProductImage[];
   productSpecifications: ProductSpecification[];
   reviews: Review[];
@@ -26,7 +40,7 @@ interface Brand {
   brandDescription: string;
 }
 
-interface ProductImage {
+export interface ProductImage {
   id: number;
   url: string;
   isMain: boolean;
@@ -51,4 +65,9 @@ interface Rating {
   ratingScore: number;
   orderStatus: string;
   userId: string;
+}
+
+export interface Color {
+  id: number;
+  value: string;
 }

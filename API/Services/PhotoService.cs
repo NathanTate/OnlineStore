@@ -23,26 +23,30 @@ namespace API.Services
             _cloudinary.Api.Secure = true;
         }
 
-        public async Task<Result<ImageUploadResult>> UploadPhotoAsync(IFormFile file)
+        public async Task<Result<List<ImageUploadResult>>> UploadPhotoAsync(IFormCollection files)
         {
 
-            if (file.Length < 0)
+            if (files.Count == 0)
             {
                 return Result.Fail("No image to upload");
             }
 
-            using var stream = file.OpenReadStream();
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(file.FileName, stream),
-                Transformation = new Transformation().Gravity("face").Height(500).Width(500)
-                .Crop("fill"),
-                Folder = "product"
-            };
+            List<Task<ImageUploadResult>> tasks = new();
 
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            foreach(IFormFile file in files.Files) { 
 
-            return Result.Ok(uploadResult);
+                using var stream = file.OpenReadStream();
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Folder = "product"
+                };
+
+                tasks.Add(_cloudinary.UploadAsync(uploadParams));
+            }
+
+            var uploadResults = await Task.WhenAll(tasks);
+            return Result.Ok(uploadResults.ToList());
         }
 
         public async Task<Result<DeletionResult>> DeletePhotoAsync(string publicId)

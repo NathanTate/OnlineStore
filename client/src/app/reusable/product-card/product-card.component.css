@@ -3,7 +3,7 @@
   grid-template-rows: subgrid;
   grid-row: span 5;
   border: 1px solid var(--clr-primary-200);
-  padding: var(--size-400) var(--size-500);
+  padding: var(--size-300) var(--size-300);
   transition: scale 300ms;
 }
 
@@ -33,6 +33,13 @@
 
 .card__info {
   font-size: 11px;
+}
+
+.card__info > a {
+  display: block;
+  height: 36px;
+  line-height: 18px;
+  overflow: hidden;
 }
 
 .price-old {

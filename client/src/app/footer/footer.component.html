@@ -14,7 +14,7 @@
             <div>
                 <div class="wrapper">
                     <h4>Information</h4>
-                    <img (click)="onToggle('info')" [src]="isVisible['info'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
+                    <img loading="lazy" (click)="onToggle('info')" [src]="isVisible['info'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
                 </div>
                 <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.info">
                     <li><a href="#">About Us</a></li>
@@ -27,7 +27,7 @@
             <div>
                 <div class="wrapper">
                     <h4>PC Parts</h4>
-                    <img (click)="onToggle('pcParts')" [src]="isVisible['pcParts'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
+                    <img loading="lazy" (click)="onToggle('pcParts')" [src]="isVisible['pcParts'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
                 </div>
                 <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.pcParts">
                     <li><a href="#">Processor</a></li>
@@ -42,7 +42,7 @@
             <div>
                 <div class="wrapper">
                     <h4>Desktop PCs</h4>
-                    <img (click)="onToggle('desktopPCs')" [src]="isVisible['desktopPCs'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
+                    <img loading="lazy" (click)="onToggle('desktopPCs')" [src]="isVisible['desktopPCs'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
                 </div>
                 <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.desktopPCs">
                     <li><a href="#">Gaming Desktops</a></li>
@@ -54,7 +54,7 @@
             <div>
                 <div class="wrapper">
                     <h4>Laptops</h4>
-                    <img (click)="onToggle('laptops')" [src]="isVisible['laptops'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
+                    <img loading="lazy" (click)="onToggle('laptops')" [src]="isVisible['laptops'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
                 </div>
                 <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.laptops">
                     <li><a href="#">Gaming Laptops</a></li>
@@ -66,9 +66,9 @@
             <div>
                 <div class="wrapper">
                     <h4>Address</h4>
-                    <img (click)="onToggle('address')" [src]="isVisible['address'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
+                    <img loading="lazy" (click)="onToggle('address')" [src]="isVisible['address'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
                 </div>
-                <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.address">
+                <ul role="list" class="footer-nav-list flow" style="--flow-spacer: 0.33rem" [attr.data-visible]="isVisible.address">
                     <li>123 Street Name</li>
                     <li>City</li>
                     <li>Country</li>
@@ -84,11 +84,11 @@
                 <fa-icon [icon]="faInstagram" size="2x"></fa-icon>
             </div>
             <div class="payment-method-icons">
-                <img src="/assets/svg/paypal.svg" alt="paypal icon">
-                <img src="/assets/svg/visa.svg" alt="visa icon">
-                <img src="/assets/svg/masterCard.svg" alt="mastercard icon">
-                <img src="/assets/svg/discover.svg" alt="discover icon">
-                <img src="/assets/svg/american-express.svg" alt="american express icon">
+                <img loading="lazy" src="/assets/svg/paypal.svg" alt="paypal icon">
+                <img loading="lazy" src="/assets/svg/visa.svg" alt="visa icon">
+                <img loading="lazy" src="/assets/svg/masterCard.svg" alt="mastercard icon">
+                <img loading="lazy" src="/assets/svg/discover.svg" alt="discover icon">
+                <img loading="lazy" src="/assets/svg/american-express.svg" alt="american express icon">
             </div>
             <p class="copyright-text text-primary-400">
                 Copyright &copy; 2024 Shop Pty. Ltd.

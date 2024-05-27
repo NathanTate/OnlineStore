@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2 } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { SubCategory } from '../../_models/Categories';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { ProductParams } from '../../_models/ProductParams';
+import { FilterParams } from '../../_models/ProductParams';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -12,10 +12,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './filter.component.css'
 })
 export class FilterComponent implements OnInit, OnDestroy{
+  @ViewChildren('checkbox') inputs: QueryList<ElementRef<HTMLInputElement>>;
   @Input() colors: Set<string>;
   @Input() brands: Set<string>;
   @Input() subCategories: SubCategory[];
-  @Output() productParams = new EventEmitter<ProductParams>;
+  @Output() filterParams = new EventEmitter<FilterParams>;
   filterForm: FormGroup;
   chevronDown = faChevronDown;
   chevronUp = faChevronUp;
@@ -87,12 +88,11 @@ export class FilterComponent implements OnInit, OnDestroy{
       this.toastr.error('Submission of invalid form')
       return;
     }
-    this.productParams.emit(this.filterForm.value);
+    this.filterParams.emit(this.filterForm.value);
   }
 
   initializeForm() {
-    this.filterForm = this.fb.group({
-      categoryId: [2],
+    this.filterForm = this.fb.nonNullable.group({
       subCategories: this.fb.array([]),
       priceMin: [0],
       priceMax: [0],
@@ -134,6 +134,29 @@ export class FilterComponent implements OnInit, OnDestroy{
     } else {
       this.filterForm.patchValue({priceMin: 0, priceMax: 0})
     }
+  }
+
+  onClear() {
+    this.filterForm.reset();
+    this.uncheckInputs();
+    this.selectedFiltersAmount = 0;
+
+    let colors = this.filterForm.get('colors') as FormArray;
+    let subCategories = this.filterForm.get('subCategories') as FormArray;
+    let brands = this.filterForm.get('brands') as FormArray;
+    colors.clear();
+    subCategories.clear();
+    brands.clear();
+  }
+
+  uncheckInputs() {
+    console.log(this.inputs)
+    this.inputs.forEach(input => {
+      input.nativeElement.checked = false;
+    })
+    this.priceRanges.forEach(p => {
+      p.checked = false;
+    })
   }
 
   ngOnDestroy(): void {

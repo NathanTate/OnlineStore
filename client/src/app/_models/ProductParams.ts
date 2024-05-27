@@ -17,8 +17,16 @@ export class ProductParams {
   priceEnd: number = 0;
   brands: number[] = [];
   colors: string[] = [];
-  page: number;
-  pageSize: number;
-  sortBy: string;
-  sortColumn: string;
+  page: number = 1;
+  pageSize: number = 20;
+  sortBy: string = 'desc';
+  sortColumn: string = 'rating';
+}
+
+export interface FilterParams {
+  subCategories: number[];
+  priceStart: number;
+  priceEnd: number
+  brands: number[];
+  colors: string[];
 }

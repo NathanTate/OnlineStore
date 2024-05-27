@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, map } from "rxjs";
+import { BehaviorSubject, Observable, map, take } from "rxjs";
 import { User } from "../_models/User";
 import { HttpClient } from "@angular/common/http";
 import { AuthModel } from "../_models/Auth";
@@ -24,9 +24,16 @@ export class AuthService {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
       map((user: User) => {
           this.setCurrentUser(user);
-          this.cartCreate();
+          // this.cartCreate();
       })
     );
+  }
+
+  hasRole(roles: string[]): Observable<boolean> {
+    return this.currentUser$.pipe(take(1), map(user => {
+      if(!user || !user.roles) return false;
+      return user.roles.some(role => roles.includes(role.toUpperCase()));
+    }))
   }
 
   register(model: AuthModel) { 
@@ -60,13 +67,13 @@ export class AuthService {
     const experationTime = expires.getDate() - Date.now();
     const roles = decodedToken.role;
     user.tokenExperationDate = expires;
-    user.roles = roles;
+    user.roles = [];
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
     const isValidToken = user.tokenExperationDate && new Date() < user.tokenExperationDate;
     if(isValidToken) {
       this.currentUserSubject.next(user);
       localStorage.setItem('user', JSON.stringify(user));
       this.cartCreate();
-      this.cartService.getCart().subscribe();
       this.autoLogout(experationTime);
     }
   }
@@ -77,11 +84,15 @@ export class AuthService {
     }
   }
 
-  private cartCreate() {
+  private cartCreate(): void {
     this.cartService.cartExists().subscribe({
       next: (exists: boolean) => {
         if(!exists) {
-          this.cartService.createCart().subscribe();
+          this.cartService.createCart().subscribe({
+            next: () => this.cartService.getCart().subscribe()
+          });
+        } else {
+          this.cartService.getCart().subscribe();
         }
       }
     })

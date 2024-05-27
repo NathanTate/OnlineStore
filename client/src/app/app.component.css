@@ -4,6 +4,10 @@
   grid-template-rows: auto 1fr auto;
 }
 
+.padding-block-main {
+  padding-block: 2rem 3rem;
+}
+
 .benefits-section {
   text-align: center;
   padding: var(--size-700) var(--size-600) var(--size-600);

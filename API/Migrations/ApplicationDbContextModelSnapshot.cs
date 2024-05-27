@@ -346,6 +346,24 @@ namespace API.Migrations
                     b.ToTable("Brand");
                 });
 
+            modelBuilder.Entity("API.Models.ProductModel.Color", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Colors");
+                });
+
             modelBuilder.Entity("API.Models.ProductModel.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -356,11 +374,6 @@ namespace API.Migrations
 
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -423,6 +436,21 @@ namespace API.Migrations
                         .IsUnique();
 
                     b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("API.Models.ProductModel.ProductColor", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ColorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "ColorId");
+
+                    b.HasIndex("ColorId");
+
+                    b.ToTable("ProductColors");
                 });
 
             modelBuilder.Entity("API.Models.ProductModel.ProductImage", b =>
@@ -792,6 +820,25 @@ namespace API.Migrations
                     b.Navigation("SubCategory");
                 });
 
+            modelBuilder.Entity("API.Models.ProductModel.ProductColor", b =>
+                {
+                    b.HasOne("API.Models.ProductModel.Color", "Color")
+                        .WithMany("Colors")
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.ProductModel.Product", "Product")
+                        .WithMany("Colors")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Color");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("API.Models.ProductModel.ProductImage", b =>
                 {
                     b.HasOne("API.Models.ProductModel.Product", "Product")
@@ -927,8 +974,15 @@ namespace API.Migrations
                     b.Navigation("Products");
                 });
 
+            modelBuilder.Entity("API.Models.ProductModel.Color", b =>
+                {
+                    b.Navigation("Colors");
+                });
+
             modelBuilder.Entity("API.Models.ProductModel.Product", b =>
                 {
+                    b.Navigation("Colors");
+
                     b.Navigation("ProductImages");
 
                     b.Navigation("ProductSpecifications");

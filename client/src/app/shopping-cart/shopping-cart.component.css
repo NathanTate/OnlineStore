@@ -64,9 +64,11 @@ hr {
 
 @media (hover: hover) {
   .cart__button.clear:hover {
+    cursor: pointer;
     opacity: 0.8;
   }
   .cart__button.continue:hover {
+    cursor: pointer;
     background-color: var(--clr-primary-400);
     color: var(--clr-primary-900);
   }
