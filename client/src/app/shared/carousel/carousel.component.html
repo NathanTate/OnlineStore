@@ -1,0 +1,11 @@
+<div class="carousel" [ngStyle]="{'--items': items, 'font-size': size}">
+  <div class="carousel__inner" #content>
+    <ng-content></ng-content>
+  </div>
+  <button *ngIf="showControls" (click)="showPreviousItem()" [ngClass]="theme === 'dark' ? 'dark' : 'light'" class="carousel__button left">
+    <fa-icon [icon]="iconPrevious"></fa-icon>
+  </button>
+  <button *ngIf="showControls" (click)="showNextItem()" [ngClass]="theme === 'dark' ? 'dark' : 'light'" class="carousel__button right">
+    <fa-icon [icon]="iconNext"></fa-icon>
+  </button>
+</div>

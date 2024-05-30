@@ -16,6 +16,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   tabs: string[] = ['About Product', 'Specifications', 'Reviews']
   activeTab: string;
   count: number = 1;
+  images: string[] = [];
 
 
   constructor(private productService: ProductService, private route: ActivatedRoute) {}
@@ -34,6 +35,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.productService.getProduct(this.productId).subscribe({
       next: (product: Product) => {
         this.product = product;
+        this.images = this.product.productImages.map(x => x.url);
       }
     })
   }

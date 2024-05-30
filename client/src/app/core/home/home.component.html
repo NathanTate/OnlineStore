@@ -1,80 +1,78 @@
-<div class="container container-md-none">
-  <app-ad-banner [imageUrl]="'/assets/images/banner-small.png'"></app-ad-banner>
-</div>
-<div style="padding-top: 2rem">
-  <div class="container grid-wrapper">
-    <section class="sidebar">
-      <app-filter
-        [subCategories]="subCategories"
-        [colors]="availableColors"
-        [brands]="availableBrands"
-        (filterParams)="setFilters($event)"
-      ></app-filter>
-    </section>
-    <section class="sort">
-      <div class="fw-semi-bold"><a href="#">&lsaquo; Back</a></div>
-      <div class="text-primary-400">Items {{productParams.pageSize * (productParams.page - 1)}}-{{productResponse?.items!.length + productParams.pageSize * (productParams.page - 1)}} of {{productResponse?.totalCount}}</div>
-      <div class="sort__group">
-        <div class="sort__sortBy">
-          <label for="sortBy">Sort By:</label>
-          <select [(ngModel)]="productParams.sortColumn" (ngModelChange)="getProducts()" id="sortBy">
-            <option value="rating">Rating</option>
-            <option value="price">Price</option>
-            <option value="date">Date</option>
-          </select>
-        </div>
-        <div class="sort__orderBy">
-          <label for="orderBy">Order By:</label>
-          <select [(ngModel)]="productParams.sortBy" (ngModelChange)="getProducts()" id="orderBy">
-            <option value="desc">Descending</option>
-            <option value="ascending">Ascending</option>
-          </select>
-        </div>
-        <div class="sort__grid">
-          <button (click)="changeGridMode('big')" [attr.data-selected]="gridMode === 'big'" class="button" data-icon="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0.900391" y="0.900024" width="5.57143" height="5.57143" fill="black" />
-              <rect x="0.900391" y="8.21429" width="5.57143" height="5.57143" fill="black" />
-              <rect x="0.900391" y="15.5286" width="5.57143" height="5.57143" fill="black" />
-              <rect x="8.21387" y="8.21429" width="5.57143" height="5.57143" fill="black" />
-              <rect x="8.21387" y="15.5286" width="5.57143" height="5.57143" fill="black" />
-              <rect x="8.21387" y="0.900024" width="5.57143" height="5.57143" fill="black" />
-              <rect x="15.5283" y="8.21429" width="5.57143" height="5.57143" fill="black" />
-              <rect x="15.5283" y="15.5286" width="5.57143" height="5.57143" fill="black" />
-              <rect x="15.5283" y="0.900024" width="5.57143" height="5.57143" fill="black" />
-              </svg>
-          </button>
-          <button (click)="changeGridMode('small')" [attr.data-selected]="gridMode === 'small'" class="button" data-icon="true">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect style="fill: white;" width="32" height="32"/>
-              <rect x="4.57129" y="21.0286" width="9.14286" height="2.74286" fill="#A2A6B0"/>
-              <rect x="4.57129" y="8.22858" width="21.9429" height="2.74286" fill="#A2A6B0"/>
-              <rect x="4.57129" y="14.6286" width="16.4571" height="2.74286" fill="#A2A6B0"/>
-            </svg>    
-          </button>
-        </div>
+<div class="container">
+  <div class="slider">
+    <app-image-slider [images]="images" [showDots]="false" [colors]="{arrowColor: '#fff', btnColor: '#3636364d'}" 
+    [auto]="true" [interval]="4">
+  </app-image-slider>
+  </div>
+  <section class="new-products">
+    <h2 class="fw-semi-bold title">New Products</h2>
+    <app-carousel [items]="6" *ngIf="!loading && newProducts">
+      <div *ngFor="let product of newProducts.items" class="carousel__cell">
+        <app-product-card [product]="product"></app-product-card>
       </div>
+    </app-carousel>
+  </section>
+  <div class="zip-ad bg-primary-200">
+    <img src="/assets/svg/zip.svg" alt="">
+    <span style="font-size: 24px; color: #00AEB8;">|</span>
+    <p style="font-size: var(--fs-400);">own it now, up to 6 months interest free learn more</p>
+  </div>
+  <div *ngIf="!loading && customBuilds" class="recommendations">
+    <section class="section custom-builds">
+      <div class="section__image text-primary-100">
+        <div class="section__text"> 
+          <h3 class="title fw-bold">Custom<br>Builds</h3>
+          <a routerLink="/catalog">See All Products</a>
+        </div>
+        <img src="/assets/images/home1.webp" alt="custom link background">
+      </div>
+      <app-carousel [items]="5" [showControls]="false">
+        <div *ngFor="let product of customBuilds.items" class="carousel__cell">
+          <app-product-card [product]="product"></app-product-card>
+        </div>
+      </app-carousel>
     </section>
-    <main class="main">
-      <ng-template [ngIf]="!loading && productResponse.items">
-        <div class="products-grid" [attr.data-big]="gridMode === 'small'">
-          <app-product-card
-            class="bg-primary-400"
-            *ngFor="let product of productResponse.items"
-            [product]="product"
-            [index]="product.id">
-          </app-product-card>
-
+    <section class="section custom-builds">
+      <div class="section__image text-primary-100">
+        <div class="section__text"> 
+          <h3 class="title fw-bold">MSI<br>Laptops</h3>
+          <a routerLink="">See All Products</a>
         </div>
-        <div class="bottom justify-center padding-block-500">
-          <app-pagination
-            [currentPage]="productParams.page"
-            [itemsPerPage]="productParams.pageSize"
-            [totalItems]="productResponse.totalCount"
-            (pageChanged)="pageChanged($event)">
-          </app-pagination>
+        <img src="/assets/images/home2.webp" alt="custom link background">
+      </div>
+      <app-carousel [items]="5" [showControls]="false">
+        <div *ngFor="let product of mSILaptops.items" class="carousel__cell">
+          <app-product-card [product]="product"></app-product-card>
         </div>
-      </ng-template>
-    </main>
+      </app-carousel>
+    </section>
+    <section class="section custom-builds">
+      <div class="section__image text-primary-100">
+        <div class="section__text"> 
+          <h3 class="title fw-bold">Desktops</h3>
+          <a routerLink="">See All Products</a>
+        </div>
+        <img src="/assets/images/home3.webp" alt="custom link background">
+      </div>
+      <app-carousel [items]="5" [showControls]="false">
+        <div *ngFor="let product of desktops.items" class="carousel__cell">
+          <app-product-card [product]="product"></app-product-card>
+        </div>
+      </app-carousel>
+    </section>
+    <section class="section custom-builds">
+      <div class="section__image text-primary-100">
+        <div class="section__text"> 
+          <h3 class="title fw-bold">Gaming<br>Monitors</h3>
+          <a routerLink="">See All Products</a>
+        </div>
+        <img src="/assets/images/home4.webp" alt="custom link background">
+      </div>
+      <app-carousel [items]="5" [showControls]="false">
+        <div *ngFor="let product of gamingMonitors.items" class="carousel__cell">
+          <app-product-card [product]="product"></app-product-card>
+        </div>
+      </app-carousel>
+    </section>
   </div>
 </div>

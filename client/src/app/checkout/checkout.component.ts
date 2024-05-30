@@ -4,7 +4,6 @@ import { CartService } from '../_services/cart.service';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from '../_services/checkout.service';
-import { AddressRequest } from '../_models/Address';
 import { OrderCheckoutRequest } from '../_models/Order';
 import { Subscription } from 'rxjs';
 

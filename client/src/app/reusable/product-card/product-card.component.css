@@ -2,6 +2,7 @@
   display: grid;
   grid-template-rows: subgrid;
   grid-row: span 5;
+  gap: 0.5rem;
   border: 1px solid var(--clr-primary-200);
   padding: var(--size-300) var(--size-300);
   transition: scale 300ms;
@@ -12,7 +13,6 @@
   display: block;
   width: 100%;
   overflow: hidden;
-  margin-top: -0.5rem;
 }
 
 .card__item-img-link::before {
@@ -78,6 +78,12 @@
   }
   .card__cart-button:hover {
     background-color: rgb(222, 240, 222);
+  }
+}
+
+@media (min-width: 30rem) {
+  .card__reviews p {
+    text-wrap: nowrap;
   }
 }
 

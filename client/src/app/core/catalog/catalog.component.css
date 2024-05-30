@@ -1,0 +1,181 @@
+:host {
+  padding-top: 0;
+}
+
+.grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-areas: 
+  'filter sort'
+  'main main';
+  gap: 0.75rem;
+}
+
+.products-grid {
+  --card-size: 184px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
+  grid-auto-rows: auto auto auto auto auto;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.sidebar {
+  grid-area: filter;
+}
+.main {
+  grid-area: main;
+}
+.sort {
+  display: flex;
+  align-items: center;
+  grid-area: sort;
+  gap: 0.75rem;
+  font-size: var(--fs-300);
+}
+
+.sort >*:nth-child(1) a {
+  display: block;
+  width: max-content;
+  margin: auto;
+}
+
+.sort > *:nth-child(1),
+.sort >*:nth-child(2),
+.sort__grid {
+  display:none;
+}
+
+.sort__orderBy label {
+  display: none;
+}
+
+.sort__group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sort__group > div:not(:last-child) {
+  border: 1px solid var(--clr-primary-400);
+  padding: 0.5rem 0.75rem;
+}
+
+.sort__grid button rect {
+  fill: #A2A6B0;
+
+}
+
+.sort__grid button[data-selected="true"] rect {
+  fill: #000;
+
+}
+
+select {
+  outline: none;
+  border: none;
+}
+
+.bottom {
+  margin-top: auto;
+}
+
+@media (hover: hover) {
+  select {
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 48rem) {
+  .products-grid {
+    --card-size: 220px;
+  }
+
+  .products-grid[data-big="true"] {
+    --card-size: 300px;
+  }
+
+  .grid-wrapper {
+    grid-template-columns: 234px 1fr;
+    grid-template-areas: 
+    'filter sort'
+    'filter main';
+  }
+
+  .sort >*:nth-child(2) {
+    display: block;
+  }
+
+  .sort__grid {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 1rem;
+  }
+
+  .sort__group {
+    margin-inline: auto 0;
+  }
+
+  select {
+    padding-inline: 0.25rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .grid-wrapper {
+    grid-template-columns: 234px 1fr;
+    grid-template-areas: 
+    'sort sort'
+    'filter main';
+  }
+
+  .sort >*:nth-child(1) {
+    display: block;
+    width: 234px;
+  }
+
+  .sort {
+    font-size: var(--fs-400);
+  }
+  .sort__orderBy label {
+    display: inline;
+  }
+  .sort__group {
+    margin-inline: auto 2rem;
+  }
+}
+
+@media (max-width: 30rem) {
+  .container {
+    --padding: 0.5rem;
+  }
+
+  .grid-wrapper {
+    grid-template-areas: 
+    'filter filter'
+    'sort sort'
+    'main main';
+  }
+
+  .products-grid {
+    gap: 0.25rem;
+  }
+
+  .sort > *:nth-child(2) {
+    display: none;
+  }
+
+  .sort {
+    justify-content: center;
+  }
+
+  .sort__grid {
+    display: none;
+  }
+
+  .sort__group {
+    flex-wrap: wrap;
+  }
+}
+

@@ -1,0 +1,65 @@
+.carousel {
+  position: relative;
+  max-width: calc(100vw - 2rem);
+  height: 100%;
+  --items: 5;
+}
+
+.carousel__inner {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: hidden;
+}
+
+:host .carousel__inner ::ng-deep > * {
+  flex: 0 0 calc((100% / var(--items)) - 0.75rem);
+}
+
+.carousel__button {
+  display: none;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 2em;
+  height: 2.5em;
+  border: none;
+}
+
+.carousel__button.left {
+  border-radius: 0 10px 10px 0;
+  left: 0;
+}
+
+.carousel__button.right {
+  border-radius: 10px 0 0 10px;
+  right: 0;
+}
+
+.dark {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: rgba(102, 102, 102, 1);
+}
+
+.light {
+  background-color:rgba(102, 102, 102, 0.3);
+  color: #fff;
+}
+
+@media (hover: hover) {
+  .light:is(:hover, :focus-visible) {
+    background-color: rgba(102, 102, 102, 0.5);
+    scale: 1.1;
+  }
+  
+  .dark:is(:hover, :focus-visible) {
+    background-color: rgba(255, 255, 255, 0.3);
+    scale: 1.1;
+  }
+  
+}
+
+@media (min-width: 48rem) {
+  .carousel__button {
+    display: block;
+  }
+}

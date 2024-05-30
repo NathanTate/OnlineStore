@@ -1,9 +1,10 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../_services/product.service';
 import { ProductResponse } from '../../_models/Product';
-import { FilterParams, ProductParams } from '../../_models/ProductParams';
-import { SubCategory } from '../../_models/Categories';
-import { forkJoin } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
+import { ProductParams } from '../../_models/ProductParams';
+import { Category } from '../../_models/Categories';
+import { CategoryService } from '../../_services/category.service';
 
 @Component({
   selector: 'app-home',
@@ -11,91 +12,57 @@ import { forkJoin } from 'rxjs';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit{
-  productResponse: ProductResponse;
   productParams: ProductParams;
-  loading: boolean = true;
-  gridMode: string = 'big';
-  subCategories: SubCategory[] = [];
-  availableColors: Set<string> = new Set<string>();
-  availableBrands: Set<string> = new Set<string>();
+  newProducts: ProductResponse;
+  customBuilds: ProductResponse;
+  mSILaptops: ProductResponse;
+  desktops: ProductResponse;
+  gamingMonitors: ProductResponse;
+  categories: Category[];
+  loading: boolean = false;
+  categoriesSubscription: Subscription;
+  images: string[] = ['/assets/images/slide1.webp', '/assets/images/slide1.webp', '/assets/images/slide1.webp']
 
-  constructor(private productService: ProductService) {
-    this.productParams = productService.getProductParams();
+  constructor(private productService: ProductService, private categoryService: CategoryService) {
+    this.productParams = new ProductParams();
+    this.productParams.pageSize = 5;
   }
-  
+
   ngOnInit(): void {
-    this.loadProductsAndSubCategories();
+    this.getCategories();
+    this.fetchData();
   }
 
-  loadProductsAndSubCategories() {
+  fetchData() {
     this.loading = true;
-
     forkJoin({
-      subCategories: this.productService.getSubCategories(2),
-      productsData: this.productService.getProducts(this.productParams),
-      colors: this.productService.getColors()
+      newProducts: this.productService.getProducts({...this.productParams, sortColumn: 'date', pageSize: 10}),
+      customBuilds: this.productService.getProducts({...this.productParams}),
+      MSILaptops: this.productService.getProducts({...this.productParams}),
+      Desktops: this.productService.getProducts({...this.productParams}),
+      GamingMonitors: this.productService.getProducts({...this.productParams}),
     }).subscribe({
-      next: ({ subCategories, productsData, colors}) => {
-        this.subCategories = subCategories;
-        this.handleProductData(productsData);
-        this.availableColors = new Set<string>(colors.flatMap(c => c.value));
+      next: ({newProducts, customBuilds, MSILaptops, Desktops, GamingMonitors}) => {
+        this.newProducts = newProducts;
+        this.customBuilds = customBuilds;
+        this.mSILaptops = MSILaptops;
+        this.desktops = Desktops;
+        this.gamingMonitors = GamingMonitors;
         this.loading = false;
       }
     })
   }
 
-  getSubCategories() {
-    this.productService.getSubCategories(2).subscribe({
-      next: (subCategories) => {
-        this.subCategories = subCategories;
-      }
-    })
-  }
-
-  getProducts() {
+  getCategories() {
     this.loading = true;
-    this.productParams.page;
-    this.productParams.pageSize;
-
-    this.productService.getProducts(this.productParams).subscribe({
-      next: (productsData) => {
-        this.handleProductData(productsData);
+    this.categoryService.getCategories();
+    this.categoriesSubscription = this.categoryService.categories$.subscribe({
+      next: (categories) => {
+        if(categories !== null) {
+          this.categories = categories;
+        }
         this.loading = false;
       }
     })
-  }
-
-  changeGridMode(mode: string) {
-    switch (mode) {
-      case 'big': 
-        this.productParams.pageSize = 20;
-        this.productParams.page = 1;
-        this.gridMode = 'big';
-        break;
-      case 'small': 
-        this.productParams.pageSize = 8;
-        this.gridMode = 'small'
-        break;
-      default: this.productParams.pageSize = 20;
-    }
-
-    this.getProducts();
-  }
-
-  handleProductData(productsData: ProductResponse) {
-    this.productResponse = productsData;
-    this.availableBrands = new Set<string>(this.productResponse.items.flatMap(p => p.brand.brandName));
-  }
-
-  pageChanged(page: number) {
-    if(this.productParams.page !== page) {
-      this.productParams.page = page;
-      this.getProducts();
-    }
-  }
-
-  setFilters(filterParams: FilterParams) {
-    this.productParams = {...filterParams, ... this.productParams};
-    this.getProducts();
   }
 }

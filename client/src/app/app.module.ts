@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeaderComponent } from './header/header.component';
-import { HomeComponent } from './core/home/home.component';
+import { CatalogComponent } from './core/catalog/catalog.component';
 import { FooterComponent } from './footer/footer.component';
 import { AuthComponent } from './auth/auth.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -36,12 +36,15 @@ import { ProductAdminComponent } from './core/admin/product-management/product-a
 import { HasRoleDirective } from './_directives/hasRole.directive';
 import { CurrencyPipe } from '@angular/common';
 import { DragAndDropDirective } from './shared/drag-and-drop.directive';
+import { HomeComponent } from './core/home/home.component';
+import { CarouselComponent } from './shared/carousel/carousel.component';
+import { ContactUsComponent } from './static-pages/contact-us/contact-us.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    HomeComponent,
+    CatalogComponent,
     FooterComponent,
     AuthComponent,
     NotFoundComponent,
@@ -64,6 +67,9 @@ import { DragAndDropDirective } from './shared/drag-and-drop.directive';
     ProductAdminComponent,
     HasRoleDirective,
     DragAndDropDirective,
+    HomeComponent,
+    CarouselComponent,
+    ContactUsComponent,
   ],
   imports: [
     BrowserModule,

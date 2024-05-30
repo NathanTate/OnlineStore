@@ -1,0 +1,80 @@
+<div class="container contact padding-block-600">
+  <h1 class="fw-semi-bold fs-secondary-heading">Contact Us</h1>
+  <div class="fs-helper contact__subtitle">
+    <p>We love hearing from you, our Shop customers.</p>
+    <p>Please contact us and we will make sure to get back to you as soon as wepossibly can.</p>
+  </div>
+  <div class="two-columns">
+    <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()" class="contact__form">
+      <div class="form-flex">
+        <div class="form-group">
+          <label [ngClass]="{ highlighted: name?.valid }" class="label fs-label fw-semi-bold" for="name">Your Name</label>
+          <input formControlName="name" class="form-input" id="name" type="text" />
+          <div class="helper-block" *ngIf="name?.invalid && (name?.touched || name?.dirty)">
+            <span class="text-danger" *ngIf="name?.hasError('required')">Name is required</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label [ngClass]="{ highlighted: email?.valid }" class="label fs-label fw-semi-bold" for="email">Your email</label>
+          <input formControlName="email" class="form-input" id="email" type="text" />
+          <div class="helper-block" *ngIf="email?.invalid && (email?.touched || email?.dirty)">
+            <span class="text-danger" *ngIf="email?.hasError('required')">Email is required</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label [ngClass]="{ highlighted: phone?.valid }" class="label fs-label fw-semi-bold" for="phone">Your Phone number</label>
+          <input formControlName="phone"  class="form-input" id="phone" type="text" />
+          <div class="helper-block" *ngIf="phone?.invalid && (phone?.touched || phone?.dirty)">
+            <span class="text-danger" *ngIf="phone?.hasError('required')">Phone is required</span>
+            <span class="text-danger" *ngIf="phone?.hasError('pattern')">Invalid phone number</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label [ngClass]="{ highlighted: message?.valid }" class="label fs-label fw-semi-bold" for="message">What's on your mind?</label>
+        <textarea class="form-textarea" formControlName="message" name="message" id="message" rows="8"></textarea>
+        <div class="helper-block" *ngIf="message?.invalid && (message?.touched || message?.dirty)">
+          <span class="text-danger" *ngIf="message?.hasError('required')">Message is required</span>
+          <span class="text-danger" *ngIf="message?.hasError('maxlength')">Length should be under 500 characters</span>
+        </div>
+      </div>
+      <button class="button bg-blue-accent-400" type="submit">Submit</button>
+    </form>
+    <div>
+      <div class="contact__info bg-primary-200">
+        <div class="info">
+          <fa-icon [icon]="iconLocation"></fa-icon>
+          <div>
+            <p class="fs-secondary-title fw-semi-bold">Address:</p>
+            <p>1234 Street Adress, City Address, 1234</p>
+          </div>
+        </div>
+        <div class="info">
+          <fa-icon [icon]="iconPhone"></fa-icon>
+          <div>
+            <p class="fs-secondary-title fw-semi-bold">Phone:</p>
+            <p>(00) 1234 5678</p>
+          </div>
+        </div>
+        <div class="info">
+          <fa-icon [icon]="iconClock"></fa-icon>
+          <div>
+            <p class="fs-secondary-title fw-semi-bold">We are open:</p>
+            <p>
+              Monday - Thursday: 9:00 AM - 5:30 PM <br>
+              Friday 9:00 AM - 6:00 PM <br>
+              Saturday: 11:00 AM - 5:00 PM
+            </p>
+          </div>
+        </div>
+        <div class="info">
+          <fa-icon [icon]="iconEmail"></fa-icon>
+          <div>
+            <p class="fs-secondary-title fw-semi-bold">E-mail:</p>
+            <p>shop&commat;email.com</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

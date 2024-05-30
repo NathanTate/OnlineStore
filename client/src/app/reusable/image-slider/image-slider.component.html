@@ -1,14 +1,14 @@
 <div class="slider">
   <div class="slider__track">
-    <img *ngFor="let image of images" loading="lazy" [ngStyle]="{translate: (-100 * imageIndex) + '%'}"[src]="image.url"  alt="carousel image" class="slider__image">
+    <img *ngFor="let image of images" loading="lazy" [ngStyle]="{translate: (-100 * imageIndex) + '%'}" [src]="image"  alt="carousel image" class="slider__image">
   </div>
-  <button (click)="showPrevSlide()" class="slider__button left" aria-label="View Previous Image">
-    <fa-icon [icon]="iconPreviuos"></fa-icon>
+  <button [ngStyle]="{'background-color': colors.btnColor}" (click)="showPrevSlide()" class="slider__button left" aria-label="View Previous Image">
+    <fa-icon [ngStyle]="{color: colors.arrowColor}" [icon]="iconPrevious"></fa-icon>
   </button>
-  <button (click)="showNextSlide()" class="slider__button right" aria-label="View Next Image">
-    <fa-icon [icon]="iconNext"></fa-icon>
+  <button [ngStyle]="{'background-color': colors.btnColor}" (click)="showNextSlide()" class="slider__button right" aria-label="View Next Image">
+    <fa-icon [ngStyle]="{color: colors.arrowColor}" [icon]="iconNext"></fa-icon>
   </button>
-  <div class="slider__dots">
+  <div *ngIf="showDots" class="slider__dots">
     <button [ngClass]="{active: imageIndex === i}" 
     class="slider__dot" (click)="imageIndex = i"
     *ngFor="let image of images; let i = index" [attr.aria-label]="'View Image' + i">

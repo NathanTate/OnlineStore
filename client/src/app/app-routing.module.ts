@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './core/home/home.component';
+import { CatalogComponent } from './core/catalog/catalog.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { AuthComponent } from './auth/auth.component';
 import { canActivate } from './_guards/canActive.guard';
@@ -13,9 +13,12 @@ import { AdminComponent } from './core/admin/admin.component';
 import { ProductAdminComponent } from './core/admin/product-management/product-admin.component';
 import { adminGuard } from './_guards/admin.guard';
 import { authPageGuard } from './_guards/authPage.guard';
+import { HomeComponent } from './core/home/home.component';
+import { ContactUsComponent } from './static-pages/contact-us/contact-us.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [canActivate]},
+  {path: 'catalog', component: CatalogComponent, canActivate: [canActivate]},
   {path: 'admin', component: AdminComponent, canActivate: [adminGuard], children: [
     {path: '', redirectTo: 'product', pathMatch: 'full'},
     {path: 'product', component: ProductAdminComponent}
@@ -26,6 +29,7 @@ const routes: Routes = [
   {path: 'checkout', component: CheckoutComponent, canActivate: [canActivate]},
   {path: 'about', component: AboutComponent},
   {path: 'terms', component: TermsComponent},
+  {path: 'contact', component: ContactUsComponent, canActivate: [canActivate]},
   {path: '**', component: NotFoundComponent}
 ];
 
