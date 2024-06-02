@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace API.Models.DTO.UserDTO.Requests
+namespace API.Models.DTO.UserDTO.Responses
 {
     public class UserResponse
     {

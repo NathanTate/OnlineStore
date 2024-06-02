@@ -1,6 +1,7 @@
 ﻿using API.Interfaces;
 using API.Models.DTO.ProductDTO;
 using API.Models.DTO.ProductDTO.Requests;
+using API.Models.DTO.ProductDTO.Responses;
 using API.Models.ProductModel;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -33,11 +34,28 @@ namespace API.Data.Repositories.ProductRepositories
             return Result.Ok(_mapper.Map<ProductCategoryResponse>(category));
         }
 
-        public async Task<IEnumerable<ProductCategoryResponse>> GetAllCategoryAsync()
+        public async Task<IEnumerable<CategoriesResponse>> GetAllCategoryAsync()
         {
-            var categories = await _dbContext.ProductCategories.Include(c => c.SubCategories).ToListAsync();
-            return _mapper.Map<IEnumerable<ProductCategoryResponse>>(
-                categories);
+            var categories = await _dbContext.ProductCategories
+                .Include(c => c.SubCategories).ToListAsync();
+
+            var categoryResponses = categories.Select(category => new CategoriesResponse
+            {
+                Id = category.Id,
+                CategoryName = category.CategoryName,
+                CategoryDescription = category.CategoryDescription,
+                SubcategoryGroups = category.SubCategories
+                    .GroupBy(s => s.Group)
+                    .Select(g => new SubcategoryGroupResponse
+                    {
+                        GroupName = g.Key,
+                        Subcategories = _mapper.Map<IEnumerable<ProductSubCategoryDto>>(g.ToList())
+                    })
+                    .ToList()
+            });
+
+            return categoryResponses;
+
         }
         public async Task<Result<ProductCategoryResponse>> GetCategoryAsync(int id)
         {
@@ -48,7 +66,7 @@ namespace API.Data.Repositories.ProductRepositories
                 return Result.Fail("Category doesn't exist");
             }
 
-            //await _dbContext.Entry(category).Collection(c => c.SubCategories).LoadAsync();
+            await _dbContext.Entry(category).Collection(c => c.SubCategories).LoadAsync();
 
             return Result.Ok(_mapper.Map<ProductCategoryResponse>(category));
         }
@@ -102,9 +120,18 @@ namespace API.Data.Repositories.ProductRepositories
             return Result.Ok(_mapper.Map<ProductSubCategoryDto>(subCategory));
         }
 
-        public async Task<IEnumerable<ProductSubCategoryDto>> GetAllSubCategoryAsync(int id = 1)
+        public async Task<IEnumerable<SubcategoryGroupResponse>> GetAllSubCategoryAsync(int id = 1)
         {
-            return _mapper.Map<IEnumerable<ProductSubCategoryDto>>(await _dbContext.ProductSubCategories.Where(p => p.CategoryId == id).ToListAsync());
+            var groupedSubcategories = await _dbContext.ProductSubCategories
+                .GroupBy(s => s.Group)
+                .Select(g => new SubcategoryGroupResponse
+                {
+                    GroupName = g.Key,
+                    Subcategories = _mapper.Map<IEnumerable<ProductSubCategoryDto>>(g.ToList())
+                })
+                .ToListAsync();
+
+            return groupedSubcategories;
         }
 
         public async Task<Result<ProductSubCategoryDto>> GetSubCategoryAsync(int id)

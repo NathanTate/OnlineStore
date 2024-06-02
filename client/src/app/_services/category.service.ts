@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment.development";
-import { Category, SubCategory } from "../_models/Categories";
+import { Category, CategoryWithSubGroups, SubCategory, SubCategoryGroups } from "../_models/Categories";
 import { BehaviorSubject } from "rxjs";
 
 @Injectable({
@@ -9,13 +9,13 @@ import { BehaviorSubject } from "rxjs";
 })
 export class CategoryService {
   baseUrl = environment.apiUrl;
-  private categoriesSubject = new BehaviorSubject<Category[] | null>(null);
+  private categoriesSubject = new BehaviorSubject<CategoryWithSubGroups[] | null>(null);
   categories$ = this.categoriesSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   getCategories(): void {
-    this.http.get<Category[]>(this.baseUrl + 'category/GetCategories').subscribe({
+    this.http.get<CategoryWithSubGroups[]>(this.baseUrl + 'category/GetCategories').subscribe({
       next: (categories) => this.categoriesSubject.next(categories)
     })
   }
@@ -25,7 +25,7 @@ export class CategoryService {
   }
 
   getSubCategories(categoryId: number) {
-    return this.http.get<SubCategory[]>(this.baseUrl + 'category/GetSubCategories/' + categoryId);
+    return this.http.get<SubCategoryGroups[]>(this.baseUrl + 'category/GetSubCategories/' + categoryId);
   }
 
   getSubCategory(subCategoryId: number) {

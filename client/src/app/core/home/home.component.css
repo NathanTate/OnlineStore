@@ -2,6 +2,10 @@
   transition: translate 800ms;
 }
 
+.slider {
+  overflow: hidden;
+}
+
 .title {
   font-size: var(--fs-600);
 }
@@ -35,6 +39,7 @@
 
 .section {
   display: grid;
+  grid-template-columns: 100%;
   gap: 1rem;
   cursor: pointer;
 }
@@ -66,7 +71,7 @@
 
 @media (min-width: 30rem) {
   .section {
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 200px calc(100% - 200px);
     gap: 0rem;
   }
   .section__image {

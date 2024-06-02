@@ -39,6 +39,8 @@ import { DragAndDropDirective } from './shared/drag-and-drop.directive';
 import { HomeComponent } from './core/home/home.component';
 import { CarouselComponent } from './shared/carousel/carousel.component';
 import { ContactUsComponent } from './static-pages/contact-us/contact-us.component';
+import { TestimonialComponent } from './testimonial/testimonial.component';
+import { ProductManageComponent } from './core/admin/product-management/product-manage/product-manage.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,8 @@ import { ContactUsComponent } from './static-pages/contact-us/contact-us.compone
     HomeComponent,
     CarouselComponent,
     ContactUsComponent,
+    TestimonialComponent,
+    ProductManageComponent
   ],
   imports: [
     BrowserModule,

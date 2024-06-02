@@ -3,6 +3,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProductService } from '../../_services/product.service';
 import { Product } from '../../_models/Product';
+import { CartService } from '../../_services/cart.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-product',
@@ -19,7 +21,8 @@ export class ProductComponent implements OnInit, OnDestroy {
   images: string[] = [];
 
 
-  constructor(private productService: ProductService, private route: ActivatedRoute) {}
+  constructor(private productService: ProductService, private route: ActivatedRoute, 
+    private cartService: CartService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.paramsSubscription = this.route.params.subscribe({
@@ -36,6 +39,14 @@ export class ProductComponent implements OnInit, OnDestroy {
       next: (product: Product) => {
         this.product = product;
         this.images = this.product.productImages.map(x => x.url);
+      }
+    })
+  }
+
+  addToCart(index: number) {
+    this.cartService.addToCart({productId: index, count: 1}).subscribe({
+      next: () => {
+        this.toastr.success(`${this.product.name} was added to cart`)
       }
     })
   }

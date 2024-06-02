@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -6,11 +6,16 @@ import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './carousel.component.html',
   styleUrl: './carousel.component.css'
 })
-export class CarouselComponent implements AfterViewInit{
-  @ViewChild('content') content: ElementRef;
+export class CarouselComponent implements OnInit, AfterViewInit{
+  @ViewChild('content', {static: true}) content: ElementRef;
   @HostBinding('style.cursor') cursor = 'grab';
   @HostBinding('style.user-select') userSelect = 'auto';
   @Input() items = 5;
+  _itemsToScroll = 1;
+  @Input()
+  set itemsToScroll(amount: number) {
+    this._itemsToScroll = amount > this.items ? 1 : amount;
+  }
   @Input() showControls = true;
   @Input() theme: 'dark' | 'light' = 'light';
   @Input() size: string = 'auto';
@@ -21,8 +26,15 @@ export class CarouselComponent implements AfterViewInit{
   scrollLeft: number;
   carouselInner: HTMLDivElement;
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.carouselInner = this.content.nativeElement;
+  }
+
+  ngAfterViewInit(): void {
+    const dynamic = Math.floor(this.carouselInner.offsetWidth / ((<HTMLElement>this.carouselInner.firstChild).offsetWidth + 12));
+    if(dynamic < this._itemsToScroll) {
+      this._itemsToScroll = dynamic;
+    } 
   }
 
   @HostListener('mouseenter') onMouseEnter() {
@@ -34,9 +46,7 @@ export class CarouselComponent implements AfterViewInit{
     this.isDragging = true;
     this.cursor = 'grabbing';
     this.startX = event.pageX - this.carouselInner.getBoundingClientRect().left;
-    console.log(this.startX)
     this.scrollLeft = this.carouselInner.scrollLeft;
-    console.log(this.scrollLeft)
   }
 
   @HostListener('mousemove', ['$event']) onMouseMove(event: MouseEvent) {
@@ -84,14 +94,14 @@ export class CarouselComponent implements AfterViewInit{
   showNextItem() {
     this.carouselInner.style.scrollBehavior = 'smooth'
     const content = this.carouselInner.firstChild as HTMLElement;
-    this.carouselInner.scrollLeft = this.scrollLeft + content.offsetWidth + 12;
+    this.carouselInner.scrollLeft = this.scrollLeft + (content.offsetWidth + 12) * this._itemsToScroll;
     this.carouselInner.style.scrollBehavior = 'revert'
   }
 
   showPreviousItem() {
     this.carouselInner.style.scrollBehavior = 'smooth'
     const content = this.carouselInner.firstChild as HTMLElement;
-    this.carouselInner.scrollLeft = this.scrollLeft - content.offsetWidth - 12;
+    this.carouselInner.scrollLeft = this.scrollLeft - (content.offsetWidth + 12) * this._itemsToScroll;
     this.carouselInner.style.scrollBehavior = 'revert'
   }
 }

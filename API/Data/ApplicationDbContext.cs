@@ -22,6 +22,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ProductImage> ProductImages { get; set; }
     public DbSet<ProductSpecification> ProductSpecifications { get; set; }
     public DbSet<Review> Reviews { get; set; }
+    public DbSet<Feedback> Feedbacks { get; set; }
     public DbSet<Coupon> Coupons { get; set; }
     public DbSet<CartHeader> CartHeaders { get; set; }
     public DbSet<CartDetail> CartDetails { get; set; }

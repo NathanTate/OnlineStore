@@ -34,6 +34,12 @@
   transition: color 150ms;
 }
 
+.filter__brands {
+  border-top: 10px solid #fff;
+  margin-inline: calc(-1 * var(--size-300));
+}
+
+
 .brands__wrapper {
   text-align: center;
   margin: var(--size-500) 0 var(--size-300);

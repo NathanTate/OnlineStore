@@ -12,8 +12,15 @@ hr {
 }
 
 .item__details {
+  --imageSize: 115px;
   display: flex;
   gap: 1rem;
+}
+
+.item__details > p {
+  line-height: 16px;
+  height: calc(16 * round(down, calc(var(--imageSize) / 18), 1px));
+  overflow: hidden;
 }
 
 .item__controls {
@@ -27,11 +34,9 @@ hr {
 }
 
 .item__details img {
-  --size: 115px;
-  max-width: var(--size);
-  max-height: var(--size);
-  aspect-ratio: 1;
-  object-fit: cover;
+  max-width: var(--imageSize);
+  max-height: var(--imageSize);
+  object-fit: contain;
 }
 
 .item__edit-group > button {
@@ -70,8 +75,8 @@ hr {
     gap: 1rem;
   }
 
-  .item__details img {
-    --size: 100px;
+  .item__details {
+    --imageSize: 100px;
   }
 
   .item__edit-group > button {
@@ -85,7 +90,7 @@ hr {
 }
 
 @media (max-width: 40rem) {
-  .item__details img {
-    --size: 80px;
+  .item__details {
+    --imageSize: 80px;
   }
 }

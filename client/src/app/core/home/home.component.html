@@ -6,9 +6,9 @@
   </div>
   <section class="new-products">
     <h2 class="fw-semi-bold title">New Products</h2>
-    <app-carousel [items]="6" *ngIf="!loading && newProducts">
+    <app-carousel [items]="6" [itemsToScroll]="5" *ngIf="!loading && newProducts">
       <div *ngFor="let product of newProducts.items" class="carousel__cell">
-        <app-product-card [product]="product"></app-product-card>
+        <app-product-card [product]="product" [index]="product.id"></app-product-card>
       </div>
     </app-carousel>
   </section>
@@ -28,7 +28,7 @@
       </div>
       <app-carousel [items]="5" [showControls]="false">
         <div *ngFor="let product of customBuilds.items" class="carousel__cell">
-          <app-product-card [product]="product"></app-product-card>
+          <app-product-card [product]="product" [index]="product.id"></app-product-card>
         </div>
       </app-carousel>
     </section>
@@ -42,7 +42,7 @@
       </div>
       <app-carousel [items]="5" [showControls]="false">
         <div *ngFor="let product of mSILaptops.items" class="carousel__cell">
-          <app-product-card [product]="product"></app-product-card>
+          <app-product-card [product]="product" [index]="product.id"></app-product-card>
         </div>
       </app-carousel>
     </section>
@@ -56,7 +56,7 @@
       </div>
       <app-carousel [items]="5" [showControls]="false">
         <div *ngFor="let product of desktops.items" class="carousel__cell">
-          <app-product-card [product]="product"></app-product-card>
+          <app-product-card [product]="product" [index]="product.id"></app-product-card>
         </div>
       </app-carousel>
     </section>
@@ -70,9 +70,12 @@
       </div>
       <app-carousel [items]="5" [showControls]="false">
         <div *ngFor="let product of gamingMonitors.items" class="carousel__cell">
-          <app-product-card [product]="product"></app-product-card>
+          <app-product-card [product]="product" [index]="product.id"></app-product-card>
         </div>
       </app-carousel>
     </section>
+  </div>
+  <div class="container bg-primary-200" style="--max-width: 1130px; margin-top: 4rem;">
+    <app-testimonial></app-testimonial>
   </div>
 </div>

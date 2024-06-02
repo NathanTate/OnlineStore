@@ -11,9 +11,9 @@ namespace API.FluentValidators.ProductValidators
             ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 
             RuleFor(p => p.SubCategoryName).NotEmpty().MaximumLength(100);
-            RuleFor(p => p.Image).NotEmpty().MaximumLength(500);
             RuleFor(p => p.SubCategoryDescription).NotEmpty();
             RuleFor(p => p.CategoryId).NotEmpty();
+            RuleFor(p => p.Group).NotEmpty().MaximumLength(100);
         }
     }
 }

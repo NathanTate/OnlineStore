@@ -4,7 +4,7 @@
       <div class="action-group">
         <p>On Sale from <span class="fw-semi-bold">${{product.originalPrice}}.00</span></p>
         <input type="number" (ngModelChange)="onChange($event)" [(ngModel)]="count" min="1" value="1" class="quantity_input bg-primary-200 fw-semi-bold">
-        <button class="button add-to-cart bg-blue-accent-400">Add to Cart</button>
+        <button class="button add-to-cart bg-blue-accent-400" (click)="addToCart(productId)">Add to Cart</button>
       </div>
       <app-ui-tabs [tabs]="tabs" (tabChanged)="onTabChange($event)">
       </app-ui-tabs>

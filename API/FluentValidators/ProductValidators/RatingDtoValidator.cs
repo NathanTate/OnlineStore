@@ -1,9 +1,9 @@
-﻿using API.Models.DTO.ProductDTO;
+﻿using API.Models.DTO.ProductDTO.Requests;
 using FluentValidation;
 
 namespace API.FluentValidators.ProductValidators
 {
-    public class RatingDtoValidator : AbstractValidator<RatingDto>
+    public class RatingDtoValidator : AbstractValidator<RatingRequest>
     {
         public RatingDtoValidator()
         {

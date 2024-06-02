@@ -1,0 +1,24 @@
+<div class="testimonial">
+  <div class="scroll-bar-hidden">
+    <div (scroll)="onScroll()" class="testimonial__track" #testimonial >
+      <div *ngFor="let testimonial of testimonials" class="testimonial__content">
+        <div class="text">
+          <span class="quote">‘’</span>
+          <p class="fs-secondary-title">
+            {{ testimonial.message }}
+          </p>
+        </div>
+        <p class="testiomonial__author">- {{ testimonial.author }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="testimonial__actions">
+    <button class="button text-blue-accent-400">Leave Us A Review</button>
+    <div class="dots">
+      <button
+       [ngClass]="{active: index === i}"
+       (click)="onChange(i)"
+       *ngFor="let el of testimonials, let i = index" class="dot"></button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+.grid {
+  --card-size: 184px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
+  grid-auto-rows: auto auto auto auto auto;
+  gap: 0.5rem;
+  overflow: hidden;
+}

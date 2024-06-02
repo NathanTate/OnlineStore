@@ -9,7 +9,7 @@ namespace API.FluentValidators
         {
             ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Stop;
 
-            RuleFor(x => x.Email).EmailAddress().NotEmpty().Length(11, 100);
+            RuleFor(x => x.Email).EmailAddress().NotEmpty().MaximumLength(100);
             RuleFor(x => x.Password).NotEmpty().Length(6, 32);
         }
     }

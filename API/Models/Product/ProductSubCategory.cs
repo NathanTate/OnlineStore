@@ -12,11 +12,11 @@ namespace API.Models.ProductModel
         public string SubCategoryName { get; set; }
 
         [Required]
-        [MaxLength(500)]
-        public string Image { get; set; }
+        public string SubCategoryDescription { get; set; }
 
         [Required]
-        public string SubCategoryDescription { get; set; }
+        [MaxLength(100)]
+        public string Group { get; set; }
 
         [Required]
         public int CategoryId { get; set; }

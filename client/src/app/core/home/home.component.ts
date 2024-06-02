@@ -3,7 +3,7 @@ import { ProductService } from '../../_services/product.service';
 import { ProductResponse } from '../../_models/Product';
 import { Subscription, forkJoin } from 'rxjs';
 import { ProductParams } from '../../_models/ProductParams';
-import { Category } from '../../_models/Categories';
+import { CategoryWithSubGroups } from '../../_models/Categories';
 import { CategoryService } from '../../_services/category.service';
 
 @Component({
@@ -18,10 +18,10 @@ export class HomeComponent implements OnInit{
   mSILaptops: ProductResponse;
   desktops: ProductResponse;
   gamingMonitors: ProductResponse;
-  categories: Category[];
+  categories: CategoryWithSubGroups[];
   loading: boolean = false;
   categoriesSubscription: Subscription;
-  images: string[] = ['/assets/images/slide1.webp', '/assets/images/slide1.webp', '/assets/images/slide1.webp']
+  images: string[] = ['/assets/images/slide1.webp', '/assets/images/slide2.webp', '/assets/images/slide3.png']
 
   constructor(private productService: ProductService, private categoryService: CategoryService) {
     this.productParams = new ProductParams();

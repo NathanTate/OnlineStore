@@ -35,6 +35,7 @@ label.highlighted::after {
 }
 
 .checkout__preview {
+  --imageSize: 68px;
   display: grid;
   gap: 1rem;
   width: 100%;
@@ -46,11 +47,9 @@ label.highlighted::after {
 }
 
 .checkout__preview img {
-  --size: 68px;
-  max-width: var(--size);
-  max-height: var(--size);
-  aspect-ratio: 1;
-  object-fit: cover;
+  max-width: var(--imageSize);
+  max-height: var(--imageSize);
+  object-fit: contain;
 }
 
 .checkout__preview-item {
@@ -64,8 +63,15 @@ label.highlighted::after {
   justify-content: space-between;
 }
 
+.checkout__preview-details p {
+  line-height: 16px;
+  height: calc(16 * round(down, calc(var(--imageSize) / 18), 1px) );
+  overflow: hidden;
+}
+
 .checkout__preview .quantity > * {
   display: inline-block;
+  height: fit-content;
   margin-right: 1rem;
 }
 

@@ -3,6 +3,7 @@ import { ReviewService } from '../../_services/review.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { faLocationDot, faPhone} from '@fortawesome/free-solid-svg-icons';
 import {faClock, faEnvelope} from '@fortawesome/free-regular-svg-icons'
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-contact-us',
@@ -16,7 +17,9 @@ export class ContactUsComponent implements OnInit{
   iconClock = faClock;
   iconEmail = faEnvelope;
 
-  constructor(private reviewService: ReviewService, private fb: FormBuilder) {}
+  constructor(private reviewService: ReviewService, private fb: FormBuilder,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -24,7 +27,11 @@ export class ContactUsComponent implements OnInit{
 
   onSubmit() {
     if(this.feedbackForm.valid) {
-      this.reviewService.leaveFeedback(this.feedbackForm.value);
+      this.reviewService.leaveFeedback(this.feedbackForm.value).subscribe({
+        next: () => {
+          this.toastr.success('Thanks for the feedback')
+        }
+      });
     }
   }
 

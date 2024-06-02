@@ -10,10 +10,12 @@ using API.Models.DTO.Order.Requests;
 using API.Models.DTO.ProductDTO;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
+using API.Models.DTO.Feedback;
 using API.Models.DTO.UserDTO.Requests;
 using API.Models.Order;
 using API.Models.ProductModel;
 using AutoMapper;
+using API.Models.DTO.UserDTO.Responses;
 
 namespace API.Helpers
 {
@@ -32,7 +34,7 @@ namespace API.Helpers
                 .ForMember(dest => dest.SubCategoriesDto, opt => opt.MapFrom(src => src.SubCategories));
                 config.CreateMap<ProductCategoryRequest, ProductCategory>();
                 config.CreateMap<ProductSubCategory, ProductSubCategoryDto>()
-                .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products))
+                //.ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products))
                 .ReverseMap();
 
                 config.CreateMap<ProductImage, ProductImageDto>().ReverseMap();
@@ -44,8 +46,11 @@ namespace API.Helpers
                 .ForMember(dest => dest.Colors, opt => opt.Ignore());
                 config.CreateMap<Product, ProductResponse>();
 
-                config.CreateMap<Review, ReviewDto>().ReverseMap();
-                config.CreateMap<Rating, RatingDto>().ReverseMap();
+                config.CreateMap<ReviewRequest, Review>();
+                config.CreateMap<Review, ReviewResponse>();
+                config.CreateMap<RatingRequest, Rating>();
+                config.CreateMap<Rating, RatingResponse>();
+                config.CreateMap<Feedback, FeedbackDto>().ReverseMap();
 
                 config.CreateMap<Coupon, CouponDto>().ReverseMap();
 

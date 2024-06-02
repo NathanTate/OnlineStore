@@ -1,6 +1,7 @@
 ﻿using API.Interfaces;
 using API.Models.DTO.ProductDTO;
 using API.Models.DTO.ProductDTO.Requests;
+using API.Models.DTO.ProductDTO.Responses;
 using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
@@ -52,7 +53,7 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetCategories")]
-        public async Task<ActionResult<IEnumerable<ProductCategoryResponse>>> GetCategories()
+        public async Task<ActionResult<IEnumerable<CategoriesResponse>>> GetCategories()
         {
             return Ok(await _uow.CategoryRepository.GetAllCategoryAsync());
         }
@@ -150,7 +151,7 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetSubCategories/{id}")]
-        public async Task<ActionResult<IEnumerable<ProductSubCategoryDto>>> GetSubCategories(int id = 1)
+        public async Task<ActionResult<IEnumerable<SubcategoryGroupResponse>>> GetSubCategories(int id = 1)
         {
             return Ok(await _uow.CategoryRepository.GetAllSubCategoryAsync(id));
         }

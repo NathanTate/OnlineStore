@@ -4,7 +4,7 @@
   grid-row: span 5;
   gap: 0.5rem;
   border: 1px solid var(--clr-primary-200);
-  padding: var(--size-300) var(--size-300);
+  padding: var(--size-300) var(--size-500);
   transition: scale 300ms;
 }
 

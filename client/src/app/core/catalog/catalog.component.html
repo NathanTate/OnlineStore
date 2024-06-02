@@ -1,7 +1,7 @@
 <div class="container container-md-none">
   <app-ad-banner [imageUrl]="'/assets/images/banner-small.png'"></app-ad-banner>
 </div>
-<div style="padding-top: 2rem">
+<div style="padding-block: 2rem">
   <div class="container grid-wrapper">
     <section class="sidebar">
       <app-filter
@@ -10,6 +10,21 @@
         [brands]="availableBrands"
         (filterParams)="setFilters($event)"
       ></app-filter>
+    </section>
+    <section class="info">
+      <div class="info-box bg-primary-200">
+        <p class="fs-helper fw-bold">Compare Products</p>
+        <br>
+        <p>You have no items to compare</p>
+      </div>
+      <div class="info-box bg-primary-200">
+        <p class="fs-helper fw-bold">My Wish List</p>
+        <br>
+        <p>You have no items in your wish list</p>
+      </div>
+      <div class="info__image">
+        <img width="233px" height="370px" src="/assets/images/catalog-ad.webp" alt="advertisement">
+      </div>
     </section>
     <section class="sort">
       <div class="fw-semi-bold"><a href="#">&lsaquo; Back</a></div>
@@ -66,7 +81,7 @@
           </app-product-card>
 
         </div>
-        <div class="bottom justify-center padding-block-500">
+        <div class="bottom justify-center">
           <app-pagination
             [currentPage]="productParams.page"
             [itemsPerPage]="productParams.pageSize"

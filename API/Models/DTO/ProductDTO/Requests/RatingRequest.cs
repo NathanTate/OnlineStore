@@ -1,8 +1,7 @@
-﻿namespace API.Models.DTO.ProductDTO
+﻿namespace API.Models.DTO.ProductDTO.Requests
 {
-    public class RatingDto
+    public class RatingRequest
     {
-        public int Id { get; set; }
         public int RatingScore { get; set; }
         public string OrderStatus { get; set; }
         public string UserId { get; set; }

@@ -28,7 +28,6 @@ label.highlighted::after {
 }
 
 .form-input {
-  display: block;
   width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--clr-primary-400);
@@ -86,7 +85,7 @@ label.highlighted::after {
     display: flex;
     flex-wrap: wrap;
     justify-content: start;
-    align-items: center;
+    align-items: start;
     gap: 1rem;
   }
 

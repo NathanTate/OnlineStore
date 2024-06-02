@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ProductRequest } from '../../../_models/Product';
 
 @Component({
-  selector: 'app-product-management',
+  selector: 'app-product-admin',
   templateUrl: './product-admin.component.html',
   styleUrl: './product-admin.component.css'
 })

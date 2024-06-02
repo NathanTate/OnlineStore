@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using static API.Utility.SD;
 using API.Models.DTO.UserDTO.Requests;
+using API.Models.DTO.UserDTO.Responses;
 
 namespace API.Controllers
 {

@@ -16,7 +16,7 @@ export class AdminComponent implements OnInit{
 
   ngOnInit(): void {
     this.tabs.set('Create Product', 'product');
-    this.tabs.set('Edit Products', 'edit');
+    this.tabs.set('Manage Products', 'manage');
     this.tabs.set('Manage Orders', 'orders');
     this.tabKeys = Array.from(this.tabs.keys());
   }

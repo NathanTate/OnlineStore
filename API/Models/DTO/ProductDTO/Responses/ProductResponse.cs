@@ -13,6 +13,6 @@
         public List<ColorDto> Colors { get; set; }
         public List<ProductImageDto> ProductImages { get; set; } = new();
         public List<ProductSpecificationDto> ProductSpecifications { get; set; } = new();
-        public List<ReviewDto> Reviews { get; set; } = new();
+        public List<ReviewResponse> Reviews { get; set; } = new();
     }
 }

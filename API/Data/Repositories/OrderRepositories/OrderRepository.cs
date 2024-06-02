@@ -173,7 +173,7 @@ namespace API.Data.Repositories.OrderRepositories
                 return Result.Fail("Order doesn't exist");
             }
 
-            if (model.OrderStatus == OrderStatus.CANCELED)
+            if ((OrderStatus)model.OrderStatus == OrderStatus.CANCELED)
             {
                 var refundOptions = new RefundCreateOptions
                 {
@@ -185,7 +185,7 @@ namespace API.Data.Repositories.OrderRepositories
                 Refund refund = await service.CreateAsync(refundOptions);
             }
 
-            orderHeader.OrderStatus = nameof(model.OrderStatus);
+            orderHeader.OrderStatus = ((OrderStatus)model.OrderStatus).ToString();
 
             return Result.Ok();
         }

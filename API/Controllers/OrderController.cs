@@ -1,12 +1,14 @@
 ﻿using API.Extensions;
 using API.Helpers.OrderParameters;
 using API.Interfaces;
-using API.Models.DTO.Cart.CartResponses;
 using API.Models.DTO.Order;
 using API.Models.DTO.Order.Requests;
 using FluentResults;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using static API.Utility.SD;
 
 namespace API.Controllers
@@ -21,8 +23,23 @@ namespace API.Controllers
         }
 
         [HttpPost("Checkout")]
-        public async Task<IActionResult> Checkout(OrderCheckoutRequest model)
+        public async Task<IActionResult> Checkout(OrderCheckoutRequest model, [FromServices]IValidator<OrderCheckoutRequest> validator)
         {
+            ValidationResult validationResult = validator.Validate(model);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage);
+                }
+
+                return ValidationProblem(modelStateDictionary);
+            }
+
             Result<string> result = await _uow.OrderRepository.CheckoutAsync(model, User.GetUserId());
 
             if (result.IsFailed)
@@ -73,8 +90,23 @@ namespace API.Controllers
 
         [Authorize(AuthenticationSchemes = "Bearer", Roles = nameof(UserRoles.ADMIN))]
         [HttpPut("UpdateOrder")]
-        public async Task<IActionResult> UpdateOrder(OrderUpdateRequest model)
+        public async Task<IActionResult> UpdateOrder(OrderUpdateRequest model, [FromServices]IValidator<OrderUpdateRequest> validator)
         {
+            ValidationResult validationResult = validator.Validate(model);
+
+            if(!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+                foreach(ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage);
+                }
+
+                return ValidationProblem(modelStateDictionary);
+            }
+
             Result result = await _uow.OrderRepository.UpdateOrderAsync(model);
 
             if (result.IsFailed)

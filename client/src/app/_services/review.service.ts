@@ -12,7 +12,6 @@ export class ReviewService {
   constructor(private http: HttpClient) {}
 
   leaveFeedback(feedback: Feedback) {
-    console.log(feedback)
-    // return this.http.post<void>(this.baseUrl + 'review/feedback', feedback);
+    return this.http.post<void>(this.baseUrl + 'review/createFeedback', feedback);
   }
 }

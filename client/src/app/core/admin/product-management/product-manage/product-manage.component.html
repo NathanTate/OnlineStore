@@ -1,0 +1,3 @@
+<div class="grid" *ngIf="!loading">
+  <app-product-card *ngFor="let product of productResponse.items" [product]="product" [index]="product.id"></app-product-card>
+</div>

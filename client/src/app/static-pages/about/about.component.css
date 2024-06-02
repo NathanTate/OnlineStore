@@ -9,6 +9,10 @@
   padding-top: 0;
 }
 
+.testimonial {
+  margin-block: 1.5rem;
+}
+
 .fs-primary-heading {
   font-size: var(--fs-800);
 }
@@ -117,6 +121,10 @@
   .decoration-wrapper :is(img.svg, fa-icon) {
     max-width: 1.625rem;
     font-size: 1.625rem;
+  }
+
+  .testimonial {
+    margin-block: 3rem;
   }
 }
 

@@ -1,0 +1,97 @@
+.testimonial {
+  position: relative;
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem clamp(1rem, 6vw, 8rem);
+}
+
+.scroll-bar-hidden {
+  height: 170px;
+  overflow: hidden;
+}
+
+.testimonial__track {
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 200px;
+  overflow-x: auto;
+}
+
+.testimonial__track > * {
+  height: 100%;
+  width: 100%;
+  flex-grow: 0;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.testimonial__content .text {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.testimonial__content .quote {
+  font-size: clamp(64px, 8vw, 84px);
+}
+
+.testiomonial__author {
+  text-align: end;
+}
+
+.testimonial__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.dots {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dot {
+  all: unset;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: var(--clr-primary-300);
+  cursor: pointer;
+  transition: scale 150ms ease-in-out;
+}
+
+.dot.active {
+  scale: 1.2;
+  background-color: var(--clr-blue-accent-400);
+}
+
+.dot:has(+ .active), .dot.active + * {
+  scale: 1.1;
+}
+
+:is(.slider__button, .dot):is(:focus-visible) {
+  outline: auto;
+}
+
+.dot:focus-visible {
+  outline: auto;
+}
+
+@media (hover: hover) {
+  .button:is(:hover, :focus-within) {
+    background-color: var(--clr-blue-accent-400);
+    color: var(--clr-primary-100);
+  }
+}
+
+@media (max-width: 48rem) {
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+}
