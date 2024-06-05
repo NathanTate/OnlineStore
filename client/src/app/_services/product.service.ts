@@ -3,7 +3,8 @@ import { Color, Product, ProductRequest, ProductResponse } from "../_models/Prod
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { environment } from "../../environments/environment.development";
 import { SubCategory } from "../_models/Categories";
-import { ProductParams } from "../_models/ProductParams";
+import { ProductParams } from "../_models/Params/ProductParams";
+import { generateHttpParams } from "../shared/httpParamsHelper";
 
 @Injectable({
   providedIn: 'root'
@@ -25,20 +26,7 @@ export class ProductService {
   }
 
   getProducts(productParams: ProductParams = this.productParams) {
-    let httpParams = new HttpParams();
-    for(let key in productParams) {
-      if(Object.hasOwn(productParams, key)) {
-        const value = productParams[key];
-
-        if(Array.isArray(value)) {
-          value.forEach((v: number | string | boolean) => {
-            httpParams = httpParams.append(key, v);
-          })
-        } else {
-          httpParams = httpParams.append(key, value);
-        }
-      }
-    }
+    let httpParams = generateHttpParams<ProductParams>(productParams);
 
     return this.http.get<ProductResponse>(this.baseUrl + 'product/getproducts', {params: httpParams});
   }

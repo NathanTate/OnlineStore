@@ -16,6 +16,7 @@ import { authPageGuard } from './_guards/authPage.guard';
 import { HomeComponent } from './core/home/home.component';
 import { ContactUsComponent } from './static-pages/contact-us/contact-us.component';
 import { ProductManageComponent } from './core/admin/product-management/product-manage/product-manage.component';
+import { OrdersComponent } from './core/admin/orders/orders.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [canActivate]},
@@ -23,7 +24,8 @@ const routes: Routes = [
   {path: 'admin', component: AdminComponent, canActivate: [adminGuard], children: [
     {path: '', redirectTo: 'product', pathMatch: 'full'},
     {path: 'product', component: ProductAdminComponent},
-    {path: 'manage', component: ProductManageComponent}
+    {path: 'manage', component: ProductManageComponent},
+    {path: 'orders', component: OrdersComponent}
   ]},
   {path: 'product/:id', component: ProductComponent},
   {path: 'auth', component: AuthComponent, canActivate: [authPageGuard]},

@@ -3,7 +3,7 @@ import { SubCategory } from '../../_models/Categories';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { FilterParams } from '../../_models/ProductParams';
+import { FilterParams } from '../../_models/Params/ProductParams';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

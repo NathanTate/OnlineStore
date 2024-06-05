@@ -1,6 +1,6 @@
 <div class="slider">
   <div class="slider__track">
-    <img height="329px" width="1400px" *ngFor="let image of images" loading="lazy" [ngStyle]="{translate: (-100 * imageIndex) + '%'}" [src]="image"  alt="carousel image" class="slider__image">
+    <img height="329px" width="1400px" *ngFor="let image of images" [ngStyle]="{translate: (-100 * imageIndex) + '%'}" [src]="image"  alt="carousel image" class="slider__image">
   </div>
   <button [ngStyle]="{'background-color': colors.btnColor}" (click)="showPrevSlide()" class="slider__button left" aria-label="View Previous Image">
     <fa-icon [ngStyle]="{color: colors.arrowColor}" [icon]="iconPrevious"></fa-icon>

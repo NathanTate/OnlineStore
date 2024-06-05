@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ProductService } from '../../_services/product.service';
 import { ProductResponse } from '../../_models/Product';
-import { FilterParams, ProductParams } from '../../_models/ProductParams';
+import { FilterParams, ProductParams } from '../../_models/Params/ProductParams';
 import { SubCategory } from '../../_models/Categories';
 import { forkJoin } from 'rxjs';
 
@@ -90,7 +90,7 @@ export class CatalogComponent implements OnInit{
     this.availableBrands = new Set<string>(this.productResponse.items.flatMap(p => p.brand.brandName));
   }
 
-  pageChanged(page: number) {
+  onPageChanged(page: number) {
     if(this.productParams.page !== page) {
       this.productParams.page = page;
       this.getProducts();

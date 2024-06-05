@@ -42,7 +42,6 @@
 
   --clr-primary-900: rgba(0, 0, 0, 1);
   --clr-primary-600: rgba(102, 102, 102, 1);
-  --clr-primary-500: #fff;
   --clr-primary-400: rgba(162, 166, 176, 1);
   --clr-primary-300: rgba(202, 205, 216, 1);
   --clr-primary-200: rgba(245, 247, 255, 1); 
@@ -299,6 +298,7 @@ textarea:not([rows]) {
 input {
   padding: var(--size-100);
   border-radius: var(--size-100);
+  border: 1px solid var(--clr-primary-400);
 }
 
 .label {

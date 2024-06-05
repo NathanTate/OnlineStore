@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../_services/product.service';
 import { ProductResponse } from '../../_models/Product';
 import { Subscription, forkJoin } from 'rxjs';
-import { ProductParams } from '../../_models/ProductParams';
+import { ProductParams } from '../../_models/Params/ProductParams';
 import { CategoryWithSubGroups } from '../../_models/Categories';
 import { CategoryService } from '../../_services/category.service';
 

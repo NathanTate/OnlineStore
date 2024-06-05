@@ -86,7 +86,7 @@
             [currentPage]="productParams.page"
             [itemsPerPage]="productParams.pageSize"
             [totalItems]="productResponse.totalCount"
-            (pageChanged)="pageChanged($event)">
+            (pageChanged)="onPageChanged($event)">
           </app-pagination>
         </div>
       </ng-template>

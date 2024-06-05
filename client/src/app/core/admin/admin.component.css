@@ -1,5 +1,6 @@
 .two-columns {
   display: grid;
+  min-width: 0px;
   gap: 1rem;
 }
 
@@ -10,7 +11,7 @@
 
 @media (min-width: 48rem) {
   .two-columns {
-    grid-template-columns: clamp(250px, 30vw ,350px) 1fr;
+    grid-template-columns: clamp(250px, 30vw ,350px) minmax(0, 1fr);
   }
 }
 

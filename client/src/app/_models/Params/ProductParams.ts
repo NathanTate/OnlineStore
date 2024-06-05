@@ -8,8 +8,9 @@
 //   colors: string[];
 // }
 
+import { PaginationParams } from "./PaginationParams";
 
-export class ProductParams {
+export class ProductParams extends PaginationParams {
   [key: string]: number | number[] | string[] | string;
   categoryId: number = 2;
   subCategories: number[] = [];
@@ -17,8 +18,6 @@ export class ProductParams {
   priceEnd: number = 0;
   brands: number[] = [];
   colors: string[] = [];
-  page: number = 1;
-  pageSize: number = 20;
   sortBy: string = 'desc';
   sortColumn: string = 'rating';
 }

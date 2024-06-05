@@ -1,4 +1,5 @@
 ﻿using API.Extensions;
+using API.Helpers;
 using API.Helpers.OrderParameters;
 using API.Interfaces;
 using API.Models.DTO.Order;
@@ -70,7 +71,7 @@ namespace API.Controllers
         }
 
         [HttpGet("GetOrders")]
-        public async Task<ActionResult<IEnumerable<OrderHeaderDto>>> GetOrders([FromQuery] OrderParams orderParams)
+        public async Task<ActionResult<PagedList<OrderHeaderDto>>> GetOrders([FromQuery] OrderParams orderParams)
         {
             return Ok(await _uow.OrderRepository.GetOrdersAsync(orderParams, User.GetUserId()));
         }

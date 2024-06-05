@@ -41,6 +41,9 @@ import { CarouselComponent } from './shared/carousel/carousel.component';
 import { ContactUsComponent } from './static-pages/contact-us/contact-us.component';
 import { TestimonialComponent } from './testimonial/testimonial.component';
 import { ProductManageComponent } from './core/admin/product-management/product-manage/product-manage.component';
+import { OrdersComponent } from './core/admin/orders/orders.component';
+import { TableComponent } from './shared/table/table.component';
+import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
   declarations: [
@@ -73,7 +76,9 @@ import { ProductManageComponent } from './core/admin/product-management/product-
     CarouselComponent,
     ContactUsComponent,
     TestimonialComponent,
-    ProductManageComponent
+    ProductManageComponent,
+    OrdersComponent,
+    TableComponent
   ],
   imports: [
     BrowserModule,
@@ -84,6 +89,7 @@ import { ProductManageComponent } from './core/admin/product-management/product-
     HttpClientModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    DataTablesModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},

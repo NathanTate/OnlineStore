@@ -1,0 +1,48 @@
+<h1 class="fw-semi-bold fs-secondary-heading">Orders Table</h1>
+<div class="wrapper" *ngIf="!!orderResponse">
+  <div class="table-nav">
+    <input type="search" placeholder="Search Here...">
+  </div>
+
+  <div class="table-wrapper">
+    <table datatable>
+      <thead>
+        <tr>
+          <th *ngFor="let column of columns">
+            {{column}}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of orderResponse.items">
+          <td>
+            {{item['id']}}
+          </td>
+          <td>
+            {{item['email']}}
+          </td>
+          <td>
+            {{item['phone']}}
+          </td>
+          <td>
+            {{item['orderStatus']}}
+          </td>
+          <td>
+            {{item['orderDate'] | date}}
+          </td>
+          <td>
+            {{item['orderTotal'] | currency: 'USD'}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+
+<!-- <div *ngIf="!!orderResponse">
+  <app-pagination (pageChanged)="onPageChanged($event)" [itemsPerPage]="orderResponse.pageSize" [currentPage]="orderResponse.page" [totalItems]="orderResponse.totalCount"></app-pagination>
+</div> -->
