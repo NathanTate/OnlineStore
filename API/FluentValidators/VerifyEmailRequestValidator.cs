@@ -1,16 +1,15 @@
-﻿using API.Models.DTO.UserDTO.Requests;
+using API.Models.DTO.UserDTO.Requests;
 using FluentValidation;
 
 namespace API.FluentValidators
 {
-    public class RegisterDtoValidator : AbstractValidator<RegisterRequest>
+    public class VerifyEmailRequestValidator : AbstractValidator<VerifyEmailRequest>
     {
-        public RegisterDtoValidator() 
+        public VerifyEmailRequestValidator()
         {
             ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
-
             RuleFor(x => x.Email).EmailAddress().NotEmpty().MaximumLength(100);
-            RuleFor(x => x.Password).NotEmpty().Length(6, 32);
+            RuleFor(x => x.Token).NotEmpty();
         }
     }
 }

@@ -23,11 +23,19 @@ h3 {
 }
 
 .controls {
-  padding-top: var(--size-500);
+  padding-top: var(--size-200);
+}
+
+.controls__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem;
 }
 
 .submit-button {
-  margin-right: var(--size-400);
+  margin-top: 1rem;
+  width: 100%;
 }
 
 .helper-block > *{
@@ -36,4 +44,16 @@ h3 {
 
 li {
   --flow-spacer: 0;
+}
+
+.verify-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.verify-button {
+  cursor: pointer;
+  background-color: transparent;
+  color: var(--clr-blue-accent-400);
+  border: none;
 }

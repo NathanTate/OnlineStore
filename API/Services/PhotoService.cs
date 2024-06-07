@@ -32,10 +32,13 @@ namespace API.Services
             }
 
             List<Task<ImageUploadResult>> tasks = new();
+            List<Stream> streams = new();
+            try 
+            {
+                foreach(IFormFile file in files.Files) { 
 
-            foreach(IFormFile file in files.Files) { 
-
-                using var stream = file.OpenReadStream();
+                var stream = file.OpenReadStream();
+                streams.Add(stream);
                 var uploadParams = new ImageUploadParams()
                 {
                     File = new FileDescription(file.FileName, stream),
@@ -47,6 +50,14 @@ namespace API.Services
 
             var uploadResults = await Task.WhenAll(tasks);
             return Result.Ok(uploadResults.ToList());
+            }
+            finally 
+            {
+                foreach (var stream in streams) 
+                {
+                    stream.Dispose();
+                }
+            }
         }
 
         public async Task<Result<DeletionResult>> DeletePhotoAsync(string publicId)

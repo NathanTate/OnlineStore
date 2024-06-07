@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 namespace API.Extensions
 {
@@ -10,7 +9,7 @@ namespace API.Extensions
             return principal.FindFirst(ClaimTypes.Email).Value;
         }
 
-        public static string GetId(this ClaimsPrincipal principal)
+        public static string GetUserId(this ClaimsPrincipal principal)
         {
             return principal.FindFirst(ClaimTypes.NameIdentifier).Value;
         }

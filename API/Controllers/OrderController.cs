@@ -26,19 +26,10 @@ namespace API.Controllers
         [HttpPost("Checkout")]
         public async Task<IActionResult> Checkout(OrderCheckoutRequest model, [FromServices]IValidator<OrderCheckoutRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result<string> result = await _uow.OrderRepository.CheckoutAsync(model, User.GetUserId());
@@ -93,19 +84,10 @@ namespace API.Controllers
         [HttpPut("UpdateOrder")]
         public async Task<IActionResult> UpdateOrder(OrderUpdateRequest model, [FromServices]IValidator<OrderUpdateRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if(!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach(ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result result = await _uow.OrderRepository.UpdateOrderAsync(model);

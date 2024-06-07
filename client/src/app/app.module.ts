@@ -42,8 +42,11 @@ import { ContactUsComponent } from './static-pages/contact-us/contact-us.compone
 import { TestimonialComponent } from './testimonial/testimonial.component';
 import { ProductManageComponent } from './core/admin/product-management/product-manage/product-manage.component';
 import { OrdersComponent } from './core/admin/orders/orders.component';
-import { TableComponent } from './shared/table/table.component';
 import { DataTablesModule } from 'angular-datatables';
+import { ModalComponent } from './shared/modal/modal.component';
+import { clickStopPropogation } from './_directives/clcikStopPropogation.directive';
+import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +81,10 @@ import { DataTablesModule } from 'angular-datatables';
     TestimonialComponent,
     ProductManageComponent,
     OrdersComponent,
-    TableComponent
+    ModalComponent,
+    clickStopPropogation,
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,5 @@
-﻿using API.Interfaces;
+﻿using API.Helpers;
+using API.Interfaces;
 using API.Models.DTO.Coupon;
 using FluentResults;
 using FluentValidation;
@@ -24,20 +25,10 @@ namespace API.Controllers
         [HttpPost("CreateCoupon")]
         public async Task<ActionResult<CouponDto>> CreateCoupon([FromBody] CouponDto model, [FromServices] IValidator<CouponDto> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result<CouponDto> result = await _uow.CouponRepository.CreateCouponAsync(model);
@@ -74,19 +65,10 @@ namespace API.Controllers
         [HttpPut("UpdateCoupon")]
         public async Task<IActionResult> UpdateCoupon([FromBody] CouponDto model, [FromServices] IValidator<CouponDto> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result result = await _uow.CouponRepository.UpdateCouponAsync(model);

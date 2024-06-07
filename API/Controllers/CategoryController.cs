@@ -1,4 +1,5 @@
-﻿using API.Interfaces;
+﻿using API.Helpers;
+using API.Interfaces;
 using API.Models.DTO.ProductDTO;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
@@ -24,19 +25,10 @@ namespace API.Controllers
         [HttpPost("CreateCategory")]
         public async Task<IActionResult> CreateCategory(ProductCategoryRequest model, [FromServices] IValidator<ProductCategoryRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result<ProductCategoryResponse> result = await _uow.CategoryRepository.CreateCategoryAsync(model);
@@ -75,19 +67,10 @@ namespace API.Controllers
         [HttpPut("UpdateCategory")]
         public async Task<IActionResult> UpdateCategory(ProductCategoryRequest model, IValidator<ProductCategoryRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result result = await _uow.CategoryRepository.UpdateCategoryAsync(model);
@@ -122,19 +105,10 @@ namespace API.Controllers
         [HttpPost("CreateSubCategory")]
         public async Task<IActionResult> CreateSubCategory(ProductSubCategoryDto model, [FromServices] IValidator<ProductSubCategoryDto> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result<ProductSubCategoryDto> result = await _uow.CategoryRepository.CreateSubCategoryAsync(model);
@@ -173,19 +147,10 @@ namespace API.Controllers
         [HttpPut("UpdateSubCategory")]
         public async Task<IActionResult> UpdateSubCategory(ProductSubCategoryDto model, IValidator<ProductSubCategoryDto> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result result = await _uow.CategoryRepository.UpdateSubCategoryAsync(model);

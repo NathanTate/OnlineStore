@@ -47,6 +47,7 @@ namespace API.Data.Repositories.OrderRepositories
             else
             {
                 Models.Address address = _mapper.Map<Models.Address>(model.Address);
+                address.ApplicationUserId = userId;
                 _dbContext.Add(address);
                 await _dbContext.SaveChangesAsync();
                 orderHeaderDto.AddressId = address.Id;

@@ -7,7 +7,7 @@ namespace API.FluentValidators
     {
         public FeedbackDtoValidator() 
         {
-           ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Stop;
+           ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 
           RuleFor(x => x.email).NotEmpty().EmailAddress().MaximumLength(100);
           RuleFor(x => x.name).NotEmpty().MaximumLength(100);

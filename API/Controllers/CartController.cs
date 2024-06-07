@@ -1,4 +1,5 @@
 ﻿using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using API.Models.DTO.Cart.CartRequests;
 using API.Models.DTO.Cart.CartResponses;
@@ -57,19 +58,10 @@ namespace API.Controllers
         [HttpPost("ApplyCoupon")]
         public async Task<IActionResult> ApplyCoupon(CartHeaderRequest model, [FromServices] IValidator<CartHeaderRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result result = await _uow.CartRepository.ApplyCouponAsync(model, User.GetUserId());
@@ -87,19 +79,10 @@ namespace API.Controllers
         [HttpPut("AddToCart")]
         public async Task<IActionResult> AddToCart(CartDetailRequest model, [FromServices] IValidator<CartDetailRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+           ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result result = await _uow.CartRepository.UpdateCartAsync(model, User.GetUserId());

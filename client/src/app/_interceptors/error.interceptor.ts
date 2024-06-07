@@ -12,6 +12,11 @@ export class ErrorInterceptor implements HttpInterceptor {
           if(error.status == 500) {
             this.toastr.error('Server is currently offline')
             throw error;
+          } else if (error.error.errors) {
+            const firstError = Object.values(error.error.errors)[0] as string;
+            this.toastr.error(firstError ,error.status.toString())
+
+            throw error;
           }
           this.toastr.error(error.error, error.status.toString());
         }

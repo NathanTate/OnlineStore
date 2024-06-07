@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'app-auth',
@@ -20,6 +21,8 @@ export class AuthComponent implements OnInit, OnDestroy{
   lengthValid: boolean;
   noWhitespace: boolean;
   timeoutId: ReturnType<typeof setTimeout>;
+  showVerifyEmail = false;
+  iconCheck = faCircleCheck;
 
   constructor(private fb: FormBuilder, private authService: AuthService,
     private router: Router, private toastr: ToastrService
@@ -38,14 +41,32 @@ export class AuthComponent implements OnInit, OnDestroy{
   switchMode() {
     this.loginMode = !this.loginMode;
     this.loginMode == true ? this.submitBtnText = 'Sign In'
-      : this.submitBtnText = 'Sign Up'
+      : this.submitBtnText = 'Sign Up';
+    this.showVerifyEmail = false;
+  }
+
+  verifyEmail() {
+    this.authService.verifyEmail(this.email?.value,this.token?.value).subscribe({
+      next: () => {
+        this.toastr.success("Email successfully verified")
+      }
+    })
+  }
+
+  sendVerificationToken() {
+    this.authService.sendVerificationToken(this.email?.value).subscribe({
+      next: () => {
+        this.toastr.info('Check your email')
+      }
+    })
   }
 
   initializeForm() {
     this.authForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, 
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*\s).{6,32}$/)]]
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*\s).{6,32}$/)]],
+      token: ['']
     })
   }
 
@@ -65,7 +86,8 @@ export class AuthComponent implements OnInit, OnDestroy{
       this.authService.register(this.authForm.value).subscribe({
         next: () => {
           this.switchMode(),
-          this.authForm.reset();
+          this.showVerifyEmail = true;
+          this.password?.reset();
         }
       })
     }
@@ -84,6 +106,18 @@ export class AuthComponent implements OnInit, OnDestroy{
       this.lengthValid = password.length >= 6 && password.length <= 32;
       this.noWhitespace = !/\s/.test(password);
     }, 300)
+  }
+
+  get email() {
+    return this.authForm.get('email');
+  }
+
+  get token() {
+    return this.authForm.get('token')
+  }
+
+  get password() {
+    return this.authForm.get('password')
   }
 }
 

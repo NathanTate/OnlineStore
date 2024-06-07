@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using static API.Utility.SD;
 using API.Models.DTO.UserDTO.Requests;
 using API.Models.DTO.UserDTO.Responses;
+using System.Net;
+using API.Helpers;
 
 namespace API.Controllers
 {
@@ -32,19 +34,10 @@ namespace API.Controllers
 
         public async Task<ActionResult> Register([FromBody] RegisterRequest registerDto, [FromServices] IValidator<RegisterRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(registerDto);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, registerDto);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             var user = _mapper.Map<ApplicationUser>(registerDto);
@@ -67,20 +60,12 @@ namespace API.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<UserResponse>> Login([FromBody] LoginRequest loginDto, [FromServices] IValidator<LoginRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(loginDto);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, loginDto);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
+
             var user = await _userManager.Users.SingleOrDefaultAsync(u => u.NormalizedEmail == loginDto.Email.ToUpper());
 
             if (user == null)
@@ -103,14 +88,20 @@ namespace API.Controllers
         }
 
         [HttpPost("VerifyEmail")]
-        public async Task<IActionResult> VerifyEmail(string email, string token)
+        public async Task<IActionResult> VerifyEmail(VerifyEmailRequest model, IValidator<VerifyEmailRequest> validator)
         {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.NormalizedEmail == email.ToUpper());
+           ModelStateDictionary errors = ValidateModel.Validate(validator, model);
+
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
+            }
+
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.NormalizedEmail == model.Email.ToUpper());
 
             if (user == null)
                 return BadRequest("User doesn't exist");
 
-            var result = await _userManager.ConfirmEmailAsync(user, token);
+            var result = await _userManager.ConfirmEmailAsync(user, model.Token);
 
             if (!result.Succeeded)
                 return BadRequest("Invalid token");
@@ -119,15 +110,21 @@ namespace API.Controllers
         }
 
         [HttpPost("SendEmailToken")]
-        public async Task<IActionResult> SendVerificationCode(string email)
+        public async Task<IActionResult> SendVerificationCode(EmailRequest email, IValidator<EmailRequest> validator)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, email);
+
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
+            }
+
+            var user = await _userManager.FindByEmailAsync(email.Email);
 
             if (user == null)
                 return BadRequest("User doesn't exist");
 
             if (await _userManager.IsEmailConfirmedAsync(user))
-                return Ok("Email is already verified");
+                return BadRequest("Email is already verified");
 
             var emailMetadata = new EmailMetadata(user.Email, "Password reset", await _userManager.GenerateEmailConfirmationTokenAsync(user));
 
@@ -144,12 +141,13 @@ namespace API.Controllers
             if (user == null)
                 return BadRequest("The e-mail address is not assigned to any user account");
 
-            if(!await _userManager.IsEmailConfirmedAsync(user))
+            if (!await _userManager.IsEmailConfirmedAsync(user))
                 return BadRequest("Email isn't verified");
 
             var templatePath = $"{Directory.GetCurrentDirectory()}/wwwroot/email/sample.cshtml";
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}/api/account/ResetPassword?email={user.Email}&token={token}";
+            var encodedToken = WebUtility.UrlEncode(token);
+            var baseUrl = $"https://localhost:4200/reset-password?email={user.Email}&token={encodedToken}";
             var emailMetadata = new EmailMetadata(user.Email, "Password Reset E-mail", baseUrl, templatePath);
 
             await _emailSender.Send(emailMetadata);
@@ -160,6 +158,16 @@ namespace API.Controllers
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromQuery] string email, [FromQuery] string token, ResetPasswordRequest passwordDto, [FromServices] IValidator<ResetPasswordRequest> validator)
         {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email is required");
+            }
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Token is required");
+            }
+
             ValidationResult validationResult = validator.Validate(passwordDto);
 
             if (!validationResult.IsValid)

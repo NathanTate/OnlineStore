@@ -26,19 +26,10 @@ namespace API.Controllers
         [HttpPost("CreateProduct")]
         public async Task<ActionResult<ProductResponse>> CreateProduct([FromForm] ProductRequest model, IValidator<ProductRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             var result = await _uow.ProductRepository.CreateProductAsync(model);
@@ -72,19 +63,10 @@ namespace API.Controllers
         [HttpPut("UpdateProduct")]
         public async Task<IActionResult> UpdateProduct([FromForm] ProductRequest model, IValidator<ProductRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result result = await _uow.ProductRepository.UpdateProductAsync(model);
@@ -129,6 +111,7 @@ namespace API.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
         [HttpGet("GetColors")]
         public async Task<ActionResult<ColorDto>> GetColors()
         {

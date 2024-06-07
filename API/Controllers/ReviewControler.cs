@@ -1,4 +1,5 @@
-﻿using API.Interfaces;
+﻿using API.Helpers;
+using API.Interfaces;
 using API.Models.DTO.Feedback;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
@@ -23,19 +24,10 @@ namespace API.Controllers
         [HttpPost("CreateReview")]
         public async Task<ActionResult<ReviewResponse>> CreateReview(ReviewRequest model, IValidator<ReviewRequest> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             Result<ReviewResponse> review = await _uow.ReviewRepository.CreateReviewAsync(model);
@@ -73,19 +65,10 @@ namespace API.Controllers
         [HttpPost("CreateFeedback")]
         public async Task<ActionResult<FeedbackDto>> CreateFeedback(FeedbackDto model, IValidator<FeedbackDto> validator)
         {
-            ValidationResult validationResult = validator.Validate(model);
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach(ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage);
-                }
-
-                return ValidationProblem(modelStateDictionary);
+            if (errors.Count > 0) {
+                return ValidationProblem(errors);
             }
 
             var feedback = await _uow.ReviewRepository.CreateFeedback(model);

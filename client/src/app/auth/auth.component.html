@@ -11,22 +11,22 @@
           >Email <span class="text-red-accent-400">&ast;</span></label
         >
         <input class="form-input" type="text" placeholder="Your Email" formControlName="email"/>
-        <span class="text-danger" *ngIf="authForm.get('email')?.hasError('required') && authForm.get('email')?.touched">
+        <span class="text-danger" *ngIf="email?.hasError('required') && email?.touched">
           Email is required
         </span>
-        <span class="text-danger" *ngIf="authForm.get('email')?.hasError('email')">
+        <span class="text-danger" *ngIf="email?.hasError('email')">
           Invalid email address
         </span>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="!showVerifyEmail">
         <label class="fs-label fw-semi-bold label" for="password"
           >Password <span class="text-red-accent-400">&ast;</span></label
         >
         <input (keyup)="checkPassword()" class="form-input" type="password" placeholder="Your Password" formControlName="password"/>
-        <span class="text-danger" *ngIf="authForm.get('password')?.hasError('required') && authForm.get('password')?.touched">
+        <span class="text-danger" *ngIf="password?.hasError('required') && password?.touched">
           Password is required
         </span>
-        <div class="helper-block" *ngIf="authForm.get('password')?.hasError('pattern')">
+        <div class="helper-block" *ngIf="password?.hasError('pattern')">
           <span [ngClass]="lowercaseValid ? 'text-success': 'text-danger'">At least one lowercase letter</span>
           <span [ngClass]="uppercaseValid ? 'text-success': 'text-danger'">At least one uppercase letter</span>
           <span [ngClass]="digitValid ? 'text-success': 'text-danger'">At least one digit</span>
@@ -34,16 +34,29 @@
           <span [ngClass]="noWhitespace ? 'text-success': 'text-danger'">No whitespace</span>
        </div>
       </div>
+      <div class="form-group" *ngIf="showVerifyEmail">
+        <label class="fs-label fw-semi-bold label" for="verify">
+            Verification Code <span class="text-red-accent-400">*</span>
+        </label>
+       <div class="verify-group">
+        <input class="form-input" type="text" placeholder="Your Verification Token" formControlName="token"/>
+        <button (click)="verifyEmail()" type="button" class="button text-blue-accent-400" data-icon="true">
+            <fa-icon [icon]="iconCheck" size="3x"></fa-icon>
+        </button>
+       </div>
+      </div>
       <div class="controls">
+        <div class="controls__links">
+          <button (click)="showVerifyEmail = !showVerifyEmail" type="button" class="verify-button">Verify Email</button>
+          <a
+          class="text-blue-accent-400 fw-semi-semi-bold"
+          routerLink="/forgot-password"
+          style="text-decoration: none;"
+          >Forgot Your Password?</a>
+        </div>
         <button [disabled]="authForm.invalid"  type="submit" class="submit-button button bg-blue-accent-400">
           {{submitBtnText}}
         </button>
-        <a
-          class="text-blue-accent-400 fw-semi-semi-bold"
-          style="text-wrap: nowrap;"
-          routerLink="/forgot-password"
-          >Forgot Your Password?</a
-        >
       </div>
     </form>
     <div class="bg-primary-200 flow">
@@ -65,8 +78,9 @@
         <li>Keep more than one address</li>
         <li>Track orders and more</li>
       </ul>
-      <button class="button bg-blue-accent-400" (click)="switchMode()">Sign In</button>
+      <button style="margin-right: 1rem;" class="button bg-blue-accent-400" (click)="switchMode()">Sign In</button>
     </ng-template>
+      <button (click)="sendVerificationToken()" class="button bg-blue-accent-400">Send Email Verification Token</button>
     </div>
   </div>
 </div>

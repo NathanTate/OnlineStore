@@ -1,11 +1,12 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, map, take } from "rxjs";
 import { User } from "../_models/User";
-import { HttpClient } from "@angular/common/http";
-import { AuthModel } from "../_models/Auth";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { AuthModel, ResetPasswordModel } from "../_models/Auth";
 import { environment } from "../../environments/environment.development";
 import { Router } from "@angular/router";
 import { CartService } from "./cart.service";
+import { generateHttpParams } from "../shared/httpParamsHelper";
 
 @Injectable({
   providedIn: 'root'
@@ -24,9 +25,27 @@ export class AuthService {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
       map((user: User) => {
           this.setCurrentUser(user);
-          // this.cartCreate();
       })
     );
+  }
+
+  verifyEmail(email: string, token: string) {
+    return this.http.post<void>(this.baseUrl + 'account/VerifyEmail', {email: email, token: token});
+  }
+
+  sendVerificationToken(email: string) {
+    return this.http.post<void>(this.baseUrl + 'account/SendEmailToken', {email: email});
+  }
+
+  sendResetLink(email: string) {
+    let httpParams = new HttpParams().set('email', email)
+    return this.http.post<void>(this.baseUrl + 'account/forgotPassword', email, {params: httpParams});
+  }
+
+  resetPassword(model: ResetPasswordModel) {
+    let httpParams = new HttpParams().set('email', model.email);
+    httpParams = httpParams.append('token', model.token);
+    return this.http.post<void>(this.baseUrl + 'account/resetPassword', model.passwordDto, {params: httpParams})
   }
 
   hasRole(roles: string[]): Observable<boolean> {
