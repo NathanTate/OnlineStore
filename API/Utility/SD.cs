@@ -2,7 +2,6 @@
 {
     public static class SD
     {
-        public const string REQUESTED_BY_CUSTOMER = "Requested by customer";
         public enum UserRoles
         {
             ADMIN = 1,

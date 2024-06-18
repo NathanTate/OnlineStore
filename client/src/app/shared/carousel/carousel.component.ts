@@ -81,7 +81,7 @@ export class CarouselComponent implements OnInit, AfterViewInit{
 
     const touch = event.touches[0];
     const x = touch.pageX - this.carouselInner.getBoundingClientRect().left;
-    const walk = (x - this.startX);
+    const walk = (x - this.startX) * 1.5;
     this.carouselInner.scrollLeft = this.scrollLeft - walk;
   }
 

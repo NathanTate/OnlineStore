@@ -60,7 +60,8 @@ hr {
 }
 
 .quantity_input:focus {
-  outline: none;
+  outline: 1px solid var(--clr-primary-400);
+  outline-offset: 0.15rem;
 }
 
 @media (hover: hover) {

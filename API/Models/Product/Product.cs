@@ -25,7 +25,7 @@ namespace API.Models.ProductModel
         public string Description { get; set; }
 
         [Range(10, 50)]
-        public int ProductRating { get; set; } = 0;
+        public double ProductRating { get; set; } = 0;
 
         public int TotalReviews { get; set; } = 0;
         public DateTime CreatedAt { get; set; }

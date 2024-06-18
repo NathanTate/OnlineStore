@@ -1,0 +1,11 @@
+<div *ngIf="content.length <= maxLength; else longContent">
+  <p>{{ content }}</p>
+</div>
+
+<ng-template #longContent>
+  <div class="show-more-less">
+    <p *ngIf="!showMore">{{ content.slice(0, maxLength) }}...</p>
+    <p *ngIf="showMore">{{ content }}</p>
+    <button class="button text-blue-accent-400 show-button" (click)="toggleShowMore()">Show {{ showMore ? "less" : "more" }}</button>
+  </div>
+</ng-template>

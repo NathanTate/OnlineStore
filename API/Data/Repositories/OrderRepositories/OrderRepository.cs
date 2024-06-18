@@ -119,6 +119,11 @@ namespace API.Data.Repositories.OrderRepositories
             var service = new SessionService();
             Session session = await service.GetAsync(orderHeader.StripeSessionId);
 
+            if (session.PaymentIntentId == null)
+            {
+                return Result.Fail("Payment Intent doesn't exist");
+            }
+
             var paymentIntentService = new PaymentIntentService();
             PaymentIntent paymentIntent = await paymentIntentService.GetAsync(session.PaymentIntentId);
 
@@ -138,12 +143,12 @@ namespace API.Data.Repositories.OrderRepositories
             if (await _userManager.IsInRoleAsync(user, nameof(UserRoles.ADMIN)))
             {
                 ordersQuery = _dbContext.OrderHeaders.AsNoTracking()
-                    .Include(h => h.OrderDetails).ProjectTo<OrderHeaderDto>(_mapper.ConfigurationProvider);
+                    .ProjectTo<OrderHeaderDto>(_mapper.ConfigurationProvider);
             }
             else
             {
                 ordersQuery = _dbContext.OrderHeaders.AsNoTracking()
-                    .Where(h => h.UserId == userId).Include(h => h.OrderDetails)
+                    .Where(h => h.UserId == userId)
                     .ProjectTo<OrderHeaderDto>(_mapper.ConfigurationProvider);
             }
 
@@ -172,13 +177,22 @@ namespace API.Data.Repositories.OrderRepositories
             if (orderHeader == null)
             {
                 return Result.Fail("Order doesn't exist");
+            } 
+            else if (orderHeader.OrderStatus == nameof(OrderStatus.CANCELED))
+            {   
+                return Result.Fail("Order has already been refunded");
             }
+            
 
-            if ((OrderStatus)model.OrderStatus == OrderStatus.CANCELED)
+            if (model.OrderStatus == OrderStatus.CANCELED)
             {
+                if (orderHeader.PaymentIntentId == null)
+                {
+                    return Result.Fail("Payment Intent Id is missing");
+                }
                 var refundOptions = new RefundCreateOptions
                 {
-                    Reason = SD.REQUESTED_BY_CUSTOMER,
+                    Reason = RefundReasons.RequestedByCustomer,
                     PaymentIntent = orderHeader.PaymentIntentId
                 };
 
@@ -186,8 +200,21 @@ namespace API.Data.Repositories.OrderRepositories
                 Refund refund = await service.CreateAsync(refundOptions);
             }
 
-            orderHeader.OrderStatus = ((OrderStatus)model.OrderStatus).ToString();
+            orderHeader.OrderStatus = model.OrderStatus.ToString();
 
+            return Result.Ok();
+        }
+
+        public async Task<Result> DeleteOrderAsync(int orderHeaderId) {
+            var orderHeader = await _dbContext.OrderHeaders.FindAsync(orderHeaderId);
+
+            if(orderHeader == null) 
+            {
+                return Result.Fail("Order doesn't exist");
+            }
+
+            _dbContext.OrderHeaders.Remove(orderHeader);
+            
             return Result.Ok();
         }
     }

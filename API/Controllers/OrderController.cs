@@ -80,8 +80,8 @@ namespace API.Controllers
             return Ok(result.Value);
         }
 
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = nameof(UserRoles.ADMIN))]
-        [HttpPut("UpdateOrder")]
+        [Authorize(Roles = nameof(UserRoles.ADMIN))]
+        [HttpPut("UpdateStatus")]
         public async Task<IActionResult> UpdateOrder(OrderUpdateRequest model, [FromServices]IValidator<OrderUpdateRequest> validator)
         {
             ModelStateDictionary errors = ValidateModel.Validate(validator, model);
@@ -94,6 +94,21 @@ namespace API.Controllers
 
             if (result.IsFailed)
             {
+                return BadRequest(result.Errors);
+            }
+
+            await _uow.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [Authorize(Roles = nameof(UserRoles.ADMIN))]
+        [HttpDelete("DeleteOrder/{id}")]
+        public async Task<IActionResult> DeleteOrder(int id) 
+        {
+            Result result = await _uow.OrderRepository.DeleteOrderAsync(id);
+
+            if(result.IsFailed) {
                 return BadRequest(result.Errors);
             }
 

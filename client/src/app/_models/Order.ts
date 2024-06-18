@@ -20,6 +20,8 @@ export interface OrderDetail {
 }
 
 export interface OrderHeader {
+  [key: string]: any;
+
   id: number;
   userId: string;
   orderTotal: number;
@@ -38,8 +40,21 @@ export interface OrderHeader {
 }
 
 export interface OrderResponse {
-  items: OrderHeader[],
+  items: OrderHeader[];
   page: number;
-  pageSize: number,
-  totalCount: number
+  pageSize: number;
+  totalCount: number;
+}
+
+export const OrderStatus = [
+  'PENDING',
+  'APPROVED',
+  'READYTOSHIP',
+  'COMPLETED',
+  'CANCELED'
+];
+
+export interface UpdateStatusRequest {
+  orderHeaderId: number;
+  orderStatus: string;
 }

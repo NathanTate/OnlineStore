@@ -1,8 +1,9 @@
 export interface User {
-    tokenExperationDate: Date;
+    id: string;
     email: string;
     firstName: string;
     lastName: string;
     token: string | null;
+    tokenExperationDate: Date;
     roles: string[];
 }

@@ -46,15 +46,15 @@
           </button>
           </div>
           <ul role="list" class="nav-list">
-            <li><a href="#">Laptops</a></li>
-            <li><a href="#">Desktop PCs</a></li>
-            <li><a href="#">Networking Devices</a></li>
-            <li><a href="#">Printers &amp; Scanners</a></li>
-            <li><a href="#">Repairs</a></li>
-            <li><a routerLink="/about">About</a></li>
-            <li><a routerLink="/terms">Terms</a></li>
-            <li><a href="#" class="button text-blue-accent-400">Our Deals</a></li>
-            <li *appHasRole="['ADMIN']"><a routerLink="/admin">Admin Pannel</a></li>
+            <li (click)="isVisible = false"><a href="#">Laptops</a></li>
+            <li (click)="isVisible = false"><a href="#">Desktop PCs</a></li>
+            <li (click)="isVisible = false"><a href="#">Networking Devices</a></li>
+            <li (click)="isVisible = false"><a href="#">Printers &amp; Scanners</a></li>
+            <li (click)="isVisible = false"><a href="#">Repairs</a></li>
+            <li (click)="isVisible = false"><a routerLink="/about">About</a></li>
+            <li (click)="isVisible = false"><a routerLink="/terms">Terms</a></li>
+            <li (click)="isVisible = false"><a href="#" class="button text-blue-accent-400">Our Deals</a></li>
+            <li (click)="isVisible = false" *appHasRole="['ADMIN']"><a routerLink="/admin">Admin Pannel</a></li>
           </ul>
         </div>
         </nav>

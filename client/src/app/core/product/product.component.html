@@ -3,7 +3,7 @@
     <div class="container full-width tabs">
       <div class="action-group">
         <p>On Sale from <span class="fw-semi-bold">${{product.originalPrice}}.00</span></p>
-        <input type="number" (ngModelChange)="onChange($event)" [(ngModel)]="count" min="1" value="1" class="quantity_input bg-primary-200 fw-semi-bold">
+        <input type="number" [(ngModel)]="count" min="1" value="1" class="quantity_input bg-primary-200 fw-semi-bold">
         <button class="button add-to-cart bg-blue-accent-400" (click)="addToCart(productId)">Add to Cart</button>
       </div>
       <app-ui-tabs [tabs]="tabs" (tabChanged)="onTabChange($event)">
@@ -15,122 +15,27 @@
       <h1 class="product__title fw-medium">{{product.name}}</h1>
       <ng-container *ngIf="tabs[0] === activeTab; then aboutProductTemplate"></ng-container>
       <ng-container *ngIf="tabs[1] === activeTab; then specificationsTemplate"></ng-container>
-      <ng-container *ngIf="tabs[2] === activeTab; then reviewsTemplate"></ng-container>
-      <p class="fw-semi-bold fs-label" >Have a Question? <a class="text-blue-accent-400" href="#">Contact Us</a></p>
+      <ng-container *ngIf="tabs[2] === activeTab; then aboutProductTemplate"></ng-container>
+      <p class="fw-semi-bold fs-label">Have a Question? <a class="text-blue-accent-400" routerLink="/contact">Contact Us</a></p>
     </div>
     <div class="product__image">
      <app-image-slider [images]="images"></app-image-slider>
     </div>
   </div>
 </section>
-<section class="benefits bg-primary-900 text-primary-100">
-  <div class="container two-columns" style="--align: center">
-    <div class="benefits__text">
-      <h1 class="fs-primary-heading fw-medium">Outplay the Competittion</h1>
-      <p>
-        Experience a 40% boost in computing from last generation. MSI Desktop
-        equips the 10th Gen. Intel® Core™ i7 processor with the upmost computing
-        power to bring you an unparalleled gaming experience.
-        <br />
-        <br />
-        *Performance compared to i7-9700. Specs <br />
-        varies by model.
-      </p>
-    </div>
-    <div class="benefits__image">
-      <img
-        loading="lazy"
-        src="/assets/images/productP1.png"
-        alt="intel 9 image"
-      />
-    </div>
-  </div>
-</section>
-<section class="support bg-primary-200">
-  <div
-    class="support__container container"
-    style="--max-width: 870px; --padding: 0px"
-  >
-    <ul role="list" class="support__links fw-semi-bold flow">
-      <li><a href="#">Product Support</a></li>
-      <li><a href="#">FAQ</a></li>
-      <li><a href="#">Our Buyer Guide</a></li>
-    </ul>
-  </div>
-</section>
-<section class="features text-primary-100">
-  <div class="container">
-    <div class="features__heading">
-      <h2 class="fw-medium">Features</h2>
-      <br />
-      <p class="fw-light">
-        The MPG series brings out the best in gamers by allowing full expression
-        in color with advanced RGB lighting control and synchronization.
-      </p>
-    </div>
-    <div class="features__grid">
-      <div class="features__item">
-        <div class="feature__image">
-          <img
-            loading="lazy"
-            src="/assets/svg/feature-logos/intel.svg"
-            alt="intel icon"
-          />
-        </div>
-        <p class="fw-light">
-          <span class="fw-bold">Intel® Core™ i7</span> processor with the upmost
-          computing power to bring you an unparalleled gaming experience.
-        </p>
-      </div>
-      <div class="features__item">
-        <div class="feature__image">
-          <img
-            loading="lazy"
-            src="/assets/svg/feature-logos/nvidia.svg"
-            alt="nvidia icon"
-          />
-        </div>
-        <p class="fw-light">
-          The new <span class="fw-bold">GeForce® RTX SUPER™</span> Series has
-          more cores and higher clocks for superfast performance compared to
-          previous-gen GPUs.
-        </p>
-      </div>
-      <div class="features__item">
-        <div class="feature__image">
-          <img
-            loading="lazy"
-            src="/assets/svg/feature-logos/ssd.svg"
-            alt="ssd gen3 icon"
-          />
-        </div>
-        <p class="fw-light">
-          Unleash the full potential with the latest
-          <span class="fw-bold">SSD technology</span>, the NVM Express. 6 times
-          faster than traditional SATA SSD.
-        </p>
-      </div>
-      <div class="features__item">
-        <div class="feature__image">
-          <img
-            loading="lazy"
-            src="/assets/svg/feature-logos/ram.svg"
-            alt="ddr4 icon"
-          />
-        </div>
-        <p class="fw-light">
-          Featuring the latest
-          <span class="fw-bold">10th Gen Intel® Core™</span> processors, memory
-          can support up to DDR4 2933MHz to delivers an unprecedented gaming
-          experience.
-        </p>
-      </div>
-    </div>
+
+<section #reviews class="reviews" *ngIf="!!product">
+  <div class="container full-width" style="margin-block: 2rem;">
+    <app-reviews 
+      [currentUserId]="(authService.currentUser$ | async)!.id" 
+      [product]="product">
+    </app-reviews>
   </div>
 </section>
 
+
 <ng-template #aboutProductTemplate>
-  <p class="fw-light fs-description">{{ product.description }}</p>
+  <app-read-more-less class="product__description" [content]="product.description"></app-read-more-less>
   <ul role="list" class="filter__color-group">
     <li *ngFor="let color of product.colors">
       <div [ngStyle]="{ 'background-color': color.value}" class="color">
@@ -139,7 +44,7 @@
     </li>
   </ul>
 </ng-template>
-
+<app-features></app-features>
 <ng-template #specificationsTemplate>
   <table>
     <thead>

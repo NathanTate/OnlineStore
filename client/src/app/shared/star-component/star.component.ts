@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-star',
@@ -6,11 +6,13 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrl: './star.component.css',
 })
 export class StarComponent implements OnInit{
-  @Input() rating: number = 25;
+  @Input() rating: number = 0;
   @Input() size: string = '30px';
   @Input() disabled: boolean = false;
   selectedStar: number = 0;
+  isSelected = false;
   ratingValue = 0;
+  @Output() ratingEmit = new EventEmitter<number>();
 
   constructor() {
   }
@@ -20,7 +22,9 @@ export class StarComponent implements OnInit{
   }
 
   submitRating(rating: number) {
-    this.ratingValue = rating;
+    this.rating = this.ratingValue = rating * 10;
+    this.ratingEmit.emit(this.ratingValue);
+    this.isSelected = true;
   }
 
   onMouseEnter(value: number) {
@@ -28,6 +32,10 @@ export class StarComponent implements OnInit{
   }
 
   onMouseLeave() {
-    this.rating = 0;
+    if(!this.isSelected) {
+      this.rating = 0;
+    } else {
+      this.rating = this.ratingValue;
+    }
   }
 }

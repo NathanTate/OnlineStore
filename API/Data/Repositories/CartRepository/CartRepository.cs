@@ -118,6 +118,10 @@ namespace API.Data.Repositories.CartRepository
                 model.CartHeaderId = cartHeaderDb.Id;
                 await _dbContext.CartDetails.AddAsync(_mapper.Map<CartDetail>(model));
             }
+            else if(model.CountUpdate == true)
+            {
+                cartDetailsDb.Count = model.Count;
+            }
             else
             {
                 cartDetailsDb.Count += model.Count;

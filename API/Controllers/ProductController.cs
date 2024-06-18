@@ -28,7 +28,8 @@ namespace API.Controllers
         {
             ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (errors.Count > 0) {
+            if (errors.Count > 0)
+            {
                 return ValidationProblem(errors);
             }
 
@@ -43,7 +44,24 @@ namespace API.Controllers
         [HttpGet("GetProducts")]
         public async Task<ActionResult<PagedList<ProductResponse>>> GetProducts([FromQuery] ProductParams productParams)
         {
-            return Ok(await _uow.ProductRepository.GetProductsAsync(productParams));
+            var productResponse = await _uow.ProductRepository.GetProductsAsync(productParams);
+            foreach (var product in productResponse.Items)
+            {
+                if (!product.Reviews.Any())
+                {
+                    continue;
+                }
+
+                double totalRating = 0;
+                foreach (var rating in product.Reviews)
+                {
+                    totalRating += rating.RatingScore;
+                }
+                product.ProductRating = Math.Round(totalRating / product.Reviews.Count(), 2);
+                product.TotalReviews = product.Reviews.Count();
+
+            }
+            return Ok(productResponse);
         }
 
         [AllowAnonymous]
@@ -57,6 +75,17 @@ namespace API.Controllers
                 return BadRequest(result.Errors);
             }
 
+            if (result.Value.Reviews.Any())
+            {
+                double totalRating = 0;
+                foreach (var rating in result.Value.Reviews)
+                {
+                    totalRating += rating.RatingScore;
+                }
+                result.Value.ProductRating = Math.Round(totalRating / result.Value.Reviews.Count(), 2);
+                result.Value.TotalReviews = result.Value.Reviews.Count();
+            }
+
             return Ok(result.Value);
         }
 
@@ -65,7 +94,8 @@ namespace API.Controllers
         {
             ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (errors.Count > 0) {
+            if (errors.Count > 0)
+            {
                 return ValidationProblem(errors);
             }
 

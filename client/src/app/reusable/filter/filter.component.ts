@@ -15,7 +15,7 @@ export class FilterComponent implements OnInit, OnDestroy{
   @ViewChildren('checkbox') inputs: QueryList<ElementRef<HTMLInputElement>>;
   @Input() colors: Set<string>;
   @Input() brands: Set<string>;
-  @Input() subCategories: SubCategory[];
+  @Input() subCategories: SubCategory[] = [];
   @Output() filterParams = new EventEmitter<FilterParams>;
   filterForm: FormGroup;
   chevronDown = faChevronDown;

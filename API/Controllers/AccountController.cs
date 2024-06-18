@@ -42,6 +42,7 @@ namespace API.Controllers
 
             var user = _mapper.Map<ApplicationUser>(registerDto);
             user.UserName = user.Email;
+            user.FirstName = "User-" + Guid.NewGuid();
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
@@ -80,6 +81,7 @@ namespace API.Controllers
 
             return Ok(new UserResponse
             {
+                Id = user.Id,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,

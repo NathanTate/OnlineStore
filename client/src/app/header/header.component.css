@@ -51,6 +51,7 @@
 .nav-list a:is(:hover, :focus-visible) {
     background-color: var(--clr-blue-accent-400);
     color: var(--clr-primary-200);
+    outline: none;
 }
 
 .header-right {
@@ -152,7 +153,7 @@
 }
 
 .search-bar__input:focus {
-    outline: none;
+    outline: 1px solid var(--clr-primary-400);
 }
 
 .search-bar__button {

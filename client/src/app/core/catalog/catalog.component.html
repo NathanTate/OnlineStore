@@ -71,7 +71,7 @@
       </div>
     </section>
     <main class="main">
-      <ng-template [ngIf]="!loading && productResponse.items">
+      <ng-template [ngIf]="!loading && productResponse.items.length > 0" [ngIfElse]="emptyCatalog">
         <div class="products-grid" [attr.data-big]="gridMode === 'small'">
           <app-product-card
             class="bg-primary-400"
@@ -93,3 +93,7 @@
     </main>
   </div>
 </div>
+
+<ng-template #emptyCatalog>
+  <h2 class="fs-secondary-heading fw-semi-bold padding-block-500" style="text-align: center; padding-top: 30vh;">No Items...</h2>
+</ng-template>

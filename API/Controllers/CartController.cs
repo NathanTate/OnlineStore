@@ -76,8 +76,8 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpPut("AddToCart")]
-        public async Task<IActionResult> AddToCart(CartDetailRequest model, [FromServices] IValidator<CartDetailRequest> validator)
+        [HttpPut("UpdateCart")]
+        public async Task<IActionResult> UpdateCart(CartDetailRequest model, [FromServices] IValidator<CartDetailRequest> validator)
         {
            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 

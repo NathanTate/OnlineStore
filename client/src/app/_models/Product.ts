@@ -1,3 +1,5 @@
+import { Review } from "./Review";
+
 export interface ProductResponse {
   items: Product[],
   page: number,
@@ -20,6 +22,8 @@ export interface ProductRequest {
 }
 
 export interface Product {
+  [key: string]: any;
+  
   id: number;
   name: string;
   description: string;
@@ -51,21 +55,6 @@ interface ProductSpecification {
   value: string;
 }
 
-interface Review {
-  id: number;
-  pros: string;
-  cons: string;
-  comment: string;
-  rating: Rating;
-  productId: number;
-}
-
-interface Rating {
-  id: number;
-  ratingScore: number;
-  orderStatus: string;
-  userId: string;
-}
 
 export interface Color {
   id: number;

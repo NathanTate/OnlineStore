@@ -9,7 +9,7 @@ namespace API.FluentValidators.ProductValidators
         {
             RuleFor(r => r.Pros).NotEmpty().MaximumLength(500);
             RuleFor(r => r.Cons).NotEmpty().MaximumLength(500);
-            RuleFor(r => r.Rating).NotEmpty();
+            RuleFor(r => r.RatingScore).NotEmpty();
             RuleFor(r => r.ProductId).NotEmpty();
         }
     }

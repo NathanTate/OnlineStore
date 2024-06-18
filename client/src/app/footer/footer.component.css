@@ -33,12 +33,27 @@
   display: inline-block;
   padding-block: var(--size-100);
   font-weight: var(--fw-light);
+  transition: all 500ms;
+}
+.footer-nav-list a::after {
+  content: '';
+  width: 0px;
+  height: 1px;
+  display: block;
+  background: var(--clr-primary-100);
+  transition: 300ms;
+}
+
+@media (hover: hover) {
+  .footer-nav-list a:hover::after {
+    width: 100%;
+  }
 }
 
 h4 {
   color: var(--clr-primary-400);
   font-weight: var(--fw-bold);
-  margin-bottom: var(--size-400);
+  margin-bottom: var(--size-300);
 }
 
 .wrapper img {

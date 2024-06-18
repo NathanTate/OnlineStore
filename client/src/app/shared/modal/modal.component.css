@@ -7,14 +7,21 @@
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.3);
+  z-index: 200;
 }
 
 .modal {
   position: relative;
   background-color: #fff;
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem;
   border-radius: 10px;
   margin-inline: 0.5rem;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal__header {
+  padding-right: 10px;
 }
 
 .modal__title {
@@ -36,4 +43,32 @@
   border-top: 2px solid #eeececdd;
   padding-block: 0.5rem;
 
+}
+
+.modal__close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 50%;
+  border: none;
+
+  color: red;
+}
+
+.modal__close-button:is(:hover, :focus-visible) {
+  opacity: 0.75;
+}
+
+.modal__close-button:focus-visible {
+  outline: 2px solid black;
+}
+
+@media (max-width: 30rem) {
+  .modal {
+    max-height: 100vh;
+    height: 100%;
+    width: 100%;
+    margin-inline: 0;
+    border-radius: 0;
+  }
 }

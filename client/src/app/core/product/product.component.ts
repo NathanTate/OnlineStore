@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProductService } from '../../_services/product.service';
 import { Product } from '../../_models/Product';
 import { CartService } from '../../_services/cart.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../_services/auth.service';
 
 @Component({
   selector: 'app-product',
@@ -12,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './product.component.css'
 })
 export class ProductComponent implements OnInit, OnDestroy {
+  @ViewChild('reviews') reviewsSection: ElementRef;
   productId!: number;
   product: Product;
   paramsSubscription: Subscription;
@@ -22,7 +24,7 @@ export class ProductComponent implements OnInit, OnDestroy {
 
 
   constructor(private productService: ProductService, private route: ActivatedRoute, 
-    private cartService: CartService, private toastr: ToastrService) {}
+    private cartService: CartService, private toastr: ToastrService, public authService: AuthService) {}
 
   ngOnInit(): void {
     this.paramsSubscription = this.route.params.subscribe({
@@ -44,7 +46,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   addToCart(index: number) {
-    this.cartService.addToCart({productId: index, count: 1}).subscribe({
+    this.cartService.addToCart({productId: index, count: this.count}).subscribe({
       next: () => {
         this.toastr.success(`${this.product.name} was added to cart`)
       }
@@ -52,11 +54,17 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   onTabChange(tab: string) {
-    this.activeTab = tab;
+    if (tab === this.tabs[2]) {
+      this.goToReviews();
+    } else {
+      this.activeTab = tab;
+    }
   }
 
-  onChange(count: number) {
-    console.log(count)
+  goToReviews() {
+    if(this.reviewsSection) {
+      this.reviewsSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    } 
   }
 
   ngOnDestroy(): void {

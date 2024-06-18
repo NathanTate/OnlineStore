@@ -96,16 +96,11 @@
 select {
   outline: none;
   border: none;
+  cursor: pointer;
 }
 
 .bottom {
   margin-top: 1.5rem;
-}
-
-@media (hover: hover) {
-  select {
-    cursor: pointer;
-  }
 }
 
 @media (min-width: 48rem) {

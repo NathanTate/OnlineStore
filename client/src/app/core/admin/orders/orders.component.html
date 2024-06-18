@@ -1,7 +1,7 @@
-<h1 class="fw-semi-bold fs-secondary-heading">Orders Table</h1>
 <div class="wrapper" *ngIf="!!orderResponse">
   <div class="table-nav">
-    <input type="search" placeholder="Search Here...">
+    <h1 class="fw-semi-bold fs-secondary-heading">Orders Table</h1>
+    <hr>
   </div>
 
   <div class="table-wrapper">
@@ -11,33 +11,63 @@
           <th *ngFor="let column of columns">
             {{column}}
           </th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of orderResponse.items">
           <td>
-            {{item['id']}}
+            {{item.id}}
           </td>
           <td>
-            {{item['email']}}
+            <p class="fw-medium">{{item.email}}</p>
           </td>
           <td>
-            {{item['phone']}}
+            {{item.phone}}
           </td>
           <td>
-            {{item['orderStatus']}}
+            <select [ngModel]="item.orderStatus" (ngModelChange)="onStatusChange($event, item.id)" [ngClass]="item.orderStatus" class="orderStatus" name="orderStatuses" id="status-select">
+              <option 
+                *ngFor="let orderStatus of orderStatuses" 
+                [value]="orderStatus" 
+                [ngClass]="orderStatus === item.orderStatus ? '' : orderStatus">
+                {{orderStatus}}
+              </option>
+            </select>
           </td>
           <td>
-            {{item['orderDate'] | date}}
+            {{item.orderDate | date}}
           </td>
           <td>
-            {{item['orderTotal'] | currency: 'USD'}}
+            {{item.orderTotal | currency: 'USD'}}
+          </td>
+          <td>
+            <div class="actions">
+              <button (click)="viewDetails(item.id)" class="button view-button bg-blue-accent-400">View</button>
+              <button (click)="deleteOrder(item.id)" class="bg-red-accent-400 remove-button"><fa-icon [icon]="iconTrash"></fa-icon></button>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<app-modal [headerTemplate]="modalHeader" [bodyTemplate]="modalBody" modalId="details"></app-modal>
+<ng-template #modalHeader>
+  <div class="modal__header">
+    <h2 class="fs-primary-title fw-semi-bold">Details</h2>
+    <hr>
+  </div>
+</ng-template>
+<ng-template #modalBody>
+  <div class="modal__body">
+    <div class="formGroup" *ngFor="let column of keys">
+        <label  class="label fs-label fw-semi-bold" for="name">{{column}}</label>
+        <input [disabled]="true" [value]="order![column]" class="form-input" type="text" id="name">  
+    </div>
+  </div>
+</ng-template>
 
 
 

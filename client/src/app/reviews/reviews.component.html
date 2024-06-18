@@ -1,0 +1,31 @@
+<div class="reviews">
+  <div class="reviews__header">
+    <h2 class="fs-review fw-semi-bold">Customers reviews for {{product.name}}</h2>
+    <div class="review__summary">
+      <div>
+        <app-star [disabled]="true" [rating]="product.productRating" size="26px"></app-star>
+        <span class="text-blue-accent-400 fw-light">{{product.totalReviews}} {{product.totalReviews > 1 ? 'reviews' : 'review'}}</span>
+      </div>
+      <p class="text-primary-600" style="font-size: var(--fs-350);">Product Id: {{product.id}}</p>
+    </div>
+  </div>
+  <div class="review-form">
+    <app-review-form (handleSubmit)="onSubmit($event)"></app-review-form>
+  </div>
+  <div class="reviews__filter">
+    <app-reviews-filter (filtersChange)="onFiltersChange($event)"></app-reviews-filter>
+  </div>
+  <div class="reviews-container" *ngIf="!!reviewResponse && reviewResponse.items.length > 0 else reviewsEmpty">
+    <div class="review" *ngFor="let review of reviewResponse.items">
+      <app-review 
+        [review]="review" 
+        (deleteReview)="deleteReview($event)"
+        [currentUserId]="currentUserId">
+      </app-review>
+    </div>
+  </div>
+</div>
+
+<ng-template #reviewsEmpty>
+  <h3 class="fs-primary-title fw-medium padding-block-500" style="text-align: center;">Be the first to leave us a review</h3>
+</ng-template>

@@ -13,5 +13,6 @@ namespace API.Interfaces
         Task<Result<string>> CheckoutAsync(OrderCheckoutRequest model, string userId);
         Task<Result> VerifyStripeSessionAsync(int orderHeaderId);
         Task<Result> UpdateOrderAsync(OrderUpdateRequest model);
+        Task<Result> DeleteOrderAsync(int orderHeaderId);
     }
 }

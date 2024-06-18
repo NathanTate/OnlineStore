@@ -424,8 +424,8 @@ namespace API.Migrations
                         .HasPrecision(16, 2)
                         .HasColumnType("decimal(16,2)");
 
-                    b.Property<int>("ProductRating")
-                        .HasColumnType("int");
+                    b.Property<double>("ProductRating")
+                        .HasColumnType("float");
 
                     b.Property<decimal>("SalePrice")
                         .HasPrecision(16, 2)
@@ -576,7 +576,7 @@ namespace API.Migrations
                     b.ToTable("ProductSubCategories");
                 });
 
-            modelBuilder.Entity("API.Models.ProductModel.Rating", b =>
+            modelBuilder.Entity("API.Models.ProductModel.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -584,9 +584,29 @@ namespace API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cons")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("OrderStatus")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Pros")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("RatingScore")
                         .HasColumnType("int");
@@ -597,48 +617,9 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Rating");
-                });
-
-            modelBuilder.Entity("API.Models.ProductModel.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cons")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Pros")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("RatingId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("RatingId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
                 });
@@ -905,38 +886,23 @@ namespace API.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("API.Models.ProductModel.Rating", b =>
-                {
-                    b.HasOne("API.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("API.Models.ProductModel.Review", b =>
                 {
-                    b.HasOne("API.Models.ApplicationUser", null)
-                        .WithMany("UserReviews")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("API.Models.ProductModel.Product", "Product")
                         .WithMany("Reviews")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Models.ProductModel.Rating", "Rating")
-                        .WithMany()
-                        .HasForeignKey("RatingId")
+                    b.HasOne("API.Models.ApplicationUser", "User")
+                        .WithMany("UserReviews")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
 
-                    b.Navigation("Rating");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

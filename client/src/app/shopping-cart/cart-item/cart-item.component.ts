@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faRemove } from '@fortawesome/free-solid-svg-icons';
 import { CartService } from '../../_services/cart.service';
@@ -10,11 +10,12 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './cart-item.component.html',
   styleUrl: './cart-item.component.css'
 })
-export class CartItemComponent implements OnInit{
+export class CartItemComponent implements OnInit, OnDestroy{
   @Input() item: CartDetailResponse;
   removeIcon = faRemove;
   likeIcon = faHeart;
-  count: number = 0;
+  count: number = 1;
+  timeoutId: ReturnType<typeof setTimeout>;
 
   constructor(private cartService: CartService, private toastr: ToastrService) {
 
@@ -33,6 +34,23 @@ export class CartItemComponent implements OnInit{
   }
 
   onChange(event: number) {
-  
+    if(this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
+    this.timeoutId = setTimeout(() => this.updateQuantity(), 1000)
+  }
+
+  updateQuantity() {
+    this.cartService.addToCart({productId: this.item.product.id, count: this.count, countUpdate: true}).subscribe({
+      next: () => {
+        this.toastr.success('Items update to' + this.count)
+      }
+    })
+  }
+
+  ngOnDestroy(): void {
+    if(this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
   }
 }

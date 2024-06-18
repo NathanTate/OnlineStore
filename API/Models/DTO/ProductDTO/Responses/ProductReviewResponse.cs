@@ -1,8 +1,8 @@
-﻿using API.Models.DTO.UserDTO.Responses;
+using API.Models.DTO.UserDTO.Responses;
 
 namespace API.Models.DTO.ProductDTO.Responses
 {
-    public class RatingResponse
+    public class ProductReviewResponse
     {
         public int Id { get; set; }
         public int RatingScore { get; set; }

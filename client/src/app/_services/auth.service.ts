@@ -83,7 +83,7 @@ export class AuthService {
   setCurrentUser(user: User) {
     const decodedToken = this.getDecodedToken(user.token);
     const expires = new Date(decodedToken.exp * 1000)
-    const experationTime = expires.getDate() - Date.now();
+    const experationTime = expires.getTime() - Date.now();
     const roles = decodedToken.role;
     user.tokenExperationDate = expires;
     user.roles = [];

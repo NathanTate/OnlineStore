@@ -1,0 +1,36 @@
+<div class="review">
+  <div class="review__top">
+    <div class="review__profile">
+      <p class="fw-semi-bold">{{member.firstName + ' ' + member.lastName}}</p>
+      <p>{{member.email}}</p>
+    </div>
+    <div class="review__date">
+      <p>{{review.createdAt | date}}</p>
+    </div>
+  </div>
+  <div class="review__rating">
+    <app-star 
+      [disabled]="true" 
+      [rating]="review.ratingScore"
+      size="24px">
+    </app-star>
+  </div>
+  <div class="review__body flow" style="--flow-spacer: 0.5rem">
+    <app-read-more-less [content]="review.comment"></app-read-more-less>
+    <div class="review__pros-cons">
+      <p *ngIf="review.pros"><span class="fw-semi-bold">Pros: </span>{{review.pros}}</p>
+      <p *ngIf="review.cons"><span class="fw-semi-bold">Cons: </span>{{review.cons}}</p>
+    </div>
+  </div>
+  <div class="review__actions" *ngIf="canDelete">
+    <details #details>
+      <summary>
+        <fa-icon [icon]="iconMore" size="lg"></fa-icon>
+      </summary>
+      <ul role="list" class="fw-medium">
+        <!-- <li><fa-icon [icon]="iconEdit"></fa-icon> Edit</li> -->
+        <li (click)="deleteReview.emit(this.review.id)"><fa-icon [icon]="iconTrash"></fa-icon> Delete</li>
+      </ul>
+    </details>
+  </div>
+</div>

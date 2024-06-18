@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ReviewService } from '../../_services/review.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { faLocationDot, faPhone} from '@fortawesome/free-solid-svg-icons';
 import {faClock, faEnvelope} from '@fortawesome/free-regular-svg-icons'
 import { ToastrService } from 'ngx-toastr';
+import { ReviewService } from '../../reviews/reviews.service';
 
 @Component({
   selector: 'app-contact-us',

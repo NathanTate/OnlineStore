@@ -1,11 +1,12 @@
-﻿using API.Helpers;
+﻿using API.Extensions;
+using API.Helpers;
+using API.Helpers.OrderParameters;
 using API.Interfaces;
 using API.Models.DTO.Feedback;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
 using FluentResults;
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -26,11 +27,12 @@ namespace API.Controllers
         {
             ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (errors.Count > 0) {
+            if (errors.Count > 0)
+            {
                 return ValidationProblem(errors);
             }
 
-            Result<ReviewResponse> review = await _uow.ReviewRepository.CreateReviewAsync(model);
+            Result<ReviewResponse> review = await _uow.ReviewRepository.CreateReviewAsync(model, User.GetUserId());
 
             if (review.IsFailed)
             {
@@ -44,12 +46,12 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetReviews")]
-        public async Task<ActionResult<IEnumerable<ReviewResponse>>> GetReviews()
+        public async Task<ActionResult<PagedList<ReviewResponse>>> GetReviews([FromQuery] ReviewParams reviewParams)
         {
-            return Ok(await _uow.ReviewRepository.GetAllReviewsAsync());
+            return Ok(await _uow.ReviewRepository.GetAllReviewsAsync(reviewParams));
         }
 
-        [HttpGet("GetReview{id}")]
+        [HttpGet("GetReview/{id}")]
         public async Task<ActionResult<ReviewResponse>> GetReview(int id)
         {
             Result<ReviewResponse> result = await _uow.ReviewRepository.GetReviewAsync(id);
@@ -62,18 +64,34 @@ namespace API.Controllers
             return Ok(result.Value);
         }
 
+        [HttpDelete("DeleteReview/{id}")]
+        public async Task<IActionResult> DeleteReview(int id) 
+        {
+            Result result = await _uow.ReviewRepository.DeleteReviewAsync(id);
+
+            if(result.IsFailed) 
+            {
+                return BadRequest(result.Errors);
+            }
+
+            await _uow.SaveChangesAsync();
+
+            return Ok();
+        }
+
         [HttpPost("CreateFeedback")]
         public async Task<ActionResult<FeedbackDto>> CreateFeedback(FeedbackDto model, IValidator<FeedbackDto> validator)
         {
             ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
-            if (errors.Count > 0) {
+            if (errors.Count > 0)
+            {
                 return ValidationProblem(errors);
             }
 
-            var feedback = await _uow.ReviewRepository.CreateFeedback(model);
+            var feedback = await _uow.ReviewRepository.CreateFeedbackAsync(model);
             await _uow.SaveChangesAsync();
-            
+
             return Ok(feedback);
         }
 

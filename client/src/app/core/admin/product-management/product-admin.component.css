@@ -26,7 +26,8 @@
 }
 
 input:focus {
-  outline: none;
+  outline: 1px solid var(--clr-primary-400);
+  outline-offset: 0.15rem;
 }
 
 label {
@@ -64,16 +65,6 @@ label.highlighted::after {
 
 .formArray__input-block > input {
   flex: 1;
-}
-
-.remove-button {
-  --size: 30px;
-  width: var(--size);
-  height: var(--size);
-  border-radius: 50%;
-  color: var(--clr-primary-100);
-  font-size: 1rem;
-  border: none;
 }
 
 .images-preview {

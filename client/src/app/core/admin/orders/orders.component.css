@@ -24,7 +24,17 @@ table {
 
 td, th {
   padding: 1rem;
-  text-align: start;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+}
+
+table.dataTable th.dt-type-numeric,
+table.dataTable td.dt-type-numeric  {
+  text-align: left;
 }
 
 tr {
@@ -39,3 +49,74 @@ thead {
   background-color: var(--clr-primary-200);
   font-weight: var(--fw-semi-bold);
 }
+
+.orderStatus {
+  cursor: pointer;
+  margin-inline: auto;
+  border-radius: 20px;
+  text-align: center;
+  padding: 0.25rem 0.75rem;
+  width: 100%;
+  appearance: none;
+  border: none;
+  transition: border-radius 300ms ease-in;
+}
+
+.orderStatus:hover{
+  border-radius: 0;
+}
+
+.orderStatus:focus {
+  outline: none;
+}
+
+.PENDING {
+  background-color: orange;
+}
+.APPROVED {
+  background-color: lightgreen;
+}
+.READYTOSHIP {
+  background-color: YELLOW;
+}
+.COMPLETED {
+  background-color: rgb(3, 160, 3);
+}
+.CANCELED {
+  background-color: red;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--clr-primary-400);
+}
+
+.modal__body {
+  display: grid;
+  gap: 1rem;
+  padding-bottom: 3rem;
+}
+
+hr {
+  margin-block: 1rem 0.5rem;
+}
+
+@media (min-width: 48rem) {
+  .modal__body {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .wrapper {
+    padding: 1rem;
+  }
+
+  .table-nav {
+    padding: 0;
+  }
+
+  .view-button {
+    padding: 0.5rem 1.5rem;
+  }
+}
+

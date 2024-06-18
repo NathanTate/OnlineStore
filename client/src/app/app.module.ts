@@ -16,7 +16,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { AuthInterceptor } from './_interceptors/auth.interceptor';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { ProductCardComponent } from './reusable/product-card/product-card.component';
-import { StarComponent } from './reusable/star-component/star.component';
 import { FilterComponent } from './reusable/filter/filter.component';
 import { DropdownDirective } from './_directives/dropdown.directive';
 import { AdBannerComponent } from './reusable/ad-banner/ad-banner.component';
@@ -37,16 +36,16 @@ import { HasRoleDirective } from './_directives/hasRole.directive';
 import { CurrencyPipe } from '@angular/common';
 import { DragAndDropDirective } from './shared/drag-and-drop.directive';
 import { HomeComponent } from './core/home/home.component';
-import { CarouselComponent } from './shared/carousel/carousel.component';
-import { ContactUsComponent } from './static-pages/contact-us/contact-us.component';
 import { TestimonialComponent } from './testimonial/testimonial.component';
 import { ProductManageComponent } from './core/admin/product-management/product-manage/product-manage.component';
 import { OrdersComponent } from './core/admin/orders/orders.component';
 import { DataTablesModule } from 'angular-datatables';
-import { ModalComponent } from './shared/modal/modal.component';
 import { clickStopPropogation } from './_directives/clcikStopPropogation.directive';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { FeaturesComponent } from './static-pages/features/features.component';
+import { SharedModule } from './shared/shared.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @NgModule({
   declarations: [
@@ -57,7 +56,6 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     AuthComponent,
     NotFoundComponent,
     ProductCardComponent,
-    StarComponent,
     FilterComponent,
     DropdownDirective,
     AdBannerComponent,
@@ -76,15 +74,13 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     HasRoleDirective,
     DragAndDropDirective,
     HomeComponent,
-    CarouselComponent,
-    ContactUsComponent,
     TestimonialComponent,
     ProductManageComponent,
     OrdersComponent,
-    ModalComponent,
     clickStopPropogation,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    FeaturesComponent
   ],
   imports: [
     BrowserModule,
@@ -95,7 +91,9 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     HttpClientModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    DataTablesModule
+    DataTablesModule,
+    ReviewsModule,
+    SharedModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},

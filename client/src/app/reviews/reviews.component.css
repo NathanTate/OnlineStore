@@ -1,0 +1,33 @@
+.reviews-container {
+  display: grid;
+  gap: 1rem;
+  margin-block: 1rem;
+}
+
+.reviews__filter {
+  margin-block: 1rem 0.75rem;
+}
+
+.fs-review {
+  font-size: var(--fs-600);
+}
+
+@media (min-width: 48rem) {
+  .fs-review {
+    font-size: var(--fs-700);
+  }
+}
+
+.review__summary {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-block: 0.75rem;
+}
+
+.review__summary > *:nth-child(1) {
+  display: flex;
+  gap: 0.5rem;
+}

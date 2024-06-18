@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Color, Product, ProductRequest, ProductResponse } from "../_models/Product";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { environment } from "../../environments/environment.development";
-import { SubCategory } from "../_models/Categories";
+import { SubCategory, SubCategoryGroups } from "../_models/Categories";
 import { ProductParams } from "../_models/Params/ProductParams";
 import { generateHttpParams } from "../shared/httpParamsHelper";
 
@@ -36,11 +36,15 @@ export class ProductService {
   }
 
   getSubCategories(categoryId: number) {
-    return this.http.get<SubCategory[]>(this.baseUrl + 'category/getSubCategories/' + categoryId);
+    return this.http.get<SubCategoryGroups[]>(this.baseUrl + 'category/getSubCategories/' + categoryId);
   }
 
   getColors() {
     return this.http.get<Color[]>(this.baseUrl + 'product/getColors');
+  }
+
+  deleteProduct(id: number) {
+    return this.http.delete<void>(this.baseUrl + 'product/DeleteProduct/' + id);
   }
 
 }

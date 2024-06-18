@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment.development";
-import { OrderCheckoutRequest, OrderResponse } from "../_models/Order";
+import { OrderCheckoutRequest, OrderResponse, UpdateStatusRequest } from "../_models/Order";
 import { OrderParams } from "../_models/Params/OrderParams";
 import { generateHttpParams } from "../shared/httpParamsHelper";
 import { map, of } from "rxjs";
@@ -27,7 +27,7 @@ export class OrderService {
   getOrders(params: OrderParams) {
     const orders = this.ordersCache.get(Object.values(params).join('-'));
 
-    if(orders) return of(orders);
+    if (orders) return of(orders);
 
     let httpParams = generateHttpParams<OrderParams>(params);
 
@@ -37,5 +37,13 @@ export class OrderService {
         return orders;
       })
     )
+  }
+
+  updateOrderStatus(newStatus: UpdateStatusRequest) {
+    return this.http.put<void>(this.baseUrl + 'UpdateStatus', newStatus);
+  }
+
+  deleteOrder(id: number) {
+    return this.http.delete<void>(this.baseUrl + 'DeleteOrder/' + id);
   }
 }

@@ -1,0 +1,23 @@
+.show-more-less {
+  display: flex;
+  flex-direction: column;
+}
+
+.show-button {
+  align-self: end;
+  padding: 0.25em 1em;
+  transition: background-color 200ms, color 200ms;
+}
+
+@media (hover: hover) {
+  .show-button:is(:hover, :focus-visible) {
+    background-color: var(--clr-blue-accent-400);
+    color: #fff;
+  }
+}
+
+@media (min-width: 48rem) {
+  .show-button {
+    padding: 0.5em 1.5em;
+  }
+}

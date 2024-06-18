@@ -57,6 +57,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(pc => pc.Product)
             .WithMany(pc => pc.Colors)
             .HasForeignKey(pc => pc.ProductId);
+        
+        builder.Entity<Review>()
+            .Property(r => r.Comment).IsRequired();
             
     }
 }

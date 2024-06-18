@@ -17,8 +17,9 @@ export class ProductAdminComponent implements OnInit{
   productForm: FormGroup;
   trashIcon = faTrash;
   cachedImagesArray: FormArray | null = null;
+  isEdit = false;
 
-  constructor(private fb: FormBuilder, private currencyPipe: CurrencyPipe, 
+  constructor(private fb: FormBuilder, private currencyPipe: CurrencyPipe,
     private sanitizer: DomSanitizer, private productService: ProductService, private toastr: ToastrService) {}
 
   ngOnInit(): void {

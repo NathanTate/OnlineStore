@@ -1,0 +1,52 @@
+<div class="reviews__filter">
+  <button (click)="openModal()" class="button reviews__button">
+    <fa-icon [icon]="iconFilters"></fa-icon> Filters
+  </button>
+  <div class="sort__group">
+    <div class="sort__sortBy">
+      <label for="sortBy">Sort By:</label>
+      <select [(ngModel)]="params.sortColumn" (ngModelChange)="onFiltersChange()" id="sortBy">
+        <option value="bought">Customers</option>
+        <option value="date">Date</option>
+      </select>
+    </div>
+    <div class="sort__orderBy">
+      <label for="orderBy">Order By:</label>
+      <select [(ngModel)]="params.sortBy" (ngModelChange)="onFiltersChange()" id="orderBy">
+        <option value="desc">Descending</option>
+        <option value="ascending">Ascending</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="reviews__applied-filters" *ngIf="params.stars != 0">
+  <div class="filter" (click)="removeStarsFilter()">
+    User rating: {{params.stars}}
+  </div>
+</div>
+
+<app-modal [headerTemplate]="modalHeader" [bodyTemplate]="modalBody" [modalId]="modalName"></app-modal>
+
+<ng-template #modalHeader>
+  <h3 class="fs-primary-title fw-medium">Filter reviews</h3>
+  <hr>
+</ng-template>
+
+<ng-template #modalBody>
+  <form [formGroup]="filterForm" class="filter-rating-form" (ngSubmit)="onSubmit()">
+    <h3 class="fs-secondary-title fw-medium">Customer rating</h3>
+    <div class="review__filter-rating padding-block-400">
+      <div class="box" *ngFor="let index of [].constructor(5); let i = index">
+        <input type="radio" [id]="i+1" [value]="i+1" formControlName="stars">
+        <label [for]="i+1">
+          <div class="stars fs-secondary-title">
+            <p>{{i+1}} stars</p>
+            <fa-icon [icon]="iconStar" *ngFor="let i of [].constructor(i+1)"></fa-icon>
+          </div>
+        </label>
+      </div>
+    </div>
+    <button (click)="closeModal()" type="button" class="button cancel text-blue-accent-400">Cancel</button>
+    <button type="submit" class="button reviews__button" style="padding-block: 0.5rem;">Filter</button>
+  </form>
+</ng-template>

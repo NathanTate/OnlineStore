@@ -35,7 +35,7 @@ export class CartService {
   }
 
   addToCart(model: CartDetailRequest) {
-    return this.http.put<void>(this.baseUrl + 'cart/addToCart', model).pipe(
+    return this.http.put<void>(this.baseUrl + 'cart/UpdateCart', model).pipe(
       map(() => {
         this.getCart().subscribe();
       })

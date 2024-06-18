@@ -24,4 +24,5 @@ export interface CartDetailRequest {
   cartHeaderId?: number;
   productId: number;
   count: number;
+  countUpdate?: boolean;
 }

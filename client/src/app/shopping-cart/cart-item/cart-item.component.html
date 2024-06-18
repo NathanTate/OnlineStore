@@ -1,7 +1,7 @@
 <div class="item">
   <div class="item__details">
     <img [src]="item.product.productImages[0]?.url ?? '/assets/images/images.jfif'" alt="some image">
-    <p>{{item.product.name}}: {{item.product.description}}</p>
+    <p style="margin-right: 0.75rem;">{{item.product.name}}: {{item.product.description}}</p>
   </div>
   <div class="item__controls">
     <div class="price" >
@@ -14,7 +14,7 @@
     </div>
     <div class="subtotal"> 
       <h4 class="fw-semi-bold">Subtotal</h4>
-      <p class="fs-helper fw-semi-bold">$13,049.00</p>
+      <p class="fs-helper fw-semi-bold">{{item.product.originalPrice * item.count | currency}}</p>
     </div>
     <div class="item__edit-group">
       <button (click)="removeFromCart()">

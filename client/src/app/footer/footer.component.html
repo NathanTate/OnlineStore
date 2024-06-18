@@ -17,11 +17,11 @@
                     <img loading="lazy" (click)="onToggle('info')" [src]="isVisible['info'] ? '/assets/svg/arrow-up.svg' : '/assets/svg/arrow-down.svg'" alt="">
                 </div>
                 <ul role="list" class="footer-nav-list" [attr.data-visible]="isVisible.info">
-                    <li><a href="#">About Us</a></li>
+                    <li><a routerLink="/about">About Us</a></li>
                     <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a routerLink="/contact">Contact Us</a></li>
                     <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
+                    <li><a routerLink="/terms">Terms of Service</a></li>
                 </ul>
             </div>
             <div>

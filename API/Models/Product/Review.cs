@@ -16,11 +16,19 @@ namespace API.Models.ProductModel
         public string Cons { get; set; }
 
         public string Comment { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [Required]
-        public int RatingId { get; set; }
-        public Rating Rating { get; set; }
+        [Range(10, 50)]
+        public int RatingScore { get; set; }
 
+        [MaxLength(255)]
+        public string OrderStatus { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
+    
         [Required]
         public int ProductId { get; set; }
         public Product Product { get; set; }

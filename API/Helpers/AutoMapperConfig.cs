@@ -28,6 +28,7 @@ namespace API.Helpers
                 config.CreateMap<RegisterRequest, ApplicationUser>().ReverseMap();
                 config.CreateMap<ApplicationUser, UserResponse>();
                 config.CreateMap<AddressRequest, Address>();
+                config.CreateMap<ApplicationUser, MemberResponse>();
 
 
                 config.CreateMap<ProductCategory, ProductCategoryResponse>()
@@ -45,11 +46,10 @@ namespace API.Helpers
                 .ForMember(dest => dest.ProductImages, opt => opt.Ignore())
                 .ForMember(dest => dest.Colors, opt => opt.Ignore());
                 config.CreateMap<Product, ProductResponse>();
+                config.CreateMap<Review, ProductReviewResponse>();
 
                 config.CreateMap<ReviewRequest, Review>();
-                config.CreateMap<Review, ReviewResponse>();
-                config.CreateMap<RatingRequest, Rating>();
-                config.CreateMap<Rating, RatingResponse>();
+                config.CreateMap<Review, ReviewResponse>().ForMember(dest => dest.member, opt => opt.MapFrom(src => src.User));
                 config.CreateMap<Feedback, FeedbackDto>().ReverseMap();
 
                 config.CreateMap<Coupon, CouponDto>().ReverseMap();

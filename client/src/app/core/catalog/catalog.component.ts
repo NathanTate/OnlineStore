@@ -37,7 +37,8 @@ export class CatalogComponent implements OnInit{
       colors: this.productService.getColors()
     }).subscribe({
       next: ({ subCategories, productsData, colors}) => {
-        this.subCategories = subCategories;
+        this.subCategories = subCategories.flatMap(x => x.subcategories);
+        console.log(subCategories)
         this.handleProductData(productsData);
         this.availableColors = new Set<string>(colors.flatMap(c => c.value));
         this.loading = false;
@@ -49,7 +50,7 @@ export class CatalogComponent implements OnInit{
     this.loading = true;
     this.productService.getSubCategories(2).subscribe({
       next: (subCategories) => {
-        this.subCategories = subCategories;
+        this.subCategories = subCategories.flatMap(x => x.subcategories);
         this.loading = false;
       }
     })

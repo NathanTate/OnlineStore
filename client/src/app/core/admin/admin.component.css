@@ -1,6 +1,7 @@
 .two-columns {
   display: grid;
   min-width: 0px;
+  grid-template-columns: 100%;
   gap: 1rem;
 }
 

@@ -1,5 +1,4 @@
 ﻿using API.Helpers.Pagination;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Helpers.RequestParams
 {
@@ -15,3 +14,4 @@ namespace API.Helpers.RequestParams
         public List<string> Colors { get; set; } = new();
     }
 }
+

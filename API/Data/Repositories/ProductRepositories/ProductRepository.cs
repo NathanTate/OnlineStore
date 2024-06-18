@@ -107,15 +107,14 @@ namespace API.Data.Repositories.ProductRepositories
 
         public async Task<Result<ProductResponse>> GetProductAsync(int id)
         {
-            var product = await _dbContext.Products.FindAsync(id);
+            IQueryable<Product> productQuery = _dbContext.Products.AsQueryable().AsNoTracking().Where(x => x.Id == id);
+            var product = await productQuery.ProjectTo<ProductResponse>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
+            product.CategoryId = _dbContext.ProductSubCategories.Where(x => x.Id == product.SubCategoryId).Select(x => x.CategoryId).FirstOrDefault();
 
             if (product == null)
             {
                 return Result.Fail("Product doesn't exist");
             }
-
-            await _dbContext.Entry(product).Collection(p => p.ProductImages).LoadAsync();
-            await _dbContext.Entry(product).Collection(p => p.ProductSpecifications).LoadAsync();
             var colors = await _dbContext.ProductColors.Where(pc => pc.ProductId == product.Id).Select(pc => pc.Color).ToListAsync();
             var productsDto = _mapper.Map<ProductResponse>(product);
             productsDto.Colors = _mapper.Map<List<ColorDto>>(colors);
