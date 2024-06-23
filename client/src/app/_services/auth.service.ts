@@ -7,6 +7,7 @@ import { environment } from "../../environments/environment.development";
 import { Router } from "@angular/router";
 import { CartService } from "./cart.service";
 import { generateHttpParams } from "../shared/httpParamsHelper";
+import { OrderService } from "./order.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class AuthService {
   tokenExperationTimer: ReturnType<typeof setTimeout>;
   baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private router: Router, private cartService: CartService) {
+  constructor(private http: HttpClient, private router: Router, 
+    private cartService: CartService, private orderService: OrderService) {
    
   }
 
@@ -67,6 +69,7 @@ export class AuthService {
 
   logout() {
     this.currentUserSubject.next(null);
+    this.orderService.ordersCache.clear();
     this.cartService.cartSubject.next(null);
     this.cartService.itemsInCart = 0;
     this.router.navigate(['/auth'])

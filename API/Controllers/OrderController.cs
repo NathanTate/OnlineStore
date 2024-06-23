@@ -46,7 +46,7 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpPost("ValidateStripeSession{id}")]
+        [HttpPost("ValidateStripeSession/{id}")]
         public async Task<IActionResult> ValidateStripeSession(int id)
         {
             Result result = await _uow.OrderRepository.VerifyStripeSessionAsync(id);

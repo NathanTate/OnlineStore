@@ -18,6 +18,11 @@
   margin-bottom: 2rem;
 }
 
+.container.me-sm-none {
+  margin-right: 0;
+  width: min(var(--max-width), 100% - (var(--padding) * 1.25));
+}
+
 .zip-ad {
   display: flex;
   flex-wrap: wrap;
@@ -88,5 +93,21 @@
   }
   .zip-ad span {
     display: block;
+  }
+  .container.me-sm-none {
+    margin-right: auto;
+    width: min(var(--max-width), 100% - (var(--padding) * 2.5));
+  }
+}
+.skeleton {
+  animation: skeleton-animation 1s linear infinite alternate;
+}
+
+@keyframes skeleton-animation {
+  0% {
+    background-color: rgb(153, 152, 152);
+  }
+  100% {
+    background-color: rgb(219, 218, 218);
   }
 }

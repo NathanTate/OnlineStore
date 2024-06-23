@@ -39,3 +39,15 @@
   color: black;
   background-color: rgba(245, 247, 255, 1);
 }
+
+@media (max-width: 48rem) {
+  .pagination__button {
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+  }
+  .pagination__page-number {
+    width: 25px;
+    height: 25px;
+  }
+}

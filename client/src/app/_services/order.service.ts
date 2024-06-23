@@ -4,7 +4,7 @@ import { environment } from "../../environments/environment.development";
 import { OrderCheckoutRequest, OrderResponse, UpdateStatusRequest } from "../_models/Order";
 import { OrderParams } from "../_models/Params/OrderParams";
 import { generateHttpParams } from "../shared/httpParamsHelper";
-import { map, of } from "rxjs";
+import { catchError, map, of } from "rxjs";
 
 @Injectable({
   providedIn: 'root'

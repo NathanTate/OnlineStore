@@ -19,6 +19,6 @@ export interface SubCategory {
 }
 
 export interface SubCategoryGroups {
-  group: string;
+  groupName: string;
   subcategories: SubCategory[];
 }

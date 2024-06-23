@@ -3,15 +3,21 @@
 <hr>
 <div class="product">
   <div appDragAndDrop (onFileDropped)="onFileDropped($event)" class="file-uploader bg-primary-200">
-    Drag and drop the file(s) here or click on "Browser Files"
+    <p>Drag and drop the file(s) here or click on "Browser Files"</p>
+    <input type="file" multiple id="fileDropInput" class="browse-file-input" (change)="onFileChange($event.target)">
+    <span>or</span>
+    <label for="fileDropInput" class="file-upload-button">Browser Files</label>
   </div>
   <div class="images-preview">
     <div class="image-widget" *ngFor="let image of imagesArray.controls; let i = index">
       <div>
           <img class="preview-image" [src]="image.value.url" width="50px" height="50px" alt="">
-          <span class="fw-semi-bold">{{image.value.file.name}}</span> 
+          <div class="imag-info">
+            <p class="fw-medium">{{image.value.file.name}}</p>
+            <p class="text-primary-600">{{ formatBytes(image.value.file.size) }}</p>
+          </div>
       </div>
-      <button (click)="deleteImage(i)" class="remove-button" type="button" style="color: rgb(240, 62, 62);">
+      <button (click)="deleteImage(i)" class="icon-button" type="button" style="color: rgb(240, 62, 62);">
         <fa-icon [icon]="trashIcon" size="lg"></fa-icon>
       </button>
     </div>
@@ -74,7 +80,9 @@
         <div class="formArray">
           <div class="formArray__input-block">
             <input [formControlName]="i" class="form-input" type="text" id="color">
-            <button (click)="deleteColor(i)" class="bg-red-accent-400 remove-button" type="button">X</button>
+            <button (click)="deleteColor(i)" class="bg-red-accent-400 icon-button" type="button">
+              <fa-icon [icon]="trashIcon" size="lg"></fa-icon>
+            </button>
           </div>
           <div class="helper-block" *ngIf="colorControl?.invalid && (colorControl?.touched || colorControl?.dirty)">
             <span class="text-danger" *ngIf="colorControl?.hasError('required')">Color is required</span>
@@ -93,7 +101,9 @@
           <div class="formArray__input-block" [formGroupName]="i">
             <input placeholder="Specification name" formControlName="name" class="form-input" type="text" id="specification">
             <input placeholder="Specification value" formControlName="value" class="form-input" type="text" id="">
-            <button (click)="deleteSpecification(i)" class="bg-red-accent-400 remove-button" type="button">X</button>
+            <button (click)="deleteSpecification(i)" class="bg-red-accent-400 icon-button" type="button">
+              <fa-icon [icon]="trashIcon" size="lg"></fa-icon>
+            </button>
           </div>
           <div class="helper-block" *ngIf="specification?.invalid && (specification?.touched || specification?.dirty)">
             <span class="text-danger" *ngIf="specification?.hasError('required')">Specification is required</span>

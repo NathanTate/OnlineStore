@@ -14,6 +14,7 @@ export interface OrderDetail {
   id: number;
   orderHeaderId: number;
   productId: number;
+  photoUrl: string;
   count: number;
   productName: string;
   productPrice: number;

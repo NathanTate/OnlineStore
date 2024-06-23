@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../../_services/order.service';
 import { OrderParams } from '../../../_models/Params/OrderParams';
 import { OrderHeader, OrderResponse, OrderStatus } from '../../../_models/Order';
-import { Config } from 'datatables.net';
 import { ModalService } from '../../../_services/modal.service';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
-
+import { faEye } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'app-orders',
@@ -16,39 +15,64 @@ import { ToastrService } from 'ngx-toastr';
 export class OrdersComponent implements OnInit {
   params = new OrderParams();
   orderResponse: OrderResponse;
-  dtOptions: Config;
   productToEditId: number;
   order: OrderHeader | undefined;
   keys: string[] = [];
   orderStatuses: string[] = [];
   iconTrash = faTrash;
+  iconView = faEye;
+  progressMap = new Map<number, number>();
 
-  constructor (private orderService: OrderService, private modalService: ModalService, private toastr: ToastrService) {}
+  constructor (private orderService: OrderService, private modalService: ModalService, 
+    private toastr: ToastrService) {
+      this.params.pageSize = 10;
+    }
 
   ngOnInit(): void {
     this.getOrders();
-    this.dtOptions = {
-      destroy: true
-    }
     this.orderStatuses = OrderStatus;
+  }
+
+  onSearchSubmit(searchForm: string) {
+    this.params.searchTerm = searchForm ?? '';
+    this.getOrders();
+  }
+
+  sortTable(column: keyof OrderHeader) {
+    const futureSortingOrder = this.params.sortBy === 'desc' ? 'asc' : 'desc'
+    this.params.sortBy = futureSortingOrder;
+    this.params.sortColumn = column.toString();
+    this.getOrders();
+  }
+
+  filterStatus(status: string) {
+    this.params.orderStatus = status;
+    this.getOrders();
   }
 
   getOrders() {
     this.orderService.getOrders(this.params).subscribe({
       next: (response) => {
         this.orderResponse = response;
+        for (let item of response.items) {
+          this.progressMap.set(item.id, 0);
+        }
       }
     });
   }
 
-  deleteOrder(id: number) {
-    this.orderService.deleteOrder(id).subscribe({
-      next: () => {
-        this.orderService.ordersCache.clear();
-        this.getOrders();
-        this.toastr.success(`Order №${id} was successfully deleted`)
-      }
-    })
+  deleteOrder(e: number, id: number) {
+    this.progressMap.set(id, e / 10);
+    const progress = this.progressMap.get(id);
+    if (progress !== undefined && progress > 100) {
+      this.orderService.deleteOrder(id).subscribe({
+        next: () => {
+          this.orderService.ordersCache.clear();
+          this.getOrders();
+          this.toastr.success(`Order №${id} was successfully deleted`)
+        }
+      })
+    }
   }
 
   viewDetails(productId: number) {
@@ -78,14 +102,14 @@ export class OrdersComponent implements OnInit {
     }
   }
 
-  get columns(): Array<keyof OrderHeader> {
-    const keys: Array<keyof OrderHeader> = [
-      'id',
-      'email',
-      'phone',
-      'orderStatus',
-      'orderDate',
-      'orderTotal'
+  get columns(): {column: string, sortable: boolean}[] {
+    const keys: {column: string, sortable: boolean}[] = [
+    { column: 'id', sortable: true },
+    { column: 'email', sortable: true },
+    { column: 'phone', sortable: true },
+    { column: 'orderStatus', sortable: false },
+    { column: 'orderDate', sortable: true },
+    { column: 'orderTotal', sortable: true }
     ];
 
     return keys;

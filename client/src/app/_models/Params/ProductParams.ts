@@ -16,9 +16,10 @@ export class ProductParams extends PaginationParams {
   subCategories: number[] = [];
   priceStart: number = 0;
   priceEnd: number = 0;
+  searchTerm: string = '';
   brands: number[] = [];
   colors: string[] = [];
-  sortBy: string = 'desc';
+  sortBy: string = 'ascending';
   sortColumn: string = 'rating';
 }
 

@@ -41,14 +41,17 @@
     font-weight: var(--fw-bold);
 }
 
-.nav-list a {
+.primary-header a {
     text-decoration: none;
+}
+
+.nav-list > li a {
     padding: 0.5em 1.05em;
     border-radius: 100vw;
     transition: color 200ms, background-color 200ms;
 }
 
-.nav-list a:is(:hover, :focus-visible) {
+.nav-list > li a:is(:hover, :focus-visible) {
     background-color: var(--clr-blue-accent-400);
     color: var(--clr-primary-200);
     outline: none;
@@ -203,6 +206,44 @@
     display: block;
 }
 
+.dropdown-menu {
+    transform: scaleY(0);
+    opacity: 0;
+    transform-origin: top;
+    display: flex;
+    position: absolute;
+    background-color: var(--clr-primary-100);
+    border: 1px solid var(--clr-primary-300);
+    box-shadow: 0px 3px 8px -2px var(--clr-primary-400);
+    z-index: 10;
+    top: 65px;
+    right: 0;
+    left: 0;
+    min-height: 200px;
+    padding: 1rem 6rem;
+    gap: 2rem;
+    transition: transform 500ms, opacity 300ms;
+}
+
+.dropdown-menu li:not(:first-child) {
+    cursor: pointer;
+}
+
+.subcategory-list > *:nth-child(1) {
+    margin-bottom: 0.5rem;
+}
+
+.nav-list > .dropdown-menu.mobile {
+    transform: scaleY(1) ;
+    opacity: 1;
+}
+
+.nav-list > .dropdown-menu.hide:not(.mobile) {
+    transform: scaleY(0) ;
+    opacity: 0;
+}
+
+
 @media (min-width: 80rem) {
     .search-bar:focus-within .search-bar__input {
         opacity: 1;
@@ -308,8 +349,37 @@
         background-color: transparent;
         color: var(--clr-primary-300);
     }
+    
+    .nav-list > li[categoryId]::after {
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 7px solid #000;
+        float: right;
+    }
+
+    .nav-list > li.active::after {
+        transform: rotate(180deg);
+    }
 
     .nav-list a.button {
         padding: 0.5em 3em;
+    }
+
+    .dropdown-menu {
+        position: relative;
+        inset: unset;
+        flex-wrap: wrap;
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (hover: hover) {
+    .nav-list > li[categoryId]:hover ~ .dropdown-menu,
+    .nav-list > .dropdown-menu:hover {
+        transform: scaleY(1);
+        opacity: 1;
     }
 }

@@ -10,6 +10,7 @@ export class UiTabsComponent implements OnChanges{
   @Input() direction: string = 'horizontal';
   @Input() gap: string = '0.25rem';
   @Output() tabChanged = new EventEmitter<string>;
+  @Input() defaultTab: string = ''
   activatedTab: string = '';
 
   activateTab(tab: string) {
@@ -18,8 +19,10 @@ export class UiTabsComponent implements OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.tabs) {
+    if(this.tabs && !this.defaultTab) {
       this.activatedTab = this.tabs[0];
+    } else {
+      this.activatedTab = this.defaultTab
     }
   }
 }

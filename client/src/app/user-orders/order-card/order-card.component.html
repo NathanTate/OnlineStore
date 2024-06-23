@@ -1,0 +1,23 @@
+<div class="card">
+  <div class="card__info card__heading-status">
+      <p class="fw-semi-bold">Order Id: {{ order.id }}</p>
+      <p>{{ order.orderDate | date }}</p>
+  </div>
+  <div class="card__heading-content">
+    <ul role="list" class="card__images">
+      <li class="card__image" *ngFor="let detail of order.orderDetails">
+        <img [src]="detail.photoUrl" [alt]="detail.productName + 'photo'" />
+      </li>
+    </ul>
+    <div class="card__pricing">
+      <p>{{ order.orderStatus }}</p>
+      <p class="fw-semi-bold">{{ order.orderTotal | currency }}</p>
+    </div>
+  </div>
+  <button 
+    class="button text-blue-accent-400 cancel" 
+    (click)="onCancel.emit(order.id)" 
+    [disabled]="order.orderStatus == 'CANCELED'">
+    Cancel
+  </button>
+</div>

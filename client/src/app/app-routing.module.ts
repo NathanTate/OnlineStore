@@ -19,6 +19,8 @@ import { ProductManageComponent } from './core/admin/product-management/product-
 import { OrdersComponent } from './core/admin/orders/orders.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { UserOrdersComponent } from './user-orders/user-orders.component';
+import { ValidateOrderComponent } from './validate-order/validate-order.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [canActivate]},
@@ -29,6 +31,8 @@ const routes: Routes = [
     {path: 'manage', component: ProductManageComponent},
     {path: 'orders', component: OrdersComponent}
   ]},
+  {path: 'validate-order/:id', component: ValidateOrderComponent, canActivate: [canActivate]},
+  {path: 'orders', component: UserOrdersComponent, canActivate: [canActivate]},
   {path: 'product/:id', component: ProductComponent},
   {path: 'auth', component: AuthComponent, canActivate: [authPageGuard]},
   {path: 'forgot-password', component: ForgotPasswordComponent},

@@ -83,8 +83,7 @@ namespace API.Data.Repositories.ProductRepositories
 
         public async Task<PagedList<ProductResponse>> GetProductsAsync(ProductParams productParams)
         {
-            IQueryable<Product> productsQuery = _dbContext.Products.AsQueryable()
-                .Where(p => p.SubCategory.CategoryId == productParams.categoryId);
+            IQueryable<Product> productsQuery = _dbContext.Products.AsQueryable();
 
             productsQuery = FilterProduct(productsQuery, productParams);
 
@@ -184,6 +183,10 @@ namespace API.Data.Repositories.ProductRepositories
 
         private static IQueryable<Product> FilterProduct(IQueryable<Product> productsQuery, ProductParams productParams)
         {
+            if(productParams.categoryId != default(int))
+            {
+                productsQuery =  productsQuery.Where(p => p.SubCategory.CategoryId == productParams.categoryId);
+            }
             if (productParams.subCategories.Count() != 0)
             {
                 productsQuery = productsQuery.Where(p => productParams.subCategories.Contains(p.SubCategoryId));
@@ -203,6 +206,14 @@ namespace API.Data.Repositories.ProductRepositories
             if (productParams.PriceMin != default(decimal))
             {
                 productsQuery = productsQuery.Where(p => p.OriginalPrice >= productParams.PriceMin);
+            }
+            if (!string.IsNullOrWhiteSpace(productParams.SearchTerm)) 
+            {
+                productsQuery = productsQuery
+                .Where(p => p.Name.ToLower().Contains(productParams.SearchTerm.ToLower()) ||
+                p.Id.ToString().Contains(productParams.SearchTerm) ||
+                p.Brand.BrandName.ToLower().Contains(productParams.SearchTerm) ||
+                p.Description.ToLower().Contains(productParams.SearchTerm));
             }
 
             return productsQuery;

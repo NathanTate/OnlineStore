@@ -88,6 +88,23 @@ export class ProductAdminComponent implements OnInit{
     }
   }
 
+  onFileChange(event: EventTarget | null) {
+    if(event && event instanceof HTMLInputElement) {
+      this.onFileDropped(event.files!)
+    }
+  }
+
+  formatBytes(bytes: number, decimals: number = 0) {
+    if (bytes === 0) {
+      return '0 Bytes';
+    }
+    const k = 1024;
+    const dm = decimals <= 0 ? 0 : decimals || 2;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+
   prepareFormData(productRequest: ProductRequest): FormData {
     const formData = new FormData();
 
@@ -114,7 +131,7 @@ export class ProductAdminComponent implements OnInit{
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       originalPrice: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      salePrice: ['', Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+      salePrice: [0, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
       description: ['', Validators.required],
       subCategoryId: ['', Validators.required],
       categoryId: ['', Validators.required],

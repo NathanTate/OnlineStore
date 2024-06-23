@@ -1,4 +1,5 @@
-﻿using API.Helpers;
+﻿using System.Linq.Expressions;
+using API.Helpers;
 using API.Helpers.OrderParameters;
 using API.Interfaces;
 using API.Models;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Stripe.Checkout;
+using Stripe.Climate;
 using static API.Utility.SD;
 
 namespace API.Data.Repositories.OrderRepositories
@@ -57,16 +59,19 @@ namespace API.Data.Repositories.OrderRepositories
             orderHeaderDto.OrderStatus = nameof(SD.OrderStatus.PENDING);
             orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailDto>>(model.CartResponse.CartDetails);
             orderHeaderDto.OrderDetails.ForEach(x => x.Id = 0);
+            orderHeaderDto.Id = 0;
+
+            var orderHeader = _mapper.Map<OrderHeader>(orderHeaderDto);
+            _dbContext.OrderHeaders.Add(orderHeader);
+            await _dbContext.SaveChangesAsync();
 
             var options = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>(),
                 Mode = "payment",
-                SuccessUrl = $"https://localhost:4200/validateSession/{orderHeaderDto.Id}",
+                SuccessUrl = $"https://localhost:4200/validate-order/{orderHeader.Id}",
                 CancelUrl = "https://localhost:4200/OrderCancell"
             };
-
-            orderHeaderDto.Id = 0;
 
             var discounts = new List<SessionDiscountOptions>()
             {
@@ -101,10 +106,7 @@ namespace API.Data.Repositories.OrderRepositories
 
             var service = new SessionService();
             Session session = await service.CreateAsync(options);
-            orderHeaderDto.StripeSessionId = session.Id;
-            var orderHeader = _mapper.Map<OrderHeader>(orderHeaderDto);
-            await _dbContext.OrderHeaders.AddAsync(orderHeader);
-
+            orderHeader.StripeSessionId = session.Id;
             return Result.Ok(session.Url);
         }
 
@@ -138,21 +140,35 @@ namespace API.Data.Repositories.OrderRepositories
 
         public async Task<PagedList<OrderHeaderDto>> GetOrdersAsync(OrderParams orderParams, string userId)
         {
-            IQueryable<OrderHeaderDto> ordersQuery;
+            IQueryable<OrderHeader> ordersQuery;
             var user = await _dbContext.Users.FindAsync(userId);
             if (await _userManager.IsInRoleAsync(user, nameof(UserRoles.ADMIN)))
             {
-                ordersQuery = _dbContext.OrderHeaders.AsNoTracking()
-                    .ProjectTo<OrderHeaderDto>(_mapper.ConfigurationProvider);
+                ordersQuery = _dbContext.OrderHeaders.AsNoTracking();
             }
             else
             {
                 ordersQuery = _dbContext.OrderHeaders.AsNoTracking()
-                    .Where(h => h.UserId == userId)
-                    .ProjectTo<OrderHeaderDto>(_mapper.ConfigurationProvider);
+                    .Where(h => h.UserId == userId);
             }
 
-            return await PagedList<OrderHeaderDto>.CreateAsync(ordersQuery, orderParams.Page, orderParams.PageSize);
+            ordersQuery = FilterOrders(ordersQuery, orderParams);
+
+            if(orderParams.SortBy?.ToLower() == "desc")
+            {
+                ordersQuery = ordersQuery.OrderByDescending(GetSortProperty(orderParams));
+            }
+            else
+            {
+                ordersQuery = ordersQuery.OrderBy(GetSortProperty(orderParams));
+            }
+            
+            var result = await PagedList<OrderHeaderDto>.CreateAsync(
+                ordersQuery.ProjectTo<OrderHeaderDto>(_mapper.ConfigurationProvider),
+                orderParams.Page,
+                orderParams.PageSize);
+            
+            return result;
         }
 
         public async Task<Result<OrderHeaderDto>> GetOrderAsync(int orderHeaderId, string userId)
@@ -216,6 +232,37 @@ namespace API.Data.Repositories.OrderRepositories
             _dbContext.OrderHeaders.Remove(orderHeader);
             
             return Result.Ok();
+        }
+
+        private static Expression<Func<OrderHeader, object>> GetSortProperty(OrderParams sortColumn)
+        {
+            Expression<Func<OrderHeader, object>> keySelector = sortColumn.SortColumn?.ToLower() switch
+            {
+                "orderdate" => order => order.OrderDate,
+                "ordertotal" => order => order.OrderTotal,
+                "email" => order => order.Email,
+                "phone" => order => order.Phone,
+                _ => review => review.Id
+            };
+
+            return keySelector;
+        }
+
+        private static IQueryable<OrderHeader> FilterOrders(IQueryable<OrderHeader> ordersQuery, OrderParams orderParams) 
+        {
+            if (!string.IsNullOrWhiteSpace(orderParams.OrderStatus)) 
+            {
+                ordersQuery = ordersQuery.Where(o => o.OrderStatus == orderParams.OrderStatus.ToUpper());
+            }
+            if (!string.IsNullOrWhiteSpace(orderParams.SearchTerm)) 
+            {
+                ordersQuery = ordersQuery
+                .Where(o => o.Email.ToLower().Contains(orderParams.SearchTerm.ToLower()) ||
+                o.Id.ToString().StartsWith(orderParams.SearchTerm) ||
+                o.Phone.Contains(orderParams.SearchTerm));
+            }
+
+            return ordersQuery;
         }
     }
 }

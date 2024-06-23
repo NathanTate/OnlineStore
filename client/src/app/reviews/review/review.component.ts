@@ -12,7 +12,7 @@ export class ReviewComponent implements OnInit{
   private detailsEl: HTMLDetailsElement;
   @ViewChild('details') 
     set dRef(ref: ElementRef) {
-      this.detailsEl = ref.nativeElement;
+      this.detailsEl = ref?.nativeElement;
     };
   @Input({required: true}) review: Review;
   @Input() canDelete: boolean = false;

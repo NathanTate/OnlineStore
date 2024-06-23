@@ -1,62 +1,56 @@
-<div class="wrapper" *ngIf="!!productResponse">
-  <div class="table-nav">
-    <h1 class="fw-semi-bold fs-secondary-heading">Products Table</h1>
-    <hr>
-  </div>
+<ng-container *ngIf="!!productResponse">
+  <app-datatable 
+    [columns]="columns" [length]="productResponse.items.length" 
+    [totalCount]="productResponse.totalCount" [pageSize]="params.pageSize" 
+    [currentPage]="params.page"
+    [filterStatuses]="['In Stock', 'Out of Stock']"
+    (pageChanged)="onPageChanged($event)"
+    (filter)="onSearchSubmit($event)"
+    (sort)="onSortTable($event)"
+    (filterStatus)="onFilterStatus($event)">
+    <tbody>
+      <tr *ngFor="let item of productResponse.items">
+        <td>
+          {{item.id}}
+        </td>
+        <td>
+          <p class="fw-medium">{{item.name}}</p>
+        </td>
+        <td>
+          {{item.originalPrice | currency: 'USD'}}
+        </td>
+        <td>
+          {{item.salePrice | currency: 'USD'}}
+        </td>
+        <td>
+          {{item.brand?.brandName}}
+        </td>
+        <td>
+          <ul role="list" class="filter__color-group">
+            <li *ngFor="let color of item.colors">
+              <div [ngStyle]="{ 'background-color': color.value}" class="color">
+              </div>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <div class="actions">
+            <button (click)="viewDetails(item.id)" class="icon-button text-blue-accent-400" style="--font-size: 1.25rem"><fa-icon [icon]="iconView"></fa-icon></button>
+            <button [routerLink]="['/admin/product']" class="text-green-accent-400 icon-button" style="--font-size: 1.25rem"><fa-icon [icon]="iconEdit"></fa-icon></button>
+            <button holdable (holdTime)="deleteProduct($event, item.id)" class="text-red-accent-400 icon-button" style="--font-size: 1.25rem"><fa-icon [icon]="iconTrash"></fa-icon></button>
+            <progress max="100" [value]="progressMap.get(item.id)"></progress>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </app-datatable>
+</ng-container>
 
-  <div class="table-wrapper">
-    <table datatable>
-      <thead>
-        <tr>
-          <th *ngFor="let column of columns">
-            {{column}}
-          </th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of productResponse.items">
-          <td>
-            {{item.id}}
-          </td>
-          <td>
-            <p class="fw-medium">{{item.name}}</p>
-          </td>
-          <td>
-            {{item.originalPrice | currency: 'USD'}}
-          </td>
-          <td>
-            {{item.salePrice | currency: 'USD'}}
-          </td>
-          <td>
-            {{item.brand?.brandName}}
-          </td>
-          <td>
-            <ul role="list" class="filter__color-group">
-              <li *ngFor="let color of item.colors">
-                <div [ngStyle]="{ 'background-color': color.value}" class="color">
-                </div>
-              </li>
-            </ul>
-          </td>
-          <td>
-            <div class="actions">
-              <button (click)="viewDetails(item.id)" class="button view-button bg-blue-accent-400">View</button>
-              <button [routerLink]="['/admin/product']" class="bg-green-accent-400 remove-button"><fa-icon [icon]="iconEdit"></fa-icon></button>
-              <button (click)="deleteProduct(item.id)" class="bg-red-accent-400 remove-button"><fa-icon [icon]="iconTrash"></fa-icon></button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
 
 <app-modal [headerTemplate]="modalHeader" [bodyTemplate]="modalBody" modalId="product"></app-modal>
 <ng-template #modalHeader>
   <div class="modal__header">
     <h2 class="fs-primary-title fw-semi-bold">Details</h2>
-    <hr>
   </div>
 </ng-template>
 <ng-template #modalBody>

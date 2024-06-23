@@ -16,7 +16,7 @@ namespace API.Models.ProductModel
 
         [Required]
         [MaxLength(100)]
-        public string Group { get; set; }
+        public string GroupName { get; set; }
 
         [Required]
         public int CategoryId { get; set; }

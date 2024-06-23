@@ -1,69 +1,12 @@
-.wrapper {
-  border-radius: 10px 10px 0 0;
-  border: 1px solid rgba(220, 220, 220, 0.7);
-}
-
-.table-wrapper {
-  background-color: #fff;
-  overflow-x: auto;
-}
-
-.table-nav {
-  padding: 0.5rem;
-}
-
-.table-nav input {
-  width: 100%;
-}
-
-table {
-  width: 100%;
-  color: #000;
-  border-collapse: collapse;
-}
-
-td, th {
-  padding: 1rem;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 0.5rem;
-}
-
-table.dataTable th.dt-type-numeric,
-table.dataTable td.dt-type-numeric  {
-  text-align: left;
-}
-
-tr {
-  border-top: 1px solid rgba(220, 220, 220, 0.7);
-}
-
-tr:nth-of-type(2n) {
-  background-color: rgb(240, 240, 240);
-}
-
-thead {
-  background-color: var(--clr-primary-200);
-  font-weight: var(--fw-semi-bold);
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid var(--clr-primary-400);
+progress {
+  transform: rotate(-90deg);
+  width: 30px;    
 }
 
 .modal__body {
   display: grid;
   gap: 1rem;
   padding-bottom: 3rem;
-}
-
-hr {
-  margin-block: 1rem 0.5rem;
 }
 
 @media (min-width: 48rem) {
@@ -74,17 +17,7 @@ hr {
   .wrapper {
     padding: 1rem;
   }
-
-  .table-nav {
-    padding: 0;
-  }
-
-  .view-button {
-    padding: 0.5rem 1.5rem;
-  }
 }
-
-
 
 ul.filter__color-group {
   display: flex;
@@ -101,3 +34,21 @@ ul > li {
   width: 25px;
   height: 25px;
 }
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+}
+
+.actions > button {
+  cursor: pointer;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--clr-primary-400);
+}
+

@@ -5,7 +5,7 @@ import { ProductParams } from '../../../../_models/Params/ProductParams';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ModalService } from '../../../../_services/modal.service';
 import { ToastrService } from 'ngx-toastr';
-import { faEdit } from '@fortawesome/free-regular-svg-icons';
+import { faEdit, faEye } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'app-product-manage',
@@ -14,35 +14,62 @@ import { faEdit } from '@fortawesome/free-regular-svg-icons';
 })
 export class ProductManageComponent implements OnInit {
   productResponse: ProductResponse;
-  loading = false;
   params: ProductParams;
   product: Product | undefined;
   keys: string[] = [];
   iconTrash = faTrash;
   iconEdit = faEdit;
+  iconView = faEye;
+  progressMap = new Map<number, number>();
 
   constructor(private productService: ProductService, private modalService: ModalService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
+    this.params = {...this.productService.getProductParams()};
+    this.params.pageSize = 10;
+    this.params.categoryId = 0;
     this.getProducts();
   }
 
+  onSearchSubmit(searchTerm: string) {
+    console.log(searchTerm)
+    this.params.searchTerm = searchTerm ?? '';
+    this.getProducts();
+  }
+
+  onSortTable(column: string) {
+    const futureSortingOrder = this.params.sortBy === 'desc' ? 'asc' : 'desc'
+    this.params.sortBy = futureSortingOrder;
+    this.params.sortColumn = column.toString();
+    this.getProducts();
+  }
+
+  onFilterStatus(status: string) {
+    console.log(status);
+  }
+
   getProducts() {
-    this.productService.getProducts().subscribe({
+    this.productService.getProducts(this.params).subscribe({
       next: (products: ProductResponse) => {
         this.productResponse = products;
-        this.loading = false;
+        for (let item of products.items) {
+          this.progressMap.set(item.id, 0);
+        }
       }
     })
   }
 
-  deleteProduct(id: number) {
-    this.productService.deleteProduct(id).subscribe({
-      next: () => {
-        this.getProducts();
-        this.toastr.success(`Product №${id} was successfully deleted`)
-      }
-    })
+  deleteProduct(e: number, id: number) {
+    this.progressMap.set(id, e / 10);
+    const progress = this.progressMap.get(id);
+    if (progress !== undefined && progress > 100) {
+      this.productService.deleteProduct(id).subscribe({
+        next: () => {
+          this.getProducts();
+          this.toastr.success(`Product №${id} was successfully deleted`)
+        }
+      })
+    }
   }
 
   viewDetails(productId: number) {
@@ -66,14 +93,14 @@ export class ProductManageComponent implements OnInit {
     }
   }
 
-  get columns(): Array<keyof Product> {
-    const keys: Array<keyof Product> = [
-      'id',
-      'name',
-      'originalPrice',
-      'salePrice',
-      'brand',
-      'colors'
+  get columns(): {column:  string, sortable: boolean}[] {
+    const keys: {column:  string, sortable: boolean}[] = [
+      { column: 'id', sortable: true },
+      { column: 'name', sortable: true },
+      { column: 'originalPrice', sortable: true },
+      { column: 'salePrice', sortable: true },
+      { column: 'brand', sortable: false },
+      { column: 'colors', sortable: false }
     ];
 
     return keys;

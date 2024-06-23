@@ -51,6 +51,7 @@ export class CarouselComponent implements OnInit, AfterViewInit{
 
   @HostListener('mousemove', ['$event']) onMouseMove(event: MouseEvent) {
     if(!this.isDragging) return;
+    this.content.nativeElement.style.pointerEvents = 'none'
     this.userSelect = 'none';
     event.preventDefault();
 
@@ -62,6 +63,8 @@ export class CarouselComponent implements OnInit, AfterViewInit{
   @HostListener('mouseup')
   @HostListener('mouseleave') onMouseUp() {
     this.isDragging = false;
+    this.cursor = 'grab'
+    this.content.nativeElement.style.pointerEvents = 'all'
   }
 
   @HostListener('touchstart', ['$event'])

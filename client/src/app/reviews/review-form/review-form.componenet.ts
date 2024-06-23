@@ -12,6 +12,7 @@ import { Subscription } from "rxjs";
 export class ReviewFormComponent implements OnInit{
   reviewForm: FormGroup;
   subscription: Subscription;
+  isSubmitted: boolean = false;
   @Output() handleSubmit = new EventEmitter<ReviewRequest>();
 
   constructor(private modalService: ModalService, private fb: FormBuilder) {}
@@ -20,12 +21,16 @@ export class ReviewFormComponent implements OnInit{
     this.initializeForm();
     this.subscription = this.modalService.getModalState('review').subscribe({
       next: (isOpen) => {
-        if(isOpen === false) this.reviewForm.reset();
+        if(isOpen === false) {
+          this.reviewForm.reset()
+          this.isSubmitted = false;
+        };
       }
     })
   }
 
   onSubmit() {
+    this.isSubmitted = true;
     if (!this.reviewForm.valid) return;
     this.handleSubmit.emit(this.reviewForm.value);
     this.modalService.closeModal('review');

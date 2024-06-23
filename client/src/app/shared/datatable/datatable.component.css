@@ -1,0 +1,124 @@
+.wrapper {
+  border-radius: 10px;
+  border: 1px solid rgba(220, 220, 220, 0.7);
+  overflow-x: auto;
+}
+
+.table-wrapper {
+  position: relative;
+  background-color: #fff;
+}
+
+.table-nav {
+  width: 100%;
+}
+
+.filter-group {
+  white-space: nowrap;
+  border-bottom: 1px solid var(--clr-primary-300);
+}
+
+.status-btn {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  background: transparent;
+  border: none;
+  padding: 1rem 1.5rem;
+  transition: color 300ms;
+}
+
+.status-btn:is(.active, :hover, :focus-visible) {
+  color: var(--clr-blue-accent-400);
+}
+
+.status-btn::after {
+  position: absolute;
+  content: '';
+  left: 0;
+  bottom: 0;
+  display: block;
+  width: 0;
+  height: 1px;
+  background-color: var(--clr-blue-accent-400);
+}
+
+.status-btn.active::after {
+  width: 100%;
+  transition: width 300ms;
+}
+
+.general-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+input[type=search] {
+  box-sizing: border-box;
+  font-size: 16px;
+  background-position: 10px 10px; 
+  background-repeat: no-repeat;
+  background-size: 20px;
+  padding: 10px 16px 10px 40px;
+  background-image: url("/assets/svg/search.svg");
+}
+
+table {
+  width: 100%;
+  color: #000;
+  border-collapse: collapse;
+}
+
+:host ::ng-deep td, th {
+  padding: 1rem;
+}
+
+:host ::ng-deep th {
+  text-wrap: nowrap;
+  text-align: start;
+}
+
+:host ::ng-deep th.sortable {
+  cursor: pointer;
+}
+
+:host ::ng-deep .actions {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+}
+
+:host ::ng-deep tr {
+  border-top: 1px solid rgba(220, 220, 220, 0.7);
+}
+
+:host ::ng-deep tr:nth-of-type(2n) {
+  background-color: rgb(240, 240, 240);
+}
+
+:host ::ng-deep tr:last-of-type {
+  border-bottom: 1px solid rgba(220, 220, 220, 0.7);
+}
+
+thead {
+  background-color: var(--clr-primary-200);
+  font-weight: var(--fw-medium);
+}
+
+thead fa-icon {
+  color: var(--clr-blue-accent-400);
+  margin-left: 0.25rem;
+}
+
+.pagination {
+  margin-block: 1rem 0.5rem;
+}
+
+.no-items-message {
+  position: absolute;
+  left: 50%;
+  top: 80%;
+  transform: translate(-50%, -80%);
+}

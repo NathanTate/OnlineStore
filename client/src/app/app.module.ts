@@ -19,7 +19,6 @@ import { ProductCardComponent } from './reusable/product-card/product-card.compo
 import { FilterComponent } from './reusable/filter/filter.component';
 import { DropdownDirective } from './_directives/dropdown.directive';
 import { AdBannerComponent } from './reusable/ad-banner/ad-banner.component';
-import { PaginationComponent } from './reusable/pagination/pagination.component';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { CartItemComponent } from './shopping-cart/cart-item/cart-item.component';
 import { CheckoutComponent } from './checkout/checkout.component';
@@ -39,13 +38,15 @@ import { HomeComponent } from './core/home/home.component';
 import { TestimonialComponent } from './testimonial/testimonial.component';
 import { ProductManageComponent } from './core/admin/product-management/product-manage/product-manage.component';
 import { OrdersComponent } from './core/admin/orders/orders.component';
-import { DataTablesModule } from 'angular-datatables';
-import { clickStopPropogation } from './_directives/clcikStopPropogation.directive';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { FeaturesComponent } from './static-pages/features/features.component';
 import { SharedModule } from './shared/shared.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { UserOrdersComponent } from './user-orders/user-orders.component';
+import { OrderCardComponent } from './user-orders/order-card/order-card.component';
+import { ValidateOrderComponent } from './validate-order/validate-order.component';
+import { HoldableDirective } from './shared/holdable.directive';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,6 @@ import { ReviewsModule } from './reviews/reviews.module';
     FilterComponent,
     DropdownDirective,
     AdBannerComponent,
-    PaginationComponent,
     ShoppingCartComponent,
     CartItemComponent,
     CheckoutComponent,
@@ -73,14 +73,17 @@ import { ReviewsModule } from './reviews/reviews.module';
     ProductAdminComponent,
     HasRoleDirective,
     DragAndDropDirective,
+    HoldableDirective,
     HomeComponent,
     TestimonialComponent,
     ProductManageComponent,
     OrdersComponent,
-    clickStopPropogation,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    FeaturesComponent
+    FeaturesComponent,
+    UserOrdersComponent,
+    OrderCardComponent,
+    ValidateOrderComponent,
   ],
   imports: [
     BrowserModule,
@@ -91,7 +94,6 @@ import { ReviewsModule } from './reviews/reviews.module';
     HttpClientModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    DataTablesModule,
     ReviewsModule,
     SharedModule
   ],

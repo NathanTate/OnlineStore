@@ -8,27 +8,31 @@ import { trigger, transition, style, animate } from '@angular/animations';
   selector: 'app-modal',
   template: `
   <div *ngIf="isOpen" (mousedown)="onClose()" class="wrapper">
-    <div [@enterAnimation] (mousedown)="stopPropagation($event)" class="modal">
-      <div class="modal__header">
-        <ng-container [ngTemplateOutlet]="headerTemplate || defaultModalHeader"></ng-container>
-        <ng-template #defaultModalHeader>
-          <div class="modal__title">Your title</div>
+      <div [@enterAnimation] (mousedown)="stopPropagation($event)" class="modal">
+        <div class="modal__header">
+          <ng-container [ngTemplateOutlet]="headerTemplate || defaultModalHeader"></ng-container>
+          <ng-template #defaultModalHeader>
+            <div class="modal__title">Your title</div>
+          </ng-template>
+            <button (click)="onClose()" class="modal__close-button">
+              <fa-icon [icon]="iconXmark" size="2x"></fa-icon>
+            </button>
+        </div>
+
+        <hr>
+
+        <div class="body">
+          <ng-container [ngTemplateOutlet]="bodyTemplate || defaultModalBody"></ng-container>
+        </div>
+        <ng-template #defaultModalBody>
+          <div class="modal__body">Your body goes here...</div>
+        </ng-template>
+
+        <ng-container [ngTemplateOutlet]="footerTemplate || defaultModalFooter"></ng-container>
+        <ng-template #defaultModalFooter>
         </ng-template>
       </div>
-
-      <ng-container [ngTemplateOutlet]="bodyTemplate || defaultModalBody"></ng-container>
-      <ng-template #defaultModalBody>
-        <div class="modal__body">Your body goes here...</div>
-      </ng-template>
-
-      <ng-container [ngTemplateOutlet]="footerTemplate || defaultModalFooter"></ng-container>
-      <ng-template #defaultModalFooter>
-      </ng-template>
-      <button (click)="onClose()" class="modal__close-button">
-        <fa-icon [icon]="iconXmark" size="2x"></fa-icon>
-      </button>
     </div>
-  </div>
   `,
   styleUrls: ['./modal.component.css'],
   animations: [

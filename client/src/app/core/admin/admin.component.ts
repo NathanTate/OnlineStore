@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './admin.component.css'
 })
 export class AdminComponent implements OnInit{
-  // tabs = ['Create Product', 'Edit Products', 'Manage Orders'];
+  activeTab: string = '';
 
   tabs = new Map();
   tabKeys: string[] = [];
@@ -19,6 +19,10 @@ export class AdminComponent implements OnInit{
     this.tabs.set('Manage Products', 'manage');
     this.tabs.set('Manage Orders', 'orders');
     this.tabKeys = Array.from(this.tabs.keys());
+    const path = this.route.snapshot.firstChild?.routeConfig?.path;
+    for(let [key, value] of this.tabs.entries()) {
+      this.activeTab = path === value ? key : this.activeTab;
+    }
   }
 
   onTabChanged(tab: string) {

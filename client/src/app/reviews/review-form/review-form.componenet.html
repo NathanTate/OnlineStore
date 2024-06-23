@@ -7,7 +7,6 @@
 
 <ng-template #modalHeader>
   <h3 class="fs-primary-title fw-medium">Write a review</h3>
-  <hr>
 </ng-template>
 
 <ng-template #modalBody>
@@ -15,36 +14,33 @@
     <p class="fs-helper fw-medium">Rate this item</p>
     <div class="center" style="flex-direction: column;">
       <app-star size="var(--starSize)" (ratingEmit)="onRatingSelected($event)"></app-star>
-      <div class="helper-block" *ngIf="ratingScore?.invalid && (ratingScore?.touched || ratingScore?.dirty)">
+      <div class="helper-block" *ngIf="ratingScore?.invalid && (ratingScore?.touched || ratingScore?.dirty) || isSubmitted">
         <span class="text-danger" *ngIf="ratingScore?.hasError('required')">Rating score is required</span>
       </div>
     </div>
     <div class="form-group">
       <label class="label fs-label fw-semi-bold" for="pros">Pros</label>
       <input class="form-input" type="text" id="pros" formControlName="pros">
-      <div class="helper-block" *ngIf="pros?.invalid && (pros?.touched || pros?.dirty)">
+      <div class="helper-block" *ngIf="pros?.invalid && (pros?.touched || pros?.dirty) || isSubmitted">
         <span class="text-danger" *ngIf="pros?.hasError('required')">Pros are required</span>
       </div>
     </div>
     <div class="form-group">
       <label class="label fs-label fw-semi-bold" for="cons">Cons</label>
       <input class="form-input" type="text" id="cons" formControlName="cons">
-      <div class="helper-block" *ngIf="cons?.invalid && (cons?.touched || cons?.dirty)">
+      <div class="helper-block" *ngIf="cons?.invalid && (cons?.touched || cons?.dirty) || isSubmitted">
         <span class="text-danger" *ngIf="cons?.hasError('required')">Cons are required</span>
       </div>
     </div>
     <div class="form-group">
       <label class="label fs-label fw-semi-bold" for="message">Message</label>
       <textarea class="form-textarea" type="text" id="message" formControlName="comment" rows="6"></textarea>
-      <div class="helper-block" *ngIf="comment?.invalid && (comment?.touched || comment?.dirty)">
+      <div class="helper-block" *ngIf="comment?.invalid && (comment?.touched || comment?.dirty) || isSubmitted">
         <span class="text-danger" *ngIf="comment?.hasError('maxlength')">Max length is 500 characters</span>
       </div>
     </div>
-    <div class="helper-block" *ngIf="reviewForm?.invalid && (reviewForm?.touched || reviewForm?.dirty)">
-      <span class="text-danger">Form is invalid</span>
-    </div>
     <div class="center" style="margin-top: 1rem;">
-      <button class="button text-blue-accent-400">Submit Review</button>
+      <button type="submit" class="button text-blue-accent-400">Submit Review</button>
     </div>
   </form>
   

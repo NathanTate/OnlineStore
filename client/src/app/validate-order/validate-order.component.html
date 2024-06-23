@@ -1,0 +1,11 @@
+<div class="container padding-block-600">
+  <div class="flex" *ngIf="!invalidOrderIdMessage && !isLoading else invalidOrderId">
+    <h1 class="fs-primary-heading fw-semi-bold">Thanks you for your order</h1>
+    <a routerLink="/orders" class="button text-blue-accent-400">Check your order here</a>
+    <a routerLink="/">Back to homepage</a>
+  </div>
+</div>
+
+<ng-template #invalidOrderId>
+  <h1 style="text-align: center;" class="fs-primary-heading fw-semi-bold">{{invalidOrderIdMessage}}</h1>
+</ng-template>

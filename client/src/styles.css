@@ -211,6 +211,10 @@ textarea:not([rows]) {
   scroll-margin-block: 5ex;
 }
 
+progress::-webkit-progress-value {
+  transition: 0.1s all ease;
+}
+
 /*Utility*/
 
 .container {
@@ -252,6 +256,7 @@ textarea:not([rows]) {
 
 .button:disabled {
   opacity: 0.6;
+  pointer-events: none;
 }
 
 .button[data-icon="true"] {
@@ -259,7 +264,7 @@ textarea:not([rows]) {
   padding: 0;
 }
 
-.remove-button {
+.icon-button {
   --size: 30px;
   --font-size: 1rem;
   width: var(--size);
@@ -268,6 +273,7 @@ textarea:not([rows]) {
   color: var(--clr-primary-100);
   font-size: var(--font-size);
   border: none;
+  background: transparent;
 }
 
 .helper-block .text-danger {
@@ -427,6 +433,15 @@ input {
   padding-block: var(--size-400);
 }
 
+.button:not([disabled]):is(:hover, :focus-visible),
+.icon-button:is(:hover, :focus-visible) {
+  opacity: 0.85;
+}
+
+.button:not([disabled]):focus-visible,
+.icon-button:focus-visible {
+  outline: 2px solid #0bd10b;
+}
 
 body {
   font-family: var(--ff-body);
@@ -438,16 +453,6 @@ body {
   .even-columns {
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
-  }
-
-  .button:not([disabled]):is(:hover, :focus-visible),
-  .remove-button:is(:hover, :focus-visible) {
-    opacity: 0.85;
-  }
-
-  .button:not([disabled]):focus-visible,
-  .remove-button:focus-visible {
-    outline: 2px solid #0bd10b;
   }
 }
 

@@ -3,7 +3,8 @@ import { ProductService } from '../../_services/product.service';
 import { ProductResponse } from '../../_models/Product';
 import { FilterParams, ProductParams } from '../../_models/Params/ProductParams';
 import { SubCategory } from '../../_models/Categories';
-import { forkJoin } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-catalog',
@@ -18,27 +19,36 @@ export class CatalogComponent implements OnInit{
   subCategories: SubCategory[] = [];
   availableColors: Set<string> = new Set<string>();
   availableBrands: Set<string> = new Set<string>();
+  subscription: Subscription;
 
-  constructor(private productService: ProductService) {
+  constructor(private productService: ProductService, private route: ActivatedRoute) {
     this.productParams = productService.getProductParams();
-    console.log(this.productParams)
   }
   
   ngOnInit(): void {
-    this.loadProductsAndSubCategories();
+    this.subscription = this.route.queryParams.subscribe({
+      next: (params: Params) => {
+        if(params['category']) {
+          this.productParams.categoryId = params['category'];
+        }
+        if(params['subcategory']) {
+          this.productParams.subCategories.push(params['subcategory'])
+        }
+        this.loadProductsAndSubCategories();
+      }
+    })
   }
 
   loadProductsAndSubCategories() {
     this.loading = true;
 
     forkJoin({
-      subCategories: this.productService.getSubCategories(2),
+      subCategories: this.productService.getSubCategories(this.productParams.categoryId),
       productsData: this.productService.getProducts(this.productParams),
       colors: this.productService.getColors()
     }).subscribe({
       next: ({ subCategories, productsData, colors}) => {
         this.subCategories = subCategories.flatMap(x => x.subcategories);
-        console.log(subCategories)
         this.handleProductData(productsData);
         this.availableColors = new Set<string>(colors.flatMap(c => c.value));
         this.loading = false;

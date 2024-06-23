@@ -22,6 +22,7 @@ namespace API.Data.Repositories.ProductRepositories
 
         public async Task<Result<ProductCategoryResponse>> CreateCategoryAsync(ProductCategoryRequest model)
         {
+            model.Id = 0;
             var category = _mapper.Map<ProductCategory>(model);
 
             if (_dbContext.ProductCategories.Any(p => p.CategoryName == category.CategoryName))
@@ -45,7 +46,7 @@ namespace API.Data.Repositories.ProductRepositories
                 CategoryName = category.CategoryName,
                 CategoryDescription = category.CategoryDescription,
                 SubcategoryGroups = category.SubCategories
-                    .GroupBy(s => s.Group)
+                    .GroupBy(s => s.GroupName)
                     .Select(g => new SubcategoryGroupResponse
                     {
                         GroupName = g.Key,
@@ -102,6 +103,7 @@ namespace API.Data.Repositories.ProductRepositories
 
         public async Task<Result<ProductSubCategoryDto>> CreateSubCategoryAsync(ProductSubCategoryDto model)
         {
+            model.Id = 0;
             var subCategory = _mapper.Map<ProductSubCategory>(model);
 
             if (_dbContext.ProductSubCategories.Any(p => p.SubCategoryName == subCategory.SubCategoryName))
@@ -123,7 +125,8 @@ namespace API.Data.Repositories.ProductRepositories
         public async Task<IEnumerable<SubcategoryGroupResponse>> GetAllSubCategoryAsync(int id = 1)
         {
             var groupedSubcategories = await _dbContext.ProductSubCategories
-                .GroupBy(s => s.Group)
+                .Where(c => c.CategoryId == id)
+                .GroupBy(s => s.GroupName)
                 .Select(g => new SubcategoryGroupResponse
                 {
                     GroupName = g.Key,

@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit{
   fetchData() {
     this.loading = true;
     forkJoin({
-      newProducts: this.productService.getProducts({...this.productParams, sortColumn: 'date', pageSize: 10}),
+      newProducts: this.productService.getProducts({...this.productParams, sortColumn: 'date', pageSize: 10, sortBy: 'desc'}),
       customBuilds: this.productService.getProducts({...this.productParams}),
       MSILaptops: this.productService.getProducts({...this.productParams}),
       Desktops: this.productService.getProducts({...this.productParams}),
@@ -48,20 +48,18 @@ export class HomeComponent implements OnInit{
         this.mSILaptops = MSILaptops;
         this.desktops = Desktops;
         this.gamingMonitors = GamingMonitors;
-        this.loading = false;
+        this.loading = false
       }
     })
   }
 
   getCategories() {
-    this.loading = true;
     this.categoryService.getCategories();
     this.categoriesSubscription = this.categoryService.categories$.subscribe({
       next: (categories) => {
         if(categories !== null) {
           this.categories = categories;
         }
-        this.loading = false;
       }
     })
   }

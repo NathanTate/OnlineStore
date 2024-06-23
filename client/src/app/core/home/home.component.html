@@ -4,12 +4,16 @@
     [auto]="true" [interval]="4">
   </app-image-slider>
   </div>
+</div>
+<div class="container me-sm-none">
   <section class="new-products">
     <h2 class="fw-semi-bold title">New Products</h2>
-    <app-carousel [items]="6" [itemsToScroll]="5" *ngIf="!loading && newProducts">
-      <div *ngFor="let product of newProducts.items" class="carousel__cell">
-        <app-product-card [product]="product" [index]="product.id"></app-product-card>
-      </div>
+    <app-carousel [items]="6" [itemsToScroll]="5">
+      <ng-container *ngIf="!loading else cardSkeleton">
+        <div *ngFor="let product of newProducts.items" class="carousel__cell">
+          <app-product-card [product]="product" [index]="product.id"></app-product-card>
+        </div>
+      </ng-container>
     </app-carousel>
   </section>
   <div class="zip-ad bg-primary-200">
@@ -75,7 +79,13 @@
       </app-carousel>
     </section>
   </div>
-  <div class="container bg-primary-200" style="--max-width: 1130px; margin-top: 4rem;">
-    <app-testimonial></app-testimonial>
-  </div>
 </div>
+<div class="container bg-primary-200" style="--max-width: 1130px; margin-block: 4rem;">
+  <app-testimonial></app-testimonial>
+</div>
+
+<ng-template #cardSkeleton>
+  <div *ngFor="let i of [].constructor(10)" class="card skeleton" style="height: 200px; min-width: 200px">
+
+  </div>
+</ng-template>

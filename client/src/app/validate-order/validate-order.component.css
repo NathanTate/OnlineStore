@@ -1,0 +1,16 @@
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.button {
+  transition: background-color 200ms, color 200ms;
+}
+
+.button:is(:hover, :focus-visible) {
+  background-color: var(--clr-blue-accent-400);
+  color: #fff;
+}

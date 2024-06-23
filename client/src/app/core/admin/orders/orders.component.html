@@ -1,63 +1,57 @@
-<div class="wrapper" *ngIf="!!orderResponse">
-  <div class="table-nav">
-    <h1 class="fw-semi-bold fs-secondary-heading">Orders Table</h1>
-    <hr>
-  </div>
-
-  <div class="table-wrapper">
-    <table datatable>
-      <thead>
-        <tr>
-          <th *ngFor="let column of columns">
-            {{column}}
-          </th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of orderResponse.items">
-          <td>
-            {{item.id}}
-          </td>
-          <td>
-            <p class="fw-medium">{{item.email}}</p>
-          </td>
-          <td>
-            {{item.phone}}
-          </td>
-          <td>
-            <select [ngModel]="item.orderStatus" (ngModelChange)="onStatusChange($event, item.id)" [ngClass]="item.orderStatus" class="orderStatus" name="orderStatuses" id="status-select">
-              <option 
-                *ngFor="let orderStatus of orderStatuses" 
-                [value]="orderStatus" 
-                [ngClass]="orderStatus === item.orderStatus ? '' : orderStatus">
-                {{orderStatus}}
-              </option>
-            </select>
-          </td>
-          <td>
-            {{item.orderDate | date}}
-          </td>
-          <td>
-            {{item.orderTotal | currency: 'USD'}}
-          </td>
-          <td>
-            <div class="actions">
-              <button (click)="viewDetails(item.id)" class="button view-button bg-blue-accent-400">View</button>
-              <button (click)="deleteOrder(item.id)" class="bg-red-accent-400 remove-button"><fa-icon [icon]="iconTrash"></fa-icon></button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<ng-container *ngIf="!!orderResponse">
+  <app-datatable
+    [columns]="columns" [length]="orderResponse.items.length"
+    [totalCount]="orderResponse.totalCount" 
+    [pageSize]="params.pageSize"
+    [currentPage]="params.page"
+    [filterStatuses]="orderStatuses"
+    (pageChanged)="onPageChanged($event)"
+    (filter)="onSearchSubmit($event)"
+    (sort)="sortTable($event)"
+    (filterStatus)="filterStatus($event)">
+    <tbody>
+      <tr *ngFor="let item of orderResponse.items">
+        <td class="sortable">
+          {{item.id}}
+        </td>
+        <td class="sortable">
+          <p class="fw-medium">{{item.email}}</p>
+        </td>
+        <td>
+          {{item.phone}}
+        </td>
+        <td>
+          <select [ngModel]="item.orderStatus" (ngModelChange)="onStatusChange($event, item.id)" [ngClass]="item.orderStatus" class="orderStatus" name="orderStatuses" id="status-select">
+            <option 
+              *ngFor="let orderStatus of orderStatuses" 
+              [value]="orderStatus" 
+              [ngClass]="orderStatus === item.orderStatus ? '' : orderStatus">
+              {{orderStatus}}
+            </option>
+          </select>
+        </td>
+        <td class="sortable">
+          {{item.orderDate | date}}
+        </td>
+        <td class="sortable">
+          {{item.orderTotal | currency: 'USD'}}
+        </td>
+        <td>
+          <div class="actions">
+            <button (click)="viewDetails(item.id)" class="icon-button text-blue-accent-400" style="font-size: 1.25rem;"><fa-icon [icon]="iconView"></fa-icon></button>
+            <button holdable (holdTime)="deleteOrder($event, item.id)" class="icon-button text-red-accent-400" style="font-size: 1.25rem;"><fa-icon [icon]="iconTrash"></fa-icon></button>
+            <progress max="100" [value]="progressMap.get(item.id)"></progress>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </app-datatable>
+</ng-container>
 
 <app-modal [headerTemplate]="modalHeader" [bodyTemplate]="modalBody" modalId="details"></app-modal>
 <ng-template #modalHeader>
   <div class="modal__header">
     <h2 class="fs-primary-title fw-semi-bold">Details</h2>
-    <hr>
   </div>
 </ng-template>
 <ng-template #modalBody>
@@ -69,10 +63,3 @@
   </div>
 </ng-template>
 
-
-
-
-
-<!-- <div *ngIf="!!orderResponse">
-  <app-pagination (pageChanged)="onPageChanged($event)" [itemsPerPage]="orderResponse.pageSize" [currentPage]="orderResponse.page" [totalItems]="orderResponse.totalCount"></app-pagination>
-</div> -->

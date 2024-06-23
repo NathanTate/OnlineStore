@@ -1,0 +1,49 @@
+<div class="wrapper">
+  <div class="table-nav">
+    <div class="filter-group">
+      <button #statusBtn (click)="onFilterStatus($event, '')" class="status-btn active"> All ({{totalCount}})</button>
+      <button #statusBtn (click)="onFilterStatus($event, status)" class="status-btn" *ngFor="let status of filterStatuses">{{status | titlecase}}</button>
+    </div>
+    <div class="general-actions">
+      <div class="actions">
+        <p class="text-primary-400">Items {{pageSize * (currentPage - 1)}}-{{length + pageSize * (currentPage - 1)}} of {{totalCount}}</p>
+      </div>
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+        <input type="search" id="search" placeholder="Search..." formControlName="searchTerm">
+      </form>
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th *ngFor="let column of columns" (click)="column.sortable && onSort(column.column)" [ngClass]="{'sortable': column.sortable}">
+            {{column.column}}
+            <ng-container *ngIf="column.sortable">
+              <fa-icon [icon]="iconSort" size="sm"></fa-icon>
+            </ng-container>
+          </th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <ng-container *ngIf="length > 0 else noItems">
+        <ng-content></ng-content>
+      </ng-container>
+    </table>
+    <ng-container *ngIf="length">
+    <div class="pagination justify-center">
+      <app-pagination
+        [currentPage]="currentPage"
+        [itemsPerPage]="pageSize"
+        [totalItems]="totalCount"
+        (pageChanged)="onPageChange($event)">
+      </app-pagination>
+    </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #noItems>
+  <div class="padding-block-600"></div>
+    <p class="fw-medium fs-secondary-title no-items-message">No match...</p>
+</ng-template>

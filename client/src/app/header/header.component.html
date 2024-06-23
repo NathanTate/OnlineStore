@@ -45,16 +45,26 @@
             </svg>
           </button>
           </div>
-          <ul role="list" class="nav-list">
-            <li (click)="isVisible = false"><a href="#">Laptops</a></li>
-            <li (click)="isVisible = false"><a href="#">Desktop PCs</a></li>
-            <li (click)="isVisible = false"><a href="#">Networking Devices</a></li>
-            <li (click)="isVisible = false"><a href="#">Printers &amp; Scanners</a></li>
-            <li (click)="isVisible = false"><a href="#">Repairs</a></li>
-            <li (click)="isVisible = false"><a routerLink="/about">About</a></li>
-            <li (click)="isVisible = false"><a routerLink="/terms">Terms</a></li>
-            <li (click)="isVisible = false"><a href="#" class="button text-blue-accent-400">Our Deals</a></li>
-            <li (click)="isVisible = false" *appHasRole="['ADMIN']"><a routerLink="/admin">Admin Pannel</a></li>
+          <ul #navList role="list" class="nav-list">
+            <li categoryId="3"><a (click)="isVisible=false; stopPropagation($event)" routerLink="catalog">Laptops</a></li>
+            <li categoryId="7"><a (click)="isVisible=false; stopPropagation($event)" href="#">Desktop PCs</a></li>
+            <li categoryId="8"><a (click)="isVisible=false; stopPropagation($event)" href="#">Networking Devices</a></li>
+            <li categoryId="9"><a (click)="isVisible=false; stopPropagation($event)" href="#">Printers &amp; Scanners</a></li>
+            <li><a (click)="isVisible=false; stopPropagation($event)" href="#">Repairs</a></li>
+            <li><a (click)="isVisible=false; stopPropagation($event)" routerLink="/about">About</a></li>
+            <li><a (click)="isVisible=false; stopPropagation($event)" routerLink="/terms">Terms</a></li>
+            <li><a (click)="isVisible=false; stopPropagation($event)" href="#" class="button text-blue-accent-400">Our Deals</a></li>
+            <li *appHasRole="['ADMIN']"><a routerLink="/admin">Admin Pannel</a></li>
+            <div class="dropdown-menu" (click)="onHide()" [ngClass]="{hide: clickedWithin, mobile: dropdownExpanded}">
+              <ul class="subcategory-list" role="list" *ngFor="let subcategoryGroup of subcategoryGroups">
+                <li class="fs-helper">
+                  {{subcategoryGroup.groupName}}
+                </li>
+                <li class="fw-regular" *ngFor="let subcategory of subcategoryGroup.subcategories" >
+                  <a (click)="isVisible=false" [routerLink]="['/catalog']" [queryParams]="{category: subcategory.categoryId, subcategory: subcategory.id}">{{subcategory.subCategoryName}}</a>
+                </li>
+              </ul>
+            </div>
           </ul>
         </div>
         </nav>
@@ -72,9 +82,6 @@
         </button>
       </form>
       <div class="header-right">
-        <!-- <button class="button action-button search-button" data-icon="true" aria-label="open search">
-          <fa-icon [icon]="faSearch" size="lg"></fa-icon>
-        </button> -->
         <div class="cart-button">
           <button routerLink="/cart" class="button action-button" data-icon="true" aria-label="open cart">
             <fa-icon [icon]="faCart" size="lg"></fa-icon>
@@ -100,6 +107,10 @@
       <div>
         <fa-icon [icon]="faUser" size="lg"></fa-icon>
         <a routerLink="/profile">Profile</a>
+      </div>
+      <div>
+        <fa-icon [icon]="iconTruck" size="lg"></fa-icon>
+        <a routerLink="orders">Orders</a>
       </div>
       <div (click)="authService.logout(); closeMenu()">
         <fa-icon [icon]="faSignOut" size="lg"></fa-icon>

@@ -23,7 +23,6 @@
 
 .sidebar {
   grid-area: filter;
-  max-height: 1022px;
 }
 
 .info {
