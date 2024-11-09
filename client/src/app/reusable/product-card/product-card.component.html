@@ -1,20 +1,24 @@
-<div class="text-green-accent-400 card__stock">
-  <fa-icon [icon]="faCheck"></fa-icon>
+<div class="text-green-accent-400 card__stock fs-300" *ngIf="product.quantity > 0">
+  <fa-icon [icon]="iconCheck"></fa-icon>
   <p>in stock</p>
 </div>
+<div class="text-red-accent-400 card__stock fs-300 out-of-stock" *ngIf="product.quantity <= 0">
+  <fa-icon [icon]="iconClock"></fa-icon>
+  <p>check availability</p>
+</div>
 <div class="card__image">
-  <a class="card__item-img-link" routerLink="/product/{{ index }}">
-    <img loading="lazy" [src]="product.productImages[0]?.url" alt="product image" />
+  <a #blur class="card__item-img-link blur-load" style="background-image:url('/assets/images/no-image.webp')" routerLink="/product/{{ index }}">
+    <img (load)="loaded(blur)" loading="lazy" [src]="product.mainImageUrl ?? './assets/images/no-image.webp'" [alt]="product.name" />
   </a>
 </div>
-<div class="card__reviews">
+<a class="card__reviews" routerLink="/product/{{index}}/reviews">
   <app-star
     [disabled]="true"
     [rating]="product.productRating"
     [size]="'1.2rem'"
   ></app-star>
   <p class="text-primary-400 fs-300">Reviews ({{ product.totalReviews }})</p>
-</div>
+</a>
 <div class="card__info">
   <a routerLink="/product/{{ index }}">
     {{ productDisplayName }}
@@ -22,14 +26,21 @@
 </div>
 <div class="card__price_cart">
   <div class="card__price">
-    <p class="text-primary-400 price-old">
-      {{ product.originalPrice | currency }}
-    </p>
-    <p class="fs-secondary-title fw-semi-bold">
-      {{ product.originalPrice | currency }}
-    </p>
+    @if (product.salePrice !== 0) {
+      <p class="text-primary-400 price-old">
+        {{ product.originalPrice | currency }}
+      </p>
+      <p class="fs-secondary-title fw-semi-bold">
+        {{ product.salePrice | currency }}
+      </p>
+    } @else {
+      <p class="fs-secondary-title fw-semi-bold">
+        {{product.originalPrice | currency}}
+      </p>
+    }
+
   </div>
-  <button (click)="addToCart(index)" class="card__cart-button">
-    <fa-icon [icon]="faCart" size="lg"></fa-icon>
+  <button (click)="addToCart(index)" class="card__cart-button" *ngIf="product.quantity > 0">
+    <fa-icon [icon]="iconCart" size="lg"></fa-icon>
   </button>
 </div>

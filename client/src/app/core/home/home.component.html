@@ -9,7 +9,7 @@
   <section class="new-products">
     <h2 class="fw-semi-bold title">New Products</h2>
     <app-carousel [items]="6" [itemsToScroll]="5">
-      <ng-container *ngIf="!loading else cardSkeleton">
+      <ng-container *ngIf="!loading">
         <div *ngFor="let product of newProducts.items" class="carousel__cell">
           <app-product-card [product]="product" [index]="product.id"></app-product-card>
         </div>
@@ -84,8 +84,8 @@
   <app-testimonial></app-testimonial>
 </div>
 
-<ng-template #cardSkeleton>
+<!-- <ng-template #cardSkeleton>
   <div *ngFor="let i of [].constructor(10)" class="card skeleton" style="height: 200px; min-width: 200px">
 
   </div>
-</ng-template>
+</ng-template> -->

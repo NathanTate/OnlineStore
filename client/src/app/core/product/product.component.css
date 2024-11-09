@@ -118,7 +118,8 @@ ul > li {
   transition: opacity 150ms;
 }
 
-.color:is(:hover, :focus-visible)::before {
+.color:is(:hover, :focus-visible)::before,
+.color:has(.color-checkbox:checked)::before {
   opacity: 1;
 }
 

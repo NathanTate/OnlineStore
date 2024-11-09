@@ -1,6 +1,7 @@
 ﻿using API.Models.ProductModel;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Models.Order
 {
@@ -15,6 +16,9 @@ namespace API.Models.Order
         [Required]
         public int ProductId { get; set; }
         public Product Product { get; set; }
+
+        [Required]
+        public int ColorId { get; set; }
 
         [Required]
         public int Count { get; set; }

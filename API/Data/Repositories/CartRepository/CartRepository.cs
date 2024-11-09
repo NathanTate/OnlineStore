@@ -4,6 +4,7 @@ using API.Models.Coupon;
 using API.Models.DTO.Cart.CartRequests;
 using API.Models.DTO.Cart.CartResponses;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentResults;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +34,12 @@ namespace API.Data.Repositories.CartRepository
                 return Result.Fail("This user has no cart");
             }
 
-            var cartDetails = await _dbContext.CartDetails.AsNoTracking().Where(d => d.CartHeaderId == cart.CartHeader.Id).Include(d => d.Product).Include(p => p.Product.ProductImages).ToListAsync();
+            var cartDetails = await _dbContext.CartDetails.AsNoTracking()
+            .ProjectTo<CartDetailResponse>(_mapper.ConfigurationProvider)
+            .Where(d => d.CartHeaderId == cart.CartHeader.Id).ToListAsync();
 
-            cart.CartDetails = _mapper.Map<IEnumerable<CartDetailResponse>>(cartDetails);
+
+            cart.CartDetails = cartDetails;
 
 
             foreach (var cartDetail in cart.CartDetails)
@@ -104,15 +108,24 @@ namespace API.Data.Repositories.CartRepository
                 return Result.Fail("Cart doesn't exist");
             }
 
-            var product = await _dbContext.Products.FindAsync(model.ProductId);
+            var product = await _dbContext.Products.Include(p => p.Colors).FirstOrDefaultAsync(p => p.Id == model.ProductId);
             if (product == null)
             {
                 return Result.Fail("Failed adding product to cart");
             }
+            if(product.Quantity <= 0) 
+            {
+                return Result.Fail("Product is out of stock");
+            }
+            var color = product.Colors.FirstOrDefault(c => c.ColorId == model.ColorId);
+            if(color == null)
+            {
+                return Result.Fail("Invalid color for this product");
+            }
 
             var cartDetailsDb = await _dbContext.CartDetails
                 .FirstOrDefaultAsync(d => d.CartHeaderId == cartHeaderDb.Id
-                && d.ProductId == model.ProductId);
+                && d.ProductId == model.ProductId && d.ColorId == model.ColorId);
             if (cartDetailsDb == null)
             {
                 model.CartHeaderId = cartHeaderDb.Id;

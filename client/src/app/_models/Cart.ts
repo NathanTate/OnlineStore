@@ -1,4 +1,4 @@
-import { Product } from "./Product";
+import { Color, Product } from "./Product";
 
 export interface CartResponse {
   cartHeader: CartHeaderResponse;
@@ -16,6 +16,7 @@ export interface CartHeaderResponse {
 export interface CartDetailResponse {
   id: number;
   cartHeaderId: number;
+  color: Color;
   product: Product;
   count: number;
 }
@@ -23,6 +24,7 @@ export interface CartDetailResponse {
 export interface CartDetailRequest {
   cartHeaderId?: number;
   productId: number;
+  colorId: number;
   count: number;
   countUpdate?: boolean;
 }

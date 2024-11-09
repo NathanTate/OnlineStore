@@ -1,121 +1,99 @@
-<div class="event-header bg-primary-900">
-  <div class="container">
-    <div class="event-wrapper">
-      <div>
-        <p>
-          Mon-Thu: <span class="text-primary-100">9:00 AM - 5:30 PM &#8628;</span>
-        </p>
-      </div>
-      <div>
-        <p>Visit our showroom in 1234 Street City Address, 1234</p>
-        <a class="text-primary-100" routerLink="/contact">Contact Us</a>
-      </div>
-      <div class="text-primary-100">
-        <p>Call Us: (00) 1234 5678</p>
-        <fa-icon [icon]="faFacebook"></fa-icon>
-        <fa-icon [icon]="faInstagram"></fa-icon>
-      </div>
+<div class="bg-primary-900 text-primary-400 fw-semi-bold fs-300">
+  <div class="container event-header">
+    <div>
+      <span>Mon-Thu: <span class="text-primary-100">9:00 AM-5:30 PM</span></span>
+    </div>
+    <div>
+      <span class="md-inline-block">
+        Visit our showroom in 123 Street Adress City Address, 1234
+      </span> &nbsp;
+      <a routerLink="/contact" class="text-primary-100">Contact Us</a>
+    </div>
+    <div class="event-header-right text-primary-100 md-flex">
+      <span>Call Us: (00) 1234 5678</span>
+      <fa-icon [icon]="iconFacebook" size="lg"></fa-icon>
+      <fa-icon [icon]="iconInstagram" size="lg"></fa-icon>
     </div>
   </div>
 </div>
-<header class="primary-header">
-  <div class="container">
-    <div class="nav-wrapper">
-      <div class="header-left">
-        <a routerLink="./" class="logo display-md-none">
-          <img src="/assets/svg/logo.svg"alt="website logo" />
+
+<header class="header bg-blue-accent-400 text-primary-100">
+  <div class="container header-content">
+    <div class="header-left" aria-label="Logo">
+      <a class="md-block" routerLink="/">
+        <img src="./assets/svg/logo.svg" alt="logo">
+      </a>
+      <button #menuBtn class="menuBtn md-none" aria-controls="nav-list" (click)="isNavExpanded = true">
+        <svg fill="#fff" viewBox="0 0 100 100" width="40" height="40">
+          <rect class="line top" height="10" width="80" rx="6" x="10" y="25"></rect>
+          <rect class="line middle" height="10" width="80" rx="6" x="10" y="45"></rect>
+          <rect class="line bottom" height="10" width="80" rx="6" x="10" y="65"></rect>
+        </svg>
+      </button>
+    </div>
+    <nav #navHeader id="nav-list" class="fw-semi-bold fs-nav header-nav" [ngClass]="{expanded: isNavExpanded}">
+      <div class="nav-controls">
+        <a routerLink="/">
+          <img src="./assets/svg/logo.svg" alt="logo">
         </a>
-        <button class="mobile-nav-toggle" (click)="onToggle()">
-          <svg fill="#fff" class="icon-hamburger" viewBox="0 0 100 100" width="40" height="40">
-            <rect class="line" width="80" height="10" x="10" y="25" rx="5"></rect>
-            <rect class="line" width="80" height="10" x="10" y="45" rx="5"></rect>
-            <rect class="line" width="80" height="10" x="10" y="65" rx="5"></rect>
-          </svg>
-        </button>
-        <nav class="primary-navigation" [attr.data-visible]="isVisible">
-         <div [ngClass]="{'container': isVisible}" (window:resize)="onResize()">
-          <div class="nav-expanded-control" [attr.data-visible]="isVisible">
-          <a routerLink="./" class="logo">
-            <img src="/assets/svg/logo.svg" (click)="onToggle()" alt="website logo" />
-          </a>
-          <button class="mobile-nav-toggle" (click)="onToggle()">
-            <svg fill="#00000" class="icon-close" viewBox="0 0 80 100" width="40" height="40">
-              <rect class="line top" width="60" height="8" x="10" y="45" rx="5"></rect>
-              <rect class="line bottom" width="60" height="8" x="10" y="45" rx="5"></rect>
-            </svg>
-          </button>
-          </div>
-          <ul #navList role="list" class="nav-list">
-            <li categoryId="3"><a (click)="isVisible=false; stopPropagation($event)" routerLink="catalog">Laptops</a></li>
-            <li categoryId="7"><a (click)="isVisible=false; stopPropagation($event)" href="#">Desktop PCs</a></li>
-            <li categoryId="8"><a (click)="isVisible=false; stopPropagation($event)" href="#">Networking Devices</a></li>
-            <li categoryId="9"><a (click)="isVisible=false; stopPropagation($event)" href="#">Printers &amp; Scanners</a></li>
-            <li><a (click)="isVisible=false; stopPropagation($event)" href="#">Repairs</a></li>
-            <li><a (click)="isVisible=false; stopPropagation($event)" routerLink="/about">About</a></li>
-            <li><a (click)="isVisible=false; stopPropagation($event)" routerLink="/terms">Terms</a></li>
-            <li><a (click)="isVisible=false; stopPropagation($event)" href="#" class="button text-blue-accent-400">Our Deals</a></li>
-            <li *appHasRole="['ADMIN']"><a routerLink="/admin">Admin Pannel</a></li>
-            <div class="dropdown-menu" (click)="onHide()" [ngClass]="{hide: clickedWithin, mobile: dropdownExpanded}">
-              <ul class="subcategory-list" role="list" *ngFor="let subcategoryGroup of subcategoryGroups">
-                <li class="fs-helper">
-                  {{subcategoryGroup.groupName}}
-                </li>
-                <li class="fw-regular" *ngFor="let subcategory of subcategoryGroup.subcategories" >
-                  <a (click)="isVisible=false" [routerLink]="['/catalog']" [queryParams]="{category: subcategory.categoryId, subcategory: subcategory.id}">{{subcategory.subCategoryName}}</a>
-                </li>
-              </ul>
-            </div>
-          </ul>
-        </div>
-        </nav>
-      </div>
-      <form class="search-bar fw-semi-bold">
-        <input type="search" placeholder="Search here" class="search-bar__input" aria-label="search">
-        <button class="button search-bar__button" data-icon="true">
-          <fa-icon [icon]="faSearch"></fa-icon>
-        </button>
-        <button class="button search-close__button" data-icon="true">
+        <button class="menuBtn" aria-label="closeMenu" (click)="onClose()">
           <svg fill="#00000" class="icon-close" viewBox="0 0 80 100" width="40" height="40">
             <rect class="line top" width="60" height="8" x="10" y="45" rx="5"></rect>
             <rect class="line bottom" width="60" height="8" x="10" y="45" rx="5"></rect>
           </svg>
         </button>
+      </div>
+      <ul role="list" class="nav-list" (click)="onLinkClicked($event)">
+        @for(expandingCategory of expandingCategories; track $index) {
+          <li class="nav-link" [attr.categoryId]="expandingCategory.categoryId" (mouseenter)="onCategoryHover($event)" (click)="onCategoryClick($event)" (mouseleave)="onCategoryLeave($event)">
+            <a routerLink="catalog" [queryParams]="{category: expandingCategory.categoryId}">{{expandingCategory.title}} <span class="arrow">^</span></a>
+            @if (expandingCategory.categoryId === activeCategoryId) {
+              <div class="dropdown-wrapper">
+                <div class="container dropdown-menu">
+                  @for (group of subcategoryGroups; track $index) {
+                    <ul role="list" class="dropdown-list" (click)="onDropdownLinkClick($event)">
+                      <li class="fs-helper">{{group.groupName}}</li>
+                      @for (subcategory of group.subcategories; track subcategory.id) {
+                        <li class="text-primary-600"><a routerLink="/catalog" [queryParams]="{category: subcategory.categoryId, subcategory: subcategory.id}">{{subcategory.subCategoryName}}</a></li>
+                      }
+                    </ul>
+                  }
+                </div>
+              </div>
+            }
+          </li>
+        }
+        <li><a routerLink="/contact">Repairs</a></li>
+        <li><a routerLink="/about">About</a></li>
+        <li><a routerLink="/terms">Terms</a></li>
+        <li *appHasRole="['ADMIN']"><a routerLink="/admin">Admin Pannel</a></li>
+        @if (authService.currentUser$ | async) {
+          <li (click)="authService.logout()">Logout</li>
+        }
+      </ul>
+    </nav>
+    <div class="header-right">
+      <form class="input-wrapper">
+        <input type="search" placeholder="Search here">
+        <button class="icon-button search-btn" style="--size: 22px">
+          <img src="./assets/svg/search.svg" alt="">
+        </button>
       </form>
-      <div class="header-right">
-        <div class="cart-button">
-          <button routerLink="/cart" class="button action-button" data-icon="true" aria-label="open cart">
-            <fa-icon [icon]="faCart" size="lg"></fa-icon>
-          </button>
-          <div class="cart-items-count" *ngIf="cartService.itemsInCart > 0">
+      <button class="icon-button cart-button" routerLink="/cart">
+        <fa-icon [icon]="iconCart" size="lg"></fa-icon>
+        @if (cartService.itemsInCart > 0) {
+          <div class="icon-button bg-blue-accent-400 cart-bage fs-300 fw-semi-bold" style="--size: 17px">
             {{cartService.itemsInCart}}
           </div>
-        </div>
-        <button *ngIf="authService.currentUser$ | async"
-          (click)="toggleUserMenu()" class="button" data-icon="true" aria-label="open profile">
-          <img
-            class="profile-picture"
-            src="/assets/images/profileHolder.jfif"
-            alt="profile picture"
-          />
-        </button>
-        <button class="button action-button" data-icon="true" *ngIf="!(authService.currentUser$ | async)">
-          <fa-icon routerLink="/auth" [icon]="faUser" class="action-icon" size="2x"></fa-icon>
-        </button>
-      </div>
-    </div>
-    <div [attr.data-visible]="isMenuVisible" class="fw-semi-bold user-menu bg-primary-100 flow" style="--flow-spacer: 0.5rem">
-      <div>
-        <fa-icon [icon]="faUser" size="lg"></fa-icon>
-        <a routerLink="/profile">Profile</a>
-      </div>
-      <div>
-        <fa-icon [icon]="iconTruck" size="lg"></fa-icon>
-        <a routerLink="orders">Orders</a>
-      </div>
-      <div (click)="authService.logout(); closeMenu()">
-        <fa-icon [icon]="faSignOut" size="lg"></fa-icon>
-        <a>Logout</a>
-      </div>
+        }
+      </button>
+      <button class="icon-button profile-button" routerLink="/orders">
+        @if (authService.currentUser$ | async) {
+          <img src="./assets/images/profileHolder.jfif" alt="">
+        } @else { 
+          <img src="./assets/svg/account.svg" alt="">
+        }
+      </button>
     </div>
   </div>
 </header>

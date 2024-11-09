@@ -3,7 +3,7 @@
     [columns]="columns" [length]="productResponse.items.length" 
     [totalCount]="productResponse.totalCount" [pageSize]="params.pageSize" 
     [currentPage]="params.page"
-    [filterStatuses]="['In Stock', 'Out of Stock']"
+    [filterStatuses]="[IN_STOCK, OUT_OF_STOCK]"
     (pageChanged)="onPageChanged($event)"
     (filter)="onSearchSubmit($event)"
     (sort)="onSortTable($event)"
@@ -34,9 +34,12 @@
           </ul>
         </td>
         <td>
+          {{item.quantity}}
+        </td>
+        <td>
           <div class="actions">
             <button (click)="viewDetails(item.id)" class="icon-button text-blue-accent-400" style="--font-size: 1.25rem"><fa-icon [icon]="iconView"></fa-icon></button>
-            <button [routerLink]="['/admin/product']" class="text-green-accent-400 icon-button" style="--font-size: 1.25rem"><fa-icon [icon]="iconEdit"></fa-icon></button>
+            <button [routerLink]="['/admin/product/edit/', item.id]" class="text-green-accent-400 icon-button" style="--font-size: 1.25rem"><fa-icon [icon]="iconEdit"></fa-icon></button>
             <button holdable (holdTime)="deleteProduct($event, item.id)" class="text-red-accent-400 icon-button" style="--font-size: 1.25rem"><fa-icon [icon]="iconTrash"></fa-icon></button>
             <progress max="100" [value]="progressMap.get(item.id)"></progress>
           </div>

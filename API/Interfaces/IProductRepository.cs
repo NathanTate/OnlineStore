@@ -9,12 +9,14 @@ namespace API.Interfaces
 {
     public interface IProductRepository
     {
-        Task<Result<ProductResponse>> CreateProductAsync(ProductRequest model);
+        Task<Result<ProductResponse>> CreateProductPlaceholderAsync();
         Task<PagedList<ProductResponse>> GetProductsAsync(ProductParams productParams);
         Task<Result<ProductResponse>> GetProductAsync(int id);
         Task<Result> UpdateProductAsync(ProductRequest model);
+        Task<Result> UpdatePhotosAsync(PhotoUpdateRequest model);
+        Task<Result> SetMainPhotoAsync(SetMainPhotoRequest model);
         Task<Result> DeleteProductAsync(int id);
         Task<Result> DeletePhotoAsync(int productId, int photoId);
-        Task<IEnumerable<ColorDto>> GetColorsAsync();
+        Task<IEnumerable<ColorResponse>> GetColorsAsync();
     }
 }

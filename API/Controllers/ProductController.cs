@@ -8,8 +8,10 @@ using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Caching.Memory;
 using static API.Utility.SD;
 
 namespace API.Controllers
@@ -18,49 +20,50 @@ namespace API.Controllers
     public class ProductController : BaseAPIController
     {
         private readonly IUnitOfWork _uow;
-        public ProductController(IUnitOfWork uow)
+        private readonly IMemoryCache _memoryCache;
+        public ProductController(IUnitOfWork uow, IMemoryCache memoryCache)
         {
             _uow = uow;
+            _memoryCache = memoryCache;
         }
 
-        [HttpPost("CreateProduct")]
-        public async Task<ActionResult<ProductResponse>> CreateProduct([FromForm] ProductRequest model, IValidator<ProductRequest> validator)
+        [HttpPost("CreatePlaceholder")]
+        public async Task<ActionResult<ProductResponse>> CreatePlaceholder()
         {
-            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
-
-            if (errors.Count > 0)
-            {
-                return ValidationProblem(errors);
-            }
-
-            var result = await _uow.ProductRepository.CreateProductAsync(model);
+            Result<ProductResponse> result = await _uow.ProductRepository.CreateProductPlaceholderAsync();
 
             await _uow.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(CreateProduct), new { productId = result.Value.Id }, result.Value);
+            return CreatedAtAction(nameof(CreatePlaceholder), new { productId = result.Value.Id }, result.Value);
         }
 
         [AllowAnonymous]
         [HttpGet("GetProducts")]
         public async Task<ActionResult<PagedList<ProductResponse>>> GetProducts([FromQuery] ProductParams productParams)
         {
-            var productResponse = await _uow.ProductRepository.GetProductsAsync(productParams);
-            foreach (var product in productResponse.Items)
+            var productResponse = await _memoryCache.GetOrCreateAsync(productParams.ToString(), async entry =>
             {
-                if (!product.Reviews.Any())
+                var productResponse = await _uow.ProductRepository.GetProductsAsync(productParams);
+                foreach (var product in productResponse.Items)
                 {
-                    continue;
-                }
+                    if (!product.Reviews.Any())
+                    {
+                        continue;
+                    }
 
-                double totalRating = 0;
-                foreach (var rating in product.Reviews)
-                {
-                    totalRating += rating.RatingScore;
-                }
-                product.ProductRating = Math.Round(totalRating / product.Reviews.Count(), 2);
-                product.TotalReviews = product.Reviews.Count();
+                    double totalRating = 0;
+                    foreach (var rating in product.Reviews)
+                    {
+                        totalRating += rating.RatingScore;
+                    }
+                    product.ProductRating = Math.Round(totalRating / product.Reviews.Count(), 2);
+                    product.TotalReviews = product.Reviews.Count();
 
-            }
+                }
+                entry.SlidingExpiration = TimeSpan.FromSeconds(30);
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2);
+                return productResponse;
+            });
             return Ok(productResponse);
         }
 
@@ -72,7 +75,7 @@ namespace API.Controllers
 
             if (result.IsFailed)
             {
-                return BadRequest(result.Errors);
+                return NotFound(result.Errors);
             }
 
             if (result.Value.Reviews.Any())
@@ -90,7 +93,7 @@ namespace API.Controllers
         }
 
         [HttpPut("UpdateProduct")]
-        public async Task<IActionResult> UpdateProduct([FromForm] ProductRequest model, IValidator<ProductRequest> validator)
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductRequest model, IValidator<ProductRequest> validator)
         {
             ModelStateDictionary errors = ValidateModel.Validate(validator, model);
 
@@ -104,6 +107,50 @@ namespace API.Controllers
             if (result.IsFailed)
             {
                 return BadRequest(result.Errors);
+            }
+
+            await _uow.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPut("UpdatePhotos")]
+        public async Task<IActionResult> UpdatePhotos([FromForm] PhotoUpdateRequest model, IValidator<PhotoUpdateRequest> validator)
+        {
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
+
+            if (errors.Count > 0)
+            {
+                return ValidationProblem(errors);
+            }
+
+            Result result = await _uow.ProductRepository.UpdatePhotosAsync(model);
+
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            await _uow.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPut("SetMainPhoto")]
+        public async Task<IActionResult> SetMainPhoto(SetMainPhotoRequest model, IValidator<SetMainPhotoRequest> validator)
+        {
+            ModelStateDictionary errors = ValidateModel.Validate(validator, model);
+
+            if (errors.Count > 0)
+            {
+                return ValidationProblem(errors);
+            }
+
+            Result result = await _uow.ProductRepository.SetMainPhotoAsync(model);
+
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors[0]);
             }
 
             await _uow.SaveChangesAsync();
@@ -143,7 +190,7 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetColors")]
-        public async Task<ActionResult<ColorDto>> GetColors()
+        public async Task<ActionResult<ColorResponse>> GetColors()
         {
             return Ok(await _uow.ProductRepository.GetColorsAsync());
         }

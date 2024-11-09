@@ -1,0 +1,72 @@
+<ng-container *ngIf="!!categories">
+  <app-datatable
+    [columns]="columns" [length]="categories.length"
+    [totalCount]="categories.length" 
+    [pageSize]="100"
+    [currentPage]="1">
+    <tbody>
+      <tr style="padding-block: 0.5rem;">
+        <td>
+          <button (click)="CreateModal()" class="icon-button text-blue-accent-400" style="font-size: 1.25rem;"><fa-icon [icon]="iconAdd"></fa-icon></button>
+        </td>
+      </tr>
+      <tr *ngFor="let item of subcategories">
+        <td>
+          {{item.id}}
+        </td>
+        <td>
+          <p class="fw-medium">{{item.subCategoryName}}</p>
+        </td>
+        <td>
+          <app-read-more-less [content]="item.subCategoryDescription" [maxLength]="50"></app-read-more-less>
+        </td>
+        <td>
+          {{item.categoryId}}
+        </td>
+        <td>
+          {{item.groupName}}
+        </td>
+        <td>
+          <div class="actions">
+            <button (click)="EditModal(item)" class="text-green-accent-400 icon-button" style="--font-size: 1.25rem"><fa-icon [icon]="iconEdit"></fa-icon></button>
+            <!-- <button holdable (holdTime)="deleteCategory($event, item.id)" class="text-red-accent-400 icon-button" style="--font-size: 1.25rem"><fa-icon [icon]="iconTrash"></fa-icon></button> -->
+            <!-- <progress max="100" [value]="progressMap.get(item.id)"></progress> -->
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </app-datatable>
+</ng-container>
+
+<app-modal [headerTemplate]="modalHeader" [bodyTemplate]="modalBody" modalId="subcategory"></app-modal>
+<ng-template #modalHeader>
+  <div class="modal__header">
+    <h2 class="fs-primary-title fw-semi-bold">{{editMode ? 'Update Category' : 'Create Category'}}</h2>
+  </div>
+</ng-template>
+<ng-template #modalBody>
+  <form [formGroup]="subcategoryForm" (ngSubmit)="onSubmit()" class="modal__body">
+    <div class="formGroup" *ngIf="editMode">
+      <label class="label fs-label fw-semi-bold" for="id">Id</label>
+      <input class="form-input" type="text" id="id" formControlName="id" readonly>  
+    </div>
+    <div class="formGroup">
+        <label class="label fs-label fw-semi-bold" for="name">Subcategory Name</label>
+        <input class="form-input" type="text" id="name" formControlName="categoryName">  
+        <div class="helper-block" *ngIf="subcategoryName?.invalid && (subcategoryName?.touched || subcategoryName?.dirty)">
+          <span class="text-danger" *ngIf="subcategoryName?.hasError('required')">Subcategory Name is required</span>
+          <span class="text-danger" *ngIf="subcategoryName?.hasError('maxlength')">Length should be under 100 characters</span>
+        </div>
+    </div>
+    <div class="formGroup">
+      <label class="label fs-label fw-semi-bold" for="description">Subcategory Description</label>
+      <input class="form-input" type="text" id="description" formControlName="categoryDescription">  
+      <div class="helper-block" *ngIf="subcategoryDescription?.invalid && (subcategoryDescription?.touched || subcategoryDescription?.dirty)">
+        <span class="text-danger" *ngIf="subcategoryDescription?.hasError('required')">Subcategory Description is required</span>
+      </div>
+  </div>
+  <button [disabled]="!subcategoryForm.valid" style="margin-top: 1rem; width: 100%;" class="button bg-blue-accent-400" type="submit">Submit</button>
+  </form>
+</ng-template>
+
+

@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit{
 
   constructor(private productService: ProductService, private categoryService: CategoryService) {
     this.productParams = new ProductParams();
+    this.productParams.inStock = 'true';
     this.productParams.pageSize = 5;
   }
 

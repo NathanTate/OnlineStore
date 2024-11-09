@@ -5,6 +5,7 @@ import { FilterParams, ProductParams } from '../../_models/Params/ProductParams'
 import { SubCategory } from '../../_models/Categories';
 import { Subscription, forkJoin } from 'rxjs';
 import { ActivatedRoute, Params } from '@angular/router';
+import { CategoryService } from '../../_services/category.service';
 
 @Component({
   selector: 'app-catalog',
@@ -21,13 +22,14 @@ export class CatalogComponent implements OnInit{
   availableBrands: Set<string> = new Set<string>();
   subscription: Subscription;
 
-  constructor(private productService: ProductService, private route: ActivatedRoute) {
+  constructor(private productService: ProductService, private categoryService: CategoryService, private route: ActivatedRoute) {
     this.productParams = productService.getProductParams();
   }
   
   ngOnInit(): void {
     this.subscription = this.route.queryParams.subscribe({
       next: (params: Params) => {
+        this.productParams.subCategories = [];
         if(params['category']) {
           this.productParams.categoryId = params['category'];
         }
@@ -43,7 +45,7 @@ export class CatalogComponent implements OnInit{
     this.loading = true;
 
     forkJoin({
-      subCategories: this.productService.getSubCategories(this.productParams.categoryId),
+      subCategories: this.categoryService.getSubCategories(this.productParams.categoryId),
       productsData: this.productService.getProducts(this.productParams),
       colors: this.productService.getColors()
     }).subscribe({
@@ -58,7 +60,7 @@ export class CatalogComponent implements OnInit{
 
   getSubCategories() {
     this.loading = true;
-    this.productService.getSubCategories(2).subscribe({
+    this.categoryService.getSubCategories(2).subscribe({
       next: (subCategories) => {
         this.subCategories = subCategories.flatMap(x => x.subcategories);
         this.loading = false;

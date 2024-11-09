@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { faCircleCheck } from '@fortawesome/free-regular-svg-icons';
+import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-auth',
@@ -26,10 +28,19 @@ export class AuthComponent implements OnInit, OnDestroy{
 
   constructor(private fb: FormBuilder, private authService: AuthService,
     private router: Router, private toastr: ToastrService
-  ) { }
+  ) { 
+    this.authService.currentUser$.subscribe({
+      next: (user) => {
+        if (!!user) {
+          this.router.navigate(['/']);
+        }
+      }
+    })
+  }
 
   ngOnInit(): void {
     this.initializeForm();
+    this.initializeGoogleAuth();
   }
 
   ngOnDestroy(): void {
@@ -37,6 +48,35 @@ export class AuthComponent implements OnInit, OnDestroy{
       clearTimeout(this.timeoutId)
     }
   }
+
+  initializeGoogleAuth() {
+     // @ts-ignore
+    window.onGoogleLibraryLoad = () => {
+       // @ts-ignore
+      google.accounts.id.initialize({
+        client_id: environment.clientIdGoogle,
+        callback: this.handleCredentialResponse.bind(this),
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+       // @ts-ignore
+      google.accounts.id.renderButton(
+        // @ts-ignore
+        document.getElementById('googleBtn'),
+          {theme: "filled_blue", size: "large", shape: 'pill', width: "100%"}
+      );
+       // @ts-ignore
+      google.accounts.id.prompt((notification: PromptMomentNotification) => {})
+    }
+  }
+
+  async handleCredentialResponse(response: CredentialResponse) {
+    await this.authService.loginWithGoogle(response.credential).subscribe({
+      next: (creds) => {
+        this.router.navigate(['./']);
+      }
+    })
+  } 
 
   switchMode() {
     this.loginMode = !this.loginMode;

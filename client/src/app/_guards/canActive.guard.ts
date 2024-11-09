@@ -8,14 +8,22 @@ export const canActivate: CanActivateFn = (
 ): Observable<boolean| UrlTree> |
   Promise<boolean | UrlTree> |
   boolean | UrlTree => {
-    let router = inject(Router);
-    return inject(AuthService).currentUser$.pipe(take(1), map(user => {
-      const isAuthneticated: boolean = !!user;
-      if (isAuthneticated) {
-        return true;
-      } else {
-        return router.createUrlTree(['/auth']);
-      }
-    }) 
-  )
+    const router = inject(Router);
+    const authService = inject(AuthService);
+
+    if (authService.isAuthenticated()) {
+      return true;
+    }
+
+    return router.createUrlTree(['/auth'])
 }
+
+// return inject(AuthService).currentUser$.pipe(take(1), map(user => {
+//   const isAuthneticated: boolean = !!user;
+//   if (isAuthneticated) {
+//     return true;
+//   } else {
+//     return router.createUrlTree(['/auth']);
+//   }
+// }) 
+// )

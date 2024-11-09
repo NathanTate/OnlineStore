@@ -9,6 +9,7 @@ namespace API.FluentValidators.CartValidators
         {
             RuleFor(c => c.ProductId).NotEmpty();
             RuleFor(c => c.Count).NotNull();
+            RuleFor(c => c.ColorId).NotEmpty();
         }
     }
 }

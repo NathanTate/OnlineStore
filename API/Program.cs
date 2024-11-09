@@ -12,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddJsonOptions(options => {
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
@@ -21,7 +22,8 @@ builder.AddAuthentication(builder.Configuration);
 builder.Services.AddFluentEmail(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "JWTToken_Auth_API",
@@ -52,13 +54,13 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-
 app.UseCors(opt => opt
     .AllowCredentials()
     .AllowAnyHeader()
     .AllowAnyMethod()
     .WithOrigins("https://localhost:4200"));
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripeSecretKey");
 
@@ -81,7 +83,7 @@ app.Run();
 
 async Task SeedUsers()
 {
-    using(var scope = app.Services.CreateScope())
+    using (var scope = app.Services.CreateScope())
     {
         try
         {

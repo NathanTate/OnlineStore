@@ -23,19 +23,19 @@ namespace API.Services
             _cloudinary.Api.Secure = true;
         }
 
-        public async Task<Result<List<ImageUploadResult>>> UploadPhotoAsync(IFormCollection files)
+        public async Task<List<ImageUploadResult>> UploadPhotosAsync(IFormFileCollection files)
         {
 
-            if (files.Count == 0)
+            if (files is null || files.Count == 0)
             {
-                return Result.Fail("No image to upload");
+                return null;
             }
 
             List<Task<ImageUploadResult>> tasks = new();
             List<Stream> streams = new();
             try 
             {
-                foreach(IFormFile file in files.Files) { 
+                foreach(IFormFile file in files) { 
 
                 var stream = file.OpenReadStream();
                 streams.Add(stream);
@@ -49,7 +49,7 @@ namespace API.Services
             }
 
             var uploadResults = await Task.WhenAll(tasks);
-            return Result.Ok(uploadResults.ToList());
+            return uploadResults.ToList();
             }
             finally 
             {
@@ -65,6 +65,21 @@ namespace API.Services
             var deleteParams = new DeletionParams(publicId);
 
             return Result.Ok(await _cloudinary.DestroyAsync(deleteParams));
+        }
+
+        public async Task DeletePhotosAsync(List<string> publicIds)
+        {
+            DelResParams delResParams = new DelResParams()
+            {
+                PublicIds = publicIds
+            };
+
+           await _cloudinary.DeleteResourcesAsync(delResParams);
+        }
+
+        public Task<Result<List<ImageUploadResult>>> UpdatePhotosAsync(IFormFileCollection files)
+        {
+            throw new NotImplementedException();
         }
     }
 }

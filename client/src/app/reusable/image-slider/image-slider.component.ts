@@ -1,5 +1,4 @@
-import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { ProductImage } from '../../_models/Product';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { faArrowLeft, faArrowRight, faCircle} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -7,7 +6,8 @@ import { faArrowLeft, faArrowRight, faCircle} from '@fortawesome/free-solid-svg-
   templateUrl: './image-slider.component.html',
   styleUrl: './image-slider.component.css'
 })
-export class ImageSliderComponent implements OnInit, OnDestroy{
+export class ImageSliderComponent implements OnInit, OnDestroy, AfterViewInit{
+  @ViewChild('blur') blurTag: ElementRef<HTMLAnchorElement>;
   @Input() images: string[];
   @Input() auto: boolean = false;
   @Input() interval: number = 5;
@@ -21,6 +21,19 @@ export class ImageSliderComponent implements OnInit, OnDestroy{
   iconCircle = faCircle;
 
   constructor() {}
+
+  ngAfterViewInit(): void {
+    const img = this.blurTag.nativeElement.querySelector('img');
+
+    if(img && img.complete) {
+      this.loaded(this.blurTag.nativeElement)
+    }
+  }
+
+  loaded(el: HTMLElement) {
+    el.classList.add('loaded')
+  }
+
 
   @HostListener('mouseenter')
   @HostListener('touchstart') onMousedown() {

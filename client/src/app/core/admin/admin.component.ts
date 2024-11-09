@@ -18,6 +18,9 @@ export class AdminComponent implements OnInit{
     this.tabs.set('Create Product', 'product');
     this.tabs.set('Manage Products', 'manage');
     this.tabs.set('Manage Orders', 'orders');
+    this.tabs.set('Manage Categories', 'categories');
+    this.tabs.set('Manage SubCategories', 'subcategories');
+    this.tabs.set('Manage Brands', 'brands');
     this.tabKeys = Array.from(this.tabs.keys());
     const path = this.route.snapshot.firstChild?.routeConfig?.path;
     for(let [key, value] of this.tabs.entries()) {

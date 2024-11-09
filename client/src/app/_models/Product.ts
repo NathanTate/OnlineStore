@@ -8,17 +8,29 @@ export interface ProductResponse {
 }
 
 export interface ProductRequest {
+  id: number;
   name: string;
   originalPrice: number;
   salePrice: number;
+  quantity: number;
   description: string;
   subCategoryId: number;
   categoryId: number;
   brandId: number;
-  isMainImage: boolean;
-  colors: Color[];
+  isCreate: boolean;
+  colors: ColorRequest[];
   productSpecifications: ProductSpecification[];
-  ProductImages: FileList;
+}
+
+export interface PhotoUpdateRequest {
+  itemId: number;
+  photoCollection: FileList;
+  idsToRemove: number[];
+}
+
+export interface SetMainPhotoRequest {
+  itemId: number;
+  photoId: number;
 }
 
 export interface Product {
@@ -31,14 +43,18 @@ export interface Product {
   totalReviews: number;
   brand: Brand;
   originalPrice: number;
+  subCategoryId: number;
+  categoryId: number;
   salePrice: number;
+  quantity: number;
   colors: Color[];
   productImages: ProductImage[];
+  mainImageUrl: string;
   productSpecifications: ProductSpecification[];
   reviews: Review[];
 }
 
-interface Brand {
+export interface Brand {
   id: number;
   brandName: string;
   brandDescription: string;
@@ -55,6 +71,9 @@ interface ProductSpecification {
   value: string;
 }
 
+interface ColorRequest {
+  value: string;
+}
 
 export interface Color {
   id: number;

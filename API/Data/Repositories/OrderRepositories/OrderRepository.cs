@@ -35,6 +35,7 @@ namespace API.Data.Repositories.OrderRepositories
         public async Task<Result<string>> CheckoutAsync(OrderCheckoutRequest model, string userId)
         {
             OrderHeaderDto orderHeaderDto = _mapper.Map<OrderHeaderDto>(model);
+
             var addressDb = await _dbContext.Addresses.FirstOrDefaultAsync(a => a.ApplicationUserId == userId);
             if (addressDb != null)
             {
@@ -60,6 +61,20 @@ namespace API.Data.Repositories.OrderRepositories
             orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailDto>>(model.CartResponse.CartDetails);
             orderHeaderDto.OrderDetails.ForEach(x => x.Id = 0);
             orderHeaderDto.Id = 0;
+
+            var productIds = orderHeaderDto.OrderDetails.Select(d => d.ProductId);
+            var products = _dbContext.Products.Where(p => productIds.Contains(p.Id));
+
+            foreach (var item in orderHeaderDto.OrderDetails) 
+            {
+                var product = products.FirstOrDefault(p => p.Id == item.ProductId);
+                if(product != null)
+                {
+                    product.Quantity -= item.Count;
+
+                    if(product.Quantity < 0) return Result.Fail($"{product.Name} is out of stock");
+                } 
+            }
 
             var orderHeader = _mapper.Map<OrderHeader>(orderHeaderDto);
             _dbContext.OrderHeaders.Add(orderHeader);

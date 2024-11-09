@@ -71,6 +71,10 @@
   display: none;
 }
 
+.sort__sortBy {
+  white-space: nowrap;
+}
+
 .sort__group {
   display: flex;
   align-items: center;

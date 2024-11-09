@@ -10,7 +10,7 @@ namespace API.Extensions
 {
     public static class AppAuthenticationExtensions
     {
-        public static WebApplicationBuilder AddAuthentication (this WebApplicationBuilder builder, IConfiguration configuration) 
+        public static WebApplicationBuilder AddAuthentication(this WebApplicationBuilder builder, IConfiguration configuration)
         {
             var JwtOptions = new JwtOptions();
             configuration.Bind("JwtOptions", JwtOptions);
@@ -21,7 +21,7 @@ namespace API.Extensions
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireDigit = true;
-                options.User.RequireUniqueEmail = true;       
+                options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
@@ -37,19 +37,23 @@ namespace API.Extensions
                         ValidAudience = JwtOptions.Audience,
                         ValidIssuer = JwtOptions.Issuer,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("JwtOptions:SecretKey"))),
+                        ClockSkew = TimeSpan.FromSeconds(0),
                     };
 
-                    //options.Events = new JwtBearerEvents
-                    //{
-                    //    OnMessageReceived = context =>
-                    //    {
-                    //        context.HttpContext.Request.Cookies.TryGetValue("token", out string token);
-                    //        return Task.FromResult(token);
-                    //    }
-                    //};
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            context.Request.Cookies.TryGetValue("accessToken", out string accessToken);
+                            if (!string.IsNullOrWhiteSpace(accessToken))
+                                context.Token = accessToken;
+
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
-                //.AddCookie();
-                builder.Services.AddAuthorization();
+            //.AddCookie();
+            builder.Services.AddAuthorization();
             return builder;
         }
     }

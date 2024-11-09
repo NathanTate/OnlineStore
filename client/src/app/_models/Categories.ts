@@ -2,7 +2,6 @@ export interface Category {
   id: number;
   categoryName: string;
   categoryDescription: string;
-  subCategoriesDto: SubCategory[];
 }
 
 export interface CategoryWithSubGroups extends Omit<Category, 'subCategoriesDto'> {
@@ -12,9 +11,9 @@ export interface CategoryWithSubGroups extends Omit<Category, 'subCategoriesDto'
 export interface SubCategory {
   id: number;
   subCategoryName: string;
-  image: string;
   subCategoryDescription: string;
   categoryId: number;
+  groupName: string;
   products: string[];
 }
 

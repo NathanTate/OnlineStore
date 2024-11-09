@@ -17,6 +17,20 @@ hr {
   gap: 1rem;
 }
 
+.item__image {
+  position: relative;
+}
+
+.color {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  border-radius: 10px;
+  width: 90%;
+  height: 8px;
+  transform: translateX(-50%);
+}
+
 .item__details > p {
   line-height: 16px;
   height: calc(16 * round(down, calc(var(--imageSize) / 18), 1px));

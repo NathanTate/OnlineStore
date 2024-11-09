@@ -1,7 +1,7 @@
-﻿using API.Helpers;
+﻿using API.Extensions;
+using API.Helpers;
 using API.Helpers.RequestParams;
 using API.Interfaces;
-using API.Models.DTO.ProductDTO;
 using API.Models.DTO.ProductDTO.Requests;
 using API.Models.DTO.ProductDTO.Responses;
 using API.Models.ProductModel;
@@ -9,9 +9,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CloudinaryDotNet.Actions;
 using FluentResults;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
 using System.Linq.Expressions;
 using Color = API.Models.ProductModel.Color;
 
@@ -29,56 +27,25 @@ namespace API.Data.Repositories.ProductRepositories
             _photoService = photoService;
         }
 
-        public async Task<Result<ProductResponse>> CreateProductAsync(ProductRequest model)
+        public async Task<Result<ProductResponse>> CreateProductPlaceholderAsync()
         {
-            Result<List<ImageUploadResult>> results = await _photoService.UploadPhotoAsync(model.ProductImages);
+            Product placeholder = await _dbContext.Products.FirstOrDefaultAsync(x => x.IsPlaceholder);
 
-            if (results.IsFailed)
+            if (placeholder is null)
             {
-                return Result.Fail(results.Errors[0]);
-            }
-            model.Id = 0;
-
-            var product = _mapper.Map<Product>(model);
-            product.CreatedAt = DateTime.UtcNow;
-
-            List<ProductColor> productColors = new();
-            foreach (var result in results.Value)
-            {
-                product.ProductImages.Add(new ProductImage
+                placeholder = new Product()
                 {
-                    Url = result.SecureUrl.ToString(),
-                    PublicId = result.PublicId,
-                    IsMain = model.IsMainImage
-                });
-            }
+                    IsPlaceholder = true,
+                    SubCategoryId = 1,
+                    BrandId = 1,
+                    CreatedAt = DateTime.UtcNow
+                };
 
-            foreach (var value in model.Colors.Select(c => c.Value))
-            {
-                var color = await _dbContext.Colors.FirstOrDefaultAsync(c => c.Value == value.ToLower());
+                await _dbContext.Products.AddAsync(placeholder);
+            };
 
-                if (color == null)
-                {
-                    color = new Color
-                    {
-                        Value = value.ToLower(),
-                    };
 
-                    _dbContext.Colors.Add(color);
-                }
-
-                productColors.Add(new ProductColor { Color = color });
-            }
-
-            await _dbContext.Products.AddAsync(product);
-
-            foreach (var color in productColors)
-            {
-                color.Product = product;
-                _dbContext.ProductColors.Add(color);
-            }
-
-            return Result.Ok(_mapper.Map<ProductResponse>(product));
+            return Result.Ok(_mapper.Map<ProductResponse>(placeholder));
         }
 
         public async Task<PagedList<ProductResponse>> GetProductsAsync(ProductParams productParams)
@@ -89,11 +56,11 @@ namespace API.Data.Repositories.ProductRepositories
 
             if (productParams.SortBy?.ToLower() == "desc")
             {
-                productsQuery = productsQuery.OrderByDescending(GetSortProperty(productParams));
+                productsQuery = productsQuery.OrderByDescending(p => p.Quantity > 0).ThenByDescending(GetSortProperty(productParams));
             }
             else
             {
-                productsQuery = productsQuery.OrderBy(GetSortProperty(productParams));
+                productsQuery = productsQuery.OrderByDescending(p => p.Quantity > 0).ThenBy(GetSortProperty(productParams));
             }
 
             var result = await PagedList<ProductResponse>.CreateAsync(
@@ -108,29 +75,152 @@ namespace API.Data.Repositories.ProductRepositories
         {
             IQueryable<Product> productQuery = _dbContext.Products.AsQueryable().AsNoTracking().Where(x => x.Id == id);
             var product = await productQuery.ProjectTo<ProductResponse>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
-            product.CategoryId = _dbContext.ProductSubCategories.Where(x => x.Id == product.SubCategoryId).Select(x => x.CategoryId).FirstOrDefault();
 
             if (product == null)
             {
                 return Result.Fail("Product doesn't exist");
             }
+            product.CategoryId = _dbContext.ProductSubCategories.Where(x => x.Id == product.SubCategoryId).Select(x => x.CategoryId).FirstOrDefault();
             var colors = await _dbContext.ProductColors.Where(pc => pc.ProductId == product.Id).Select(pc => pc.Color).ToListAsync();
             var productsDto = _mapper.Map<ProductResponse>(product);
-            productsDto.Colors = _mapper.Map<List<ColorDto>>(colors);
+            productsDto.Colors = _mapper.Map<List<ColorResponse>>(colors);
 
             return Result.Ok(productsDto);
         }
 
         public async Task<Result> UpdateProductAsync(ProductRequest model)
         {
-            var product = await _dbContext.Products.FindAsync(model.Id);
+            var product = await _dbContext.Products
+                .Include(p => p.ProductSpecifications)
+                .SingleOrDefaultAsync(p => p.Id == model.Id);
 
             if (product == null)
             {
                 return Result.Fail("Product doesn't exist");
             }
 
+            List<ProductColor> productColors = await _dbContext.ProductColors
+                .Where(p => p.ProductId == product.Id)
+                .Include(p => p.Color)
+                .ToListAsync();
+
             _mapper.Map(model, product);
+
+            List<Color> colors = new();
+
+            foreach (var item in model.Colors)
+            {
+                var color = await _dbContext.Colors.FirstOrDefaultAsync(c => c.Value == item.ToLower());
+
+                if (color == null)
+                {
+                    color = new Color
+                    {
+                        Value = item.ToLower(),
+                    };
+
+                    _dbContext.Colors.Add(color);
+                }
+
+                colors.Add(color);
+            }
+
+            foreach (var item in productColors)
+            {
+                if (!model.Colors.Any(color => color.ToLower() == item.Color.Value))
+                {
+                    _dbContext.ProductColors.Remove(item);
+                }
+            }
+
+            var exisitingColorValues = colors.Select(c => c).ToHashSet();
+            var newColors = colors.Where(color => !exisitingColorValues.Contains(color));
+
+            foreach (var newColor in newColors)
+            {
+                var productColor = new ProductColor()
+                {
+                    ProductId = product.Id,
+                    ColorId = newColor.Id,
+                };
+
+                _dbContext.ProductColors.Add(productColor);
+            }
+
+
+            product.IsPlaceholder = false;
+
+            return Result.Ok();
+        }
+
+        public async Task<Result> UpdatePhotosAsync(PhotoUpdateRequest model)
+        {
+            var product = await _dbContext.Products.FindAsync(model.ItemId);
+
+            if (product is null)
+                return Result.Fail("Can't upload files to non exisiting product");
+
+            await _dbContext.Entry(product)
+            .Collection(p => p.ProductImages)
+            .Query()
+            .Where(i => model.IdsToRemove.Contains(i.Id))
+            .LoadAsync();
+
+            if (product.ProductImages.Count > 0)
+            {
+                _dbContext.ProductImages.RemoveRange(product.ProductImages);
+                await _photoService.DeletePhotosAsync(product.ProductImages.Select(p => p.PublicId).ToList());
+            }
+
+            List<ImageUploadResult> result = await _photoService.UploadPhotosAsync(model.PhotoCollection);
+
+            if (result is not null)
+            {
+                // bool defaultMain = false;
+
+                // if (product.ProductImages.Count == 0)
+                // {
+                //     defaultMain = true;
+                // }
+
+                // foreach (var image in product.ProductImages)
+                // {
+                //     image.IsMain = false;
+                // }
+
+                foreach (var imageResult in result.WithIndex())
+                {
+                    product.ProductImages.Add(new ProductImage
+                    {
+                        Url = imageResult.item.SecureUrl.ToString(),
+                        PublicId = imageResult.item.PublicId,
+                        IsMain = false
+                    });
+                }
+            }
+
+            return Result.Ok();
+        }
+
+        public async Task<Result> SetMainPhotoAsync(SetMainPhotoRequest model)
+        {
+            var product = await _dbContext.Products.Include(p => p.ProductImages).SingleOrDefaultAsync(x => x.Id == model.itemId);
+
+            if (product is null)
+                return Result.Fail("Product doesn't exist");
+
+            var photo = product.ProductImages.FirstOrDefault(p => p.Id == model.photoId);
+
+            if (photo is null)
+                return Result.Fail("photo doesn't exist");
+
+            if (photo.IsMain)
+                return Result.Fail("photo is already main");
+
+            var currentMain = product.ProductImages.FirstOrDefault(p => p.IsMain);
+            if (currentMain is not null) currentMain.IsMain = false;
+            photo.IsMain = true;
+            product.MainImageUrl = photo.Url;
 
             return Result.Ok();
         }
@@ -163,9 +253,9 @@ namespace API.Data.Repositories.ProductRepositories
             return Result.Ok();
         }
 
-        public async Task<IEnumerable<ColorDto>> GetColorsAsync()
+        public async Task<IEnumerable<ColorResponse>> GetColorsAsync()
         {
-            return _mapper.Map<IEnumerable<ColorDto>>(await _dbContext.Colors.ToListAsync());
+            return _mapper.Map<IEnumerable<ColorResponse>>(await _dbContext.Colors.ToListAsync());
         }
 
         private static Expression<Func<Product, object>> GetSortProperty(ProductParams sortColumn)
@@ -173,7 +263,11 @@ namespace API.Data.Repositories.ProductRepositories
             Expression<Func<Product, object>> keySelector = sortColumn.SortColumn?.ToLower() switch
             {
                 "rating" => product => product.ProductRating,
-                "price" => product => product.OriginalPrice,
+                "price" => product => product.SalePrice != 0 ? product.SalePrice : product.OriginalPrice,
+                "originalprice" => product => product.OriginalPrice,
+                "saleprice" => product => product.SalePrice,
+                "quantity" => product => product.Quantity,
+                "name" => product => product.Name,
                 "date" => product => product.CreatedAt,
                 _ => product => product.Id
             };
@@ -183,13 +277,21 @@ namespace API.Data.Repositories.ProductRepositories
 
         private static IQueryable<Product> FilterProduct(IQueryable<Product> productsQuery, ProductParams productParams)
         {
-            if(productParams.categoryId != default(int))
+            if (productParams.categoryId != default(int))
             {
-                productsQuery =  productsQuery.Where(p => p.SubCategory.CategoryId == productParams.categoryId);
+                productsQuery = productsQuery.Where(p => p.SubCategory.CategoryId == productParams.categoryId);
             }
-            if (productParams.subCategories.Count() != 0)
+            if (productParams.SubCategories.Count() != 0)
             {
-                productsQuery = productsQuery.Where(p => productParams.subCategories.Contains(p.SubCategoryId));
+                productsQuery = productsQuery.Where(p => productParams.SubCategories.Contains(p.SubCategoryId));
+            }
+            if (productParams.InStock == true)
+            {
+                productsQuery = productsQuery.Where(p => p.Quantity > 0);
+            }
+            if (productParams.InStock == false)
+            {
+                productsQuery = productsQuery.Where(p => p.Quantity <= 0);
             }
             if (productParams.BrandId != default(int))
             {
@@ -207,7 +309,7 @@ namespace API.Data.Repositories.ProductRepositories
             {
                 productsQuery = productsQuery.Where(p => p.OriginalPrice >= productParams.PriceMin);
             }
-            if (!string.IsNullOrWhiteSpace(productParams.SearchTerm)) 
+            if (!string.IsNullOrWhiteSpace(productParams.SearchTerm))
             {
                 productsQuery = productsQuery
                 .Where(p => p.Name.ToLower().Contains(productParams.SearchTerm.ToLower()) ||

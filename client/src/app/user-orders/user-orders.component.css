@@ -1,3 +1,25 @@
 .orders > li {
   margin-bottom: 0.5rem;
 }
+
+.placeholder-wrapper {
+  display: grid;
+  gap: 1rem;
+}
+
+.placeholder {
+  height: 4rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  animation: load 2s linear infinite alternate;
+}
+
+
+@keyframes load {
+  0% {
+    background-color: hsl(200, 20%, 70%);
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}

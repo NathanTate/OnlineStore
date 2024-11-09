@@ -1,5 +1,6 @@
 ﻿using API.Interfaces;
 using API.Models;
+using API.Models.DTO.UserDTO;
 using API.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -15,14 +16,16 @@ namespace API.Services
         private readonly JwtOptions _jwtOptions;
         private readonly SymmetricSecurityKey _key;
         private readonly UserManager<ApplicationUser> _userManager;
-        public JwtTokenGenerator(IConfiguration configuration, UserManager<ApplicationUser> userManager, IOptions<JwtOptions> jwtOptions)
+        private readonly IRefreshTokenService _refreshTokenService;
+        public JwtTokenGenerator(UserManager<ApplicationUser> userManager, IOptions<JwtOptions> jwtOptions, IRefreshTokenService refreshTokenService)
         {
             _jwtOptions = jwtOptions.Value;
             _userManager = userManager;
+            _refreshTokenService = refreshTokenService;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
         }
 
-        public async Task<string> GenerateToken(ApplicationUser user)
+        public async Task<TokenDto> GenerateToken(ApplicationUser user, bool populateExp = false)
         {
             var claims = new List<Claim>
             {
@@ -41,14 +44,26 @@ namespace API.Services
                 SigningCredentials = credentials,
                 Audience = _jwtOptions.Audience,
                 Issuer = _jwtOptions.Issuer,
-                Expires = DateTime.UtcNow.AddHours(12),
+                Expires = DateTime.UtcNow.AddMinutes(5)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            string refreshToken = _refreshTokenService.GenerateRefreshToken();
 
-            return tokenHandler.WriteToken(token);
+            user.RefreshToken = refreshToken;
+
+            if (populateExp)
+            {
+                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            }
+
+            await _userManager.UpdateAsync(user);
+
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+            string accessToken = tokenHandler.WriteToken(token);
+
+            return new TokenDto(accessToken, refreshToken);
         }
     }
 }

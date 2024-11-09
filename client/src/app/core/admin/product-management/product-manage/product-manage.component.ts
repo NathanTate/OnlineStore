@@ -22,6 +22,9 @@ export class ProductManageComponent implements OnInit {
   iconView = faEye;
   progressMap = new Map<number, number>();
 
+  readonly IN_STOCK = 'IN STOCK'
+  readonly OUT_OF_STOCK = 'OUT OF STOCK'
+
   constructor(private productService: ProductService, private modalService: ModalService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
@@ -45,7 +48,13 @@ export class ProductManageComponent implements OnInit {
   }
 
   onFilterStatus(status: string) {
-    console.log(status);
+    if(status.length == 0) {
+      this.params.inStock = '';
+
+    } else {
+      this.params.inStock = status == this.IN_STOCK ? 'true' : 'false'
+    }
+    this.getProducts();
   }
 
   getProducts() {
@@ -100,7 +109,8 @@ export class ProductManageComponent implements OnInit {
       { column: 'originalPrice', sortable: true },
       { column: 'salePrice', sortable: true },
       { column: 'brand', sortable: false },
-      { column: 'colors', sortable: false }
+      { column: 'colors', sortable: false },
+      { column: 'quantity', sortable: true }
     ];
 
     return keys;

@@ -1,3 +1,6 @@
+@defer (on timer(50)) {
+  
+}
 <div class="container">
   <h1 class="fs-secondary-heading fw-semi-bold padding-block-500">Customer Login</h1>
   <div class="even-columns wrapper">
@@ -50,13 +53,14 @@
           <button (click)="showVerifyEmail = !showVerifyEmail" type="button" class="verify-button">Verify Email</button>
           <a
           class="text-blue-accent-400 fw-semi-semi-bold"
-          routerLink="/forgot-password"
+          routerLink="/auth/forgot-password"
           style="text-decoration: none;"
           >Forgot Your Password?</a>
         </div>
         <button [disabled]="authForm.invalid"  type="submit" class="submit-button button bg-blue-accent-400">
           {{submitBtnText}}
         </button>
+        <div id="googleBtn" style="margin-top: 1rem;"></div>
       </div>
     </form>
     <div class="bg-primary-200 flow">

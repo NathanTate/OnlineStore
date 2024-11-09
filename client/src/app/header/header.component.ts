@@ -1,115 +1,134 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from "@angular/core";
-import { faSquareFacebook, faSquareInstagram } from "@fortawesome/free-brands-svg-icons";
-import { faMagnifyingGlass, faCartShopping, faUser, faSignOut, faTruckFast } from "@fortawesome/free-solid-svg-icons";
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { AuthService } from "../_services/auth.service";
 import { CartService } from "../_services/cart.service";
-import { ProductService } from "../_services/product.service";
 import { SubCategoryGroups } from "../_models/Categories";
+import { debounceTime, distinctUntilChanged, Subject, Subscription, takeUntil } from "rxjs";
+import { CategoryService } from "../_services/category.service";
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit, AfterViewInit{
-    navListEl: HTMLUListElement;
-    @ViewChild('navList') 
-        set navListRef(elRef: ElementRef) {
-            this.navListEl = elRef.nativeElement;
-        }
-        subcategoryGroups: SubCategoryGroups[] = [];
-    faFacebook = faSquareFacebook;
-    faInstagram = faSquareInstagram;
-    faSearch = faMagnifyingGlass;
-    faCart = faCartShopping;
-    faUser = faUser;
-    iconTruck = faTruckFast;
-    faSignOut = faSignOut
-    isVisible = false;
-    isMenuVisible = false;
-    timeoutId: ReturnType<typeof setTimeout>
-    isMouseInside = false;
-    clickedWithin = false;
-    dropdownExpanded: boolean = false;
+export class HeaderComponent implements OnInit, OnDestroy{
+    @ViewChild('navHeader') navHeader: ElementRef;
+    private hoverCategory = new Subject<MouseEvent>();
+    private stopHover = true;
+    @ViewChild('menuBtn') menuBtn: ElementRef;
+    subcategoryGroups: SubCategoryGroups[] = [];
+    activeCategoryId: number = -1;
+    expandingCategories: {title: string, categoryId: number}[] = [];
+    iconFacebook = faFacebook;
+    iconInstagram = faInstagram;
+    iconCart = faCartShopping;
+    isNavExpanded = false;
+    private hoverSubscription: Subscription;
+    private lastCategoryClicked: HTMLElement;
 
-    constructor(public authService: AuthService, private render: Renderer2, 
-        public cartService: CartService, private productService: ProductService) {}
+    constructor(public authService: AuthService, public cartService: CartService, 
+      private categoryService: CategoryService) {
+        this.initializeExpandingCategories();
+    }
 
     ngOnInit(): void {
-    }
-
-    onHide() {
-        console.log(this.clickedWithin)
-        this.clickedWithin = true;
-    }
-
-    ngAfterViewInit(): void {
-        const liElements = this.navListEl.children
-        
-        for (let i = 0; i < liElements.length; i++) {
-            const li = liElements[i];
-            const attributeValue = li.getAttribute('categoryId');
-            if(attributeValue === null) continue;
-            const categoryId = +attributeValue;
-            this.render.listen(li, 'mouseenter', () => {
-                if(this.isMouseInside) return;
-                this.isMouseInside = true
-                this.clickedWithin = false;
-                this.timeoutId = setTimeout(() => this.getSubcategories(categoryId), 300)}
-            )
-            this.render.listen(li, 'click', () => {this.dropdownExpanded = true, li.classList.toggle('active')})
-            this.render.listen(li, 'mouseleave', () => { 
-                this.isMouseInside = false;
-                if(this.timeoutId) {
-                    clearTimeout(this.timeoutId)
-                }
-            })
-        }
-    
-    }
-
-    stopPropagation(event: Event) {
-        event.stopPropagation();
-      }
-
-    @HostListener('document:click', ['$event']) onGlobalClick(event: MouseEvent) {
-        if(!this.navListEl) return;
-        if(!this.navListEl.contains(event.target as Node)) {
-          this.dropdownExpanded = false;
-        }
-    }
-
-    getSubcategories(categoryId: number) {
-        this.productService.getSubCategories(categoryId).subscribe({
-            next: (subcategoryGroups) => {this.subcategoryGroups = subcategoryGroups}
-            
+        this.hoverSubscription = this.hoverCategory.pipe(
+            distinctUntilChanged(),
+            debounceTime(300)
+        ).subscribe({
+            next: (event) => this.stopHover ? null : this.handleCategoryHover(event)
         })
     }
 
-    onToggle() {
-        this.isVisible = !this.isVisible;
-        if(this.isVisible) {
-            this.render.addClass(document.body, 'modal-open');
+    onClose() {
+        this.isNavExpanded = false;
+        if (this.lastCategoryClicked){
+            const parentLi = this.lastCategoryClicked.closest('.nav-link');
+            if (parentLi)
+                parentLi.classList.remove('active')
+        }
+    }
+
+    onLinkClicked(event: Event) {
+        const element = event.target as HTMLElement;
+        if (element.tagName == 'A') {
+            this.isNavExpanded = false;
+        }
+    }
+
+    onDropdownLinkClick(event: Event) {
+        const parentLi = (event.target as HTMLElement).closest('.nav-link');
+        if (parentLi) {
+          parentLi.classList.remove('active');
+        }
+    }
+    
+
+    @HostListener('document:click', ['$event']) 
+        handleClick(event: MouseEvent) {
+            if (!this.navHeader) return;
+            if(!this.navHeader.nativeElement.contains(event.target) && !this.menuBtn.nativeElement.contains(event.target)) {
+                this.isNavExpanded = false;
+                if (this.lastCategoryClicked)
+                    this.lastCategoryClicked.classList.remove('active')
+            }   
+        }
+
+    onCategoryHover(event: MouseEvent) {
+        this.stopHover = false;
+        this.hoverCategory.next(event);
+    }
+
+    onCategoryClick(event: MouseEvent) {
+        const el = event.target as HTMLElement;
+        this.lastCategoryClicked = el;
+        if (el.tagName !== 'LI') {
+            el.classList.remove('active');
             return;
         }
-        this.render.removeClass(document.body, 'modal-open');
+        this.stopHover = false;
+        this.hoverCategory.next(event)
     }
 
-    toggleUserMenu() {
-        this.isMenuVisible = !this.isMenuVisible
+    onCategoryLeave(event: MouseEvent) {
+        this.stopHover = true;
+        const el = event.target as HTMLElement;
+        const categoryId = el.getAttribute('categoryId');
+        this.activeCategoryId = categoryId ? +categoryId : -1;;
+        el.classList.remove('active');
     }
 
-    closeMenu() {
-        this.isMenuVisible = false;
+    handleCategoryHover(event: MouseEvent) {
+        const el = event.target as HTMLLIElement;
+        const categoryId = el.getAttribute('categoryId');
+        if (categoryId === null) return;
+        this.activeCategoryId = +categoryId;
+        this.getSubcategories(+categoryId)
+        el.classList.add('active')
     }
 
-    onResize() {
-        if(window.innerWidth > 1280) {
-            this.isVisible = false;
-            this.render.removeClass(document.body, 'modal-open');
+    getSubcategories(categoryId: number) {
+        this.categoryService.getSubCategories(categoryId).subscribe({
+            next: (subcategoryGroups) => {
+                this.subcategoryGroups = subcategoryGroups;
+            }                 
+        })
+    }
+
+    initializeExpandingCategories() {
+        this.expandingCategories = [
+            {title: 'Laptops', categoryId: 3},
+            {title: `Monitors`, categoryId: 2},
+            {title: 'Networking Devices', categoryId: 8},
+            {title: 'Printers & Scanners', categoryId: 9}
+        ]
+    }
+
+    ngOnDestroy(): void {
+        if (this.hoverSubscription) {
+            this.hoverSubscription.unsubscribe();
         }
     }
-
-
-    
+ 
 }

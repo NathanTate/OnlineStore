@@ -120,7 +120,7 @@
       <hr>
         <ng-template [ngIf]="cart">
           <div class="checkout__preview-item" *ngFor="let item of cart.cartDetails">
-            <img [src]="item.product.productImages[0]?.url ?? '/assets/images/images.jfif'" alt="">
+            <img [src]="item.product.productImages[0]?.url" alt="">
             <div class="checkout__preview-details">
               <p>{{item.product.name}} {{item.product.description}}</p>
               <div class="quantity">

@@ -6,14 +6,15 @@ import { Product } from '../../_models/Product';
 import { CartService } from '../../_services/cart.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../_services/auth.service';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-  styleUrl: './product.component.css'
+  styleUrl: './product.component.css',
 })
 export class ProductComponent implements OnInit, OnDestroy {
-  @ViewChild('reviews') reviewsSection: ElementRef;
+  @ViewChild('reviews', {static: true}) reviewsSection: ElementRef;
   productId!: number;
   product: Product;
   paramsSubscription: Subscription;
@@ -21,6 +22,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   activeTab: string;
   count: number = 1;
   images: string[] = [];
+  colorControl: FormControl<number>;
 
 
   constructor(private productService: ProductService, private route: ActivatedRoute, 
@@ -30,23 +32,39 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.paramsSubscription = this.route.params.subscribe({
       next: (params: Params) => {
         this.productId = +params['id']
+        if(params['reviews']) {
+          setTimeout(() => {
+            this.goToReviews();
+          }, 200);
+        } else {
+          window.scroll({ 
+            top: 0, 
+            behavior: 'smooth' 
+          });
+        }
       }
     })
     this.activeTab = this.tabs[0];
     this.getProduct();
   }
 
+
   getProduct() {
     this.productService.getProduct(this.productId).subscribe({
       next: (product: Product) => {
         this.product = product;
         this.images = this.product.productImages.map(x => x.url);
+        this.colorControl = new FormControl(this.product.colors[0]?.id, {nonNullable: true, validators: Validators.required})
       }
     })
   }
 
   addToCart(index: number) {
-    this.cartService.addToCart({productId: index, count: this.count}).subscribe({
+    if (!this.colorControl.valid) {
+      this.toastr.warning('Select a color')
+      return;
+    }
+    this.cartService.addToCart({productId: index, colorId: this.colorControl.value, count: this.count}).subscribe({
       next: () => {
         this.toastr.success(`${this.product.name} was added to cart`)
       }

@@ -7,6 +7,7 @@ export class LoadingInterceptor implements HttpInterceptor{
   spinnerService = inject(LoadingSpinnerService);
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler) : Observable<HttpEvent<unknown>> {
+    
     this.spinnerService.start();
 
     return next.handle(req).pipe(

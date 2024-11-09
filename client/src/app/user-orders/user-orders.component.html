@@ -1,10 +1,18 @@
 <div class="container padding-block-500">
   <h1 class="fs-secondary-heading fw-semi-bold" style="margin-bottom: 1rem;">My Orders</h1>
-  <ul role="list" class="orders" *ngIf="ordersResponse!! && ordersResponse.items.length != 0 else noOrders">
-    <li *ngFor="let order of ordersResponse.items">
-      <app-order-card [order]="order" (onCancel)="cancelOrder($event)"></app-order-card>
-    </li>
-  </ul>
+  @if (!isLoading) {
+    <ul role="list" class="orders" *ngIf="ordersResponse.items.length != 0 else noOrders">
+      <li *ngFor="let order of ordersResponse.items">
+        <app-order-card [order]="order" (onCancel)="cancelOrder($event)"></app-order-card>
+      </li>
+    </ul>
+  } @else {
+    <div class="placeholder-wrapper">
+      @for (item of [].constructor(5); track $index) {
+        <div class="placeholder"></div>
+      }
+    </div>
+  }
 </div>
 
 <ng-template #noOrders>

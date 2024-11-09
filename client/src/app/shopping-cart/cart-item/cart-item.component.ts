@@ -41,9 +41,9 @@ export class CartItemComponent implements OnInit, OnDestroy{
   }
 
   updateQuantity() {
-    this.cartService.addToCart({productId: this.item.product.id, count: this.count, countUpdate: true}).subscribe({
+    this.cartService.addToCart({productId: this.item.product.id, colorId: this.item.product.colors[0].id, count: this.count, countUpdate: true}).subscribe({
       next: () => {
-        this.toastr.success('Items update to' + this.count)
+        this.toastr.success('Items update to ' + this.count)
       }
     })
   }

@@ -32,7 +32,7 @@
 }
 
 .wrapper img {
-  max-width: 64px;
+  width: 64px;
 }
 
 .wrapper h4 {
@@ -41,7 +41,7 @@
 
 @media (max-width: 48rem) {
   .wrapper img {
-    max-width: 45px;
+    width: 45px;
   }
 
   .benefits-section {

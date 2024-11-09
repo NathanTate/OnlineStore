@@ -71,8 +71,8 @@ namespace API.Helpers
                 .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Product.ProductImages.First().Url));
                 config.CreateMap<OrderDetailDto, OrderDetail>();
 
-                config.CreateMap<Color, ColorDto>().ReverseMap();
-                config.CreateMap<ProductColor, ColorDto>()
+                config.CreateMap<Color, ColorResponse>().ReverseMap();
+                config.CreateMap<ProductColor, ColorResponse>()
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Color.Value))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Color.Id)).ReverseMap();
             });

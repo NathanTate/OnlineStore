@@ -24,9 +24,10 @@
   </div>
 </section>
 
-<section #reviews class="reviews" *ngIf="!!product">
+<section #reviews class="reviews">
   <div class="container full-width" style="margin-block: 2rem;">
-    <app-reviews 
+    <app-reviews
+      *ngIf="!!product" 
       [currentUserId]="(authService.currentUser$ | async)!.id" 
       [product]="product">
     </app-reviews>
@@ -39,7 +40,7 @@
   <ul role="list" class="filter__color-group">
     <li *ngFor="let color of product.colors">
       <div [ngStyle]="{ 'background-color': color.value}" class="color">
-        <input type="checkbox" class="color-checkbox" [value]="color.value">
+        <input type="radio" class="color-checkbox" [value]="color.id" [formControl]="colorControl">
       </div>
     </li>
   </ul>

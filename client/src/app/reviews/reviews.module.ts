@@ -34,6 +34,6 @@ import { ReviewsFilterComponent } from "./reviews-filter/reviews-filter.componen
     ReviewFormComponent,
     ReviewsFilterComponent
   ],
-  providers: [ReviewService]
+  providers: []
 })
 export class ReviewsModule {}

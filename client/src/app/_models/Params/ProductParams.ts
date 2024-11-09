@@ -11,12 +11,12 @@
 import { PaginationParams } from "./PaginationParams";
 
 export class ProductParams extends PaginationParams {
-  [key: string]: number | number[] | string[] | string;
   categoryId: number = 2;
   subCategories: number[] = [];
   priceStart: number = 0;
   priceEnd: number = 0;
   searchTerm: string = '';
+  inStock: string = '';
   brands: number[] = [];
   colors: string[] = [];
   sortBy: string = 'ascending';

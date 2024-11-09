@@ -241,6 +241,12 @@ progress::-webkit-progress-value {
   align-items: center;
 }
 
+.md-inline-block,
+.md-flex,
+.md-block {
+  display: none;
+}
+
 .button {
   align-items: center;
   justify-content: center;
@@ -265,6 +271,7 @@ progress::-webkit-progress-value {
 }
 
 .icon-button {
+  cursor: pointer;
   --size: 30px;
   --font-size: 1rem;
   width: var(--size);
@@ -274,6 +281,25 @@ progress::-webkit-progress-value {
   font-size: var(--font-size);
   border: none;
   background: transparent;
+}
+
+.blur-load {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.blur-load.loaded > img {
+  opacity: 1;
+}
+
+.blur-load.loaded {
+  background-image: none !important;
+}
+
+.blur-load > img {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
 }
 
 .helper-block .text-danger {
@@ -453,6 +479,24 @@ body {
   .even-columns {
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
+  }
+}
+
+@media (min-width: 80rem) {
+  .md-none {
+    display: none;
+  }
+
+  .md-inline-block {
+    display: inline-block;
+  }
+
+  .md-flex {
+    display: flex;
+  }
+
+  .md-block {
+    display: block;
   }
 }
 

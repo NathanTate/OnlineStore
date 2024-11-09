@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../_services/order.service';
 import { OrderResponse } from '../_models/Order';
 import { OrderParams } from '../_models/Params/OrderParams';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-user-orders',
@@ -11,6 +12,7 @@ import { OrderParams } from '../_models/Params/OrderParams';
 export class UserOrdersComponent implements OnInit {
   ordersResponse: OrderResponse;
   orderParams: OrderParams;
+  isLoading = false;
 
   constructor(private orderService: OrderService) {
     this.orderParams = new OrderParams()
@@ -21,8 +23,10 @@ export class UserOrdersComponent implements OnInit {
   }
 
   getOrders() {
+    this.isLoading = true;
     this.orderService.getOrders(this.orderParams).subscribe({
-      next: (ordersResponse) => this.ordersResponse = ordersResponse 
+      next: (ordersResponse) => this.ordersResponse = ordersResponse,
+      complete: () => this.isLoading = false 
     })
   }
 

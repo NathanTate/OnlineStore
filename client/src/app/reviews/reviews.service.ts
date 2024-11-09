@@ -8,7 +8,9 @@ import { generateHttpParams } from "../shared/httpParamsHelper";
 import { map, of } from "rxjs";
 
 
-@Injectable() 
+@Injectable({
+  providedIn: 'root'
+}) 
 export class ReviewService {
   baseUrl = environment.apiUrl;
   params: ReviewParams;

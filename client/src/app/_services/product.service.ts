@@ -1,19 +1,16 @@
 import { Injectable } from "@angular/core";
-import { Color, Product, ProductResponse } from "../_models/Product";
+import { Color, Product, ProductRequest, ProductResponse, SetMainPhotoRequest } from "../_models/Product";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment.development";
-import { SubCategoryGroups } from "../_models/Categories";
 import { ProductParams } from "../_models/Params/ProductParams";
 import { generateHttpParams } from "../shared/httpParamsHelper";
-import { Observable, map, of } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  baseUrl = environment.apiUrl;
+  baseUrl = environment.apiUrl + 'product/';
   productParams = new ProductParams();
-  subcategoriesCache = new Map<number, SubCategoryGroups[]>();
 
   constructor(private http: HttpClient) {
   }
@@ -22,40 +19,38 @@ export class ProductService {
     return this.productParams;
   }
 
-  addProduct(model: FormData) {
-    console.log(model);
-    return this.http.post<void>(this.baseUrl + 'product/CreateProduct', model);
+  createPlaceholder() {
+    return this.http.post<Product>(this.baseUrl + 'CreatePlaceholder', {});
+  }
+
+  updateProduct(model: ProductRequest) {
+    return this.http.put<void>(this.baseUrl + 'UpdateProduct', model);
+  }
+
+  updatePhotos(model: FormData) {
+    return this.http.put<void>(this.baseUrl + 'UpdatePhotos', model);
+  }
+
+  setMainPhoto(model: SetMainPhotoRequest) {
+    return this.http.put<void>(this.baseUrl + 'SetMainPhoto', model);
   }
 
   getProducts(productParams: ProductParams = this.productParams) {
     let httpParams = generateHttpParams<ProductParams>(productParams);
 
-    return this.http.get<ProductResponse>(this.baseUrl + 'product/getproducts', {params: httpParams});
+    return this.http.get<ProductResponse>(this.baseUrl + 'getproducts/', {params: httpParams});
   }
 
   getProduct(id: number) {
-    return this.http.get<Product>(this.baseUrl + 'product/getProduct/' + id);
-  }
-
-  getSubCategories(categoryId: number): Observable<SubCategoryGroups[]> {
-    const subcategoryCache = this.subcategoriesCache.get(categoryId);
-
-    if(subcategoryCache) return of(subcategoryCache);
-
-    return this.http.get<SubCategoryGroups[]>(this.baseUrl + 'category/getSubCategories/' + categoryId).pipe(
-      map((subcategoryGroups) => {
-       this.subcategoriesCache.set(categoryId, subcategoryGroups);
-       return subcategoryGroups;
-      })
-    );
+    return this.http.get<Product>(this.baseUrl + 'getProduct/' + id);
   }
 
   getColors() {
-    return this.http.get<Color[]>(this.baseUrl + 'product/getColors');
+    return this.http.get<Color[]>(this.baseUrl + 'getColors');
   }
 
   deleteProduct(id: number) {
-    return this.http.delete<void>(this.baseUrl + 'product/DeleteProduct/' + id);
+    return this.http.delete<void>(this.baseUrl + 'DeleteProduct/' + id);
   }
 
 }

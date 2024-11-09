@@ -26,6 +26,7 @@ export class HasRoleDirective implements OnInit, OnDestroy {
   }
 
   hasRole() {
+    this.vcRef.clear();
     if(this.user && this.user.roles.some(role => this.appHasRole.includes(role))) {
       this.vcRef.createEmbeddedView(this.templateRef);
     } else {

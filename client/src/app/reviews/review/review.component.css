@@ -34,7 +34,7 @@
   right: 0;
   background-color: #fff;
   border: 1px solid var(--clr-primary-300);
-  box-shadow: 0 10px 50px var(--clr-primary-400);
+  box-shadow: 0 4px 20px var(--clr-primary-400);
   padding: 0.5rem;
   border-radius: 0.5rem;
   z-index: 500;

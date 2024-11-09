@@ -14,7 +14,6 @@ export class HoldableDirective {
     this.cancel = this.state.pipe(
       filter(v => v === 'cancel'),
       tap(v => {
-        console.log('stopped holding')
         this.holdTime.emit(0)
       })
     )
@@ -23,7 +22,6 @@ export class HoldableDirective {
   @HostListener('pointerdown', ['$event'])
    onHold(event: MouseEvent) {
     this.state.next('start')
-    console.log('start')
 
     const n = 100;
 

@@ -6,7 +6,7 @@
     </div>
     <div class="general-actions">
       <div class="actions">
-        <p class="text-primary-400">Items {{pageSize * (currentPage - 1)}}-{{length + pageSize * (currentPage - 1)}} of {{totalCount}}</p>
+        <p class="text-primary-400" style="text-wrap: nowrap;">Items {{pageSize * (currentPage - 1)}}-{{length + pageSize * (currentPage - 1)}} of {{totalCount}}</p>
       </div>
       <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
         <input type="search" id="search" placeholder="Search..." formControlName="searchTerm">

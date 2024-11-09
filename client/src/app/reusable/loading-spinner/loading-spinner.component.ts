@@ -1,5 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { LoadingSpinnerService } from '../../_services/loading-spinner.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+
 
 @Component({
   selector: 'app-loading-spinner',
@@ -11,8 +13,12 @@ export class LoadingSpinnerComponent implements OnInit{
   isLoading = false;
 
   ngOnInit(): void {
-    this.spinnerService.spinner$.subscribe({
+    this.spinnerService.spinner$.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe({
       next: (value) => {
+        console.log('spinner shows')
         this.isLoading = value;
       }
     })

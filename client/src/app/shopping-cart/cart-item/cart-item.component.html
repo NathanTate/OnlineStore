@@ -1,6 +1,9 @@
 <div class="item">
   <div class="item__details">
-    <img [src]="item.product.productImages[0]?.url ?? '/assets/images/images.jfif'" alt="some image">
+    <div class="item__image">
+      <img height="115px" width="115px" [src]="item.product.productImages[0]?.url" alt="some image">
+      <div [ngStyle]="{'background-color': item.color.value}" class="color"></div>
+    </div>
     <p style="margin-right: 0.75rem;">{{item.product.name}}: {{item.product.description}}</p>
   </div>
   <div class="item__controls">

@@ -3,7 +3,5 @@ export interface User {
     email: string;
     firstName: string;
     lastName: string;
-    token: string | null;
-    tokenExperationDate: Date;
     roles: string[];
 }

@@ -1,0 +1,101 @@
+<form
+  [formGroup]="imageForm"
+  (ngSubmit)="onSubmit()"
+  enctype="multipart/form-data"
+>
+  <div
+    appDragAndDrop
+    (onFileDropped)="onFileDropped($event)"
+    class="file-uploader bg-primary-200"
+  >
+    <p>Drag and drop the file(s) here or click on "Browser Files"</p>
+    <input
+      type="file"
+      multiple
+      id="fileDropInput"
+      class="browse-file-input"
+      (change)="onFileChange($event.target)"
+    />
+    <span>or</span>
+    <label for="fileDropInput" class="file-upload-button">Browser Files</label>
+  </div>
+  <div class="images-preview">
+    @for (image of product.productImages; track $index) {
+    <div class="image-widget">
+      <div [ngClass]="{ removed: removedImagesIds.includes(image.id) }">
+        <img
+          class="preview-image"
+          [src]="image.url"
+          width="50px"
+          height="50px"
+          alt=""
+        />
+        <div class="imag-info">
+          <p class="fw-medium">Main: {{ image.isMain }}</p>
+        </div>
+      </div>
+      <div class="controls">
+        @if (removedImagesIds.includes(image.id)) {
+        <button
+          class="icon-button"
+          style="color: blue"
+          (click)="undoRemoveImage(image.id)"
+        >
+          <fa-icon [icon]="iconUndo" size="lg"></fa-icon>
+        </button>
+        } @else {
+        <button
+          (click)="setMainPhoto(image.id)"
+          class="button bg-blue-accent-400"
+          type="button"
+        >
+          Set as Main
+        </button>
+        <button
+          (click)="removeImage(image.id)"
+          class="icon-button"
+          type="button"
+          style="color: rgb(240, 62, 62)"
+        >
+          <fa-icon [icon]="iconTrash" size="lg"></fa-icon>
+        </button>
+        }
+      </div>
+    </div>
+    } @for (image of imagesArray.controls; track $index) {
+    <div class="image-widget">
+      <div>
+        <img
+          class="preview-image"
+          [src]="image.value.url"
+          width="50px"
+          height="50px"
+          alt=""
+        />
+        <div class="imag-info">
+          <p class="fw-medium">{{ image.value.file.name }}</p>
+          <p class="text-primary-600">
+            {{ formatBytes(image.value.file.size) }}
+          </p>
+        </div>
+      </div>
+      <button
+        (click)="deleteImage($index)"
+        class="icon-button"
+        type="button"
+        style="color: rgb(240, 62, 62)"
+      >
+        <fa-icon [icon]="iconTrash" size="lg"></fa-icon>
+      </button>
+    </div>
+    }
+  </div>
+  <button
+    type="submit"
+    [disabled]="!imageForm.valid"
+    style="margin-top: 0.25rem; width: 100%"
+    class="button bg-blue-accent-400"
+  >
+    {{ isEdit ? "Update Photos" : "Upload Photos" }}
+  </button>
+</form>

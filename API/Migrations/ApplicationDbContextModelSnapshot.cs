@@ -121,6 +121,13 @@ namespace API.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RefreshToken")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -155,6 +162,9 @@ namespace API.Migrations
                     b.Property<int>("CartHeaderId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ColorId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
@@ -164,6 +174,8 @@ namespace API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CartHeaderId");
+
+                    b.HasIndex("ColorId");
 
                     b.HasIndex("ProductId");
 
@@ -264,6 +276,9 @@ namespace API.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ColorId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
@@ -412,11 +427,16 @@ namespace API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsPlaceholder")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MainImageUrl")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -426,6 +446,9 @@ namespace API.Migrations
 
                     b.Property<double>("ProductRating")
                         .HasColumnType("float");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("SalePrice")
                         .HasPrecision(16, 2)
@@ -774,6 +797,12 @@ namespace API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("API.Models.ProductModel.Color", "Color")
+                        .WithMany()
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("API.Models.ProductModel.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -781,6 +810,8 @@ namespace API.Migrations
                         .IsRequired();
 
                     b.Navigation("CartHeader");
+
+                    b.Navigation("Color");
 
                     b.Navigation("Product");
                 });

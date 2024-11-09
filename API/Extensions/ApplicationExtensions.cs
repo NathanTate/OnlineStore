@@ -20,6 +20,7 @@ namespace API.Extensions
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddMemoryCache();
 
             builder.Services.Configure<DataProtectionTokenProviderOptions>(opts => opts.TokenLifespan = TimeSpan.FromHours(1));
 
@@ -27,9 +28,11 @@ namespace API.Extensions
             builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             builder.Services.AddScoped<IPhotoService, PhotoService>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
+            builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
             builder.Services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
+            builder.Services.Configure<GoogleOptions>(configuration.GetSection("Authentication:Google"));
             builder.Services.Configure<CloudinaryOptions>(configuration.GetSection("CloudinarySettings"));
 
             return builder;
